@@ -34,13 +34,13 @@ jobs:
           extended: true
 
       - name: Build
-        working-directory: .
+        working-directory: ./siteforbobby
         run: hugo --minify
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: ./siteforbobby/public
 
   deploy:
     environment:
@@ -51,4 +51,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v4
