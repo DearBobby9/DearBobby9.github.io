@@ -34,6 +34,7 @@ jobs:
           extended: true
 
       - name: Build
+        working-directory: .
         run: hugo --minify
 
       - name: Upload artifact
