@@ -1,0 +1,62 @@
+baseURL = "https://dearbobby9.github.io/"
+languageCode = "en-us"
+title = "DearBobby9's Blog"
+theme = "anatole"
+
+[params]
+  # 基本设置
+  title = "I'm Difan Jia"
+  author = "Difan (Bobby) Jia"
+  description = """
+  Call me Difan (Dee-Fan) or Bobby. 
+  Welcome to my blog!
+  """
+  profilePicture = "images/profile.png"
+  doNotLoadAnimations = true
+  contentratio = 0.7
+  # desidebar = true
+  #contactFormAction = "https://formspree.io/f/your-form-hash-here"
+  
+  # 社交链接
+#  [[params.socialIcons]]
+#    icon = "fab fa-github"
+#    title = "GitHub"
+#    url = "https://github.com/DearBobby9"
+
+  [[params.socialIcons]]
+    icon = "fab fa-x-twitter"
+    title = "X"
+    url = "https://x.com/KeithMaxwell99"
+
+  [[params.socialIcons]]
+    icon = "fas fa-envelope"
+    title = "Email"
+    url = "mailto:keithtmaxwell99@gmail.com"
+
+    
+
+  # 导航菜单 (weight means order)
+  [menu]
+    [[menu.main]]
+    name = "Home"
+    identifier = "home"
+    weight = 100
+    url = "/"
+
+    [[menu.main]]
+    name = "Posts"
+    weight = 200
+    identifier = "posts"
+    url = "/post/" 
+
+    # [[menu.main]]
+    # name = "Portfolio"
+    # weight = 250
+    # identifier = "portfolio"
+    # url = "/portfolio/"
+
+    [[menu.main]]
+    name = "About"
+    weight = 300
+    identifier = "about"
+    url = "/about/"
