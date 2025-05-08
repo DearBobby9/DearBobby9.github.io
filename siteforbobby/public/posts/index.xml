@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Difan Jia</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Difan Jia</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My First Blog Post</title>
+      <link>http://localhost:1313/posts/my-first-blog/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/my-first-blog/</guid>
+      <description>&lt;p&gt;Welcome to my first blog post! This is where I&amp;rsquo;ll be sharing my thoughts and experiences.&lt;/p&gt;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Hello everyone! I&amp;rsquo;m excited to start sharing my journey through this blog. Here, I&amp;rsquo;ll be writing about my experiences, projects, and various topics that interest me.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-to-expect&#34;&gt;What to Expect&lt;/h2&gt;&#xA;&lt;p&gt;In this blog, you can expect to find:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Updates about my projects&lt;/li&gt;&#xA;&lt;li&gt;Technical articles&lt;/li&gt;&#xA;&lt;li&gt;Personal experiences and insights&lt;/li&gt;&#xA;&lt;li&gt;And much more!&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Stay tuned for more content!&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
