@@ -1,222 +1,56 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on DearBobby9&#39;s Blog</title>
-    <link>http://localhost:1313/post/</link>
-    <description>Recent content in Posts on DearBobby9&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 19 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>My First Post</title>
-      <link>http://localhost:1313/post/my-first-post/</link>
-      <pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/my-first-post/</guid>
-      
-        <description>&lt;p&gt;Welcome to my first blog post! This is a test post to see how the Anatole theme works.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>My First Post2</title>
-      <link>http://localhost:1313/post/post/</link>
-      <pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/post/</guid>
-      
-        <description>&lt;p&gt;Welcome to my first blog post! This is a test post to see how the Anatole theme works.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>The Notice Shortcode</title>
-      <link>http://localhost:1313/post/notice-shortcode/</link>
-      <pubDate>Fri, 18 Mar 2022 21:47:41 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/notice-shortcode/</guid>
-      
-        <description>&lt;p&gt;The notice shortcode supports three different types of disclaimers. These are as following:&lt;/p&gt;
-&lt;h2 id=&#34;info-notice&#34;&gt;Info Notice&lt;/h2&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;{{% notice info %}}
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on DearBobby9's Blog</title><link>https://dearbobby9.github.io/post/</link><description>Recent content in Posts on DearBobby9's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://dearbobby9.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>My First Post</title><link>https://dearbobby9.github.io/post/my-first-post/</link><pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/my-first-post/</guid><description>&lt;p>Welcome to my first blog post! This is a test post to see how the Anatole theme works.&lt;/p></description></item><item><title>My First Post2</title><link>https://dearbobby9.github.io/post/post/</link><pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/post/</guid><description>&lt;p>Welcome to my first blog post! This is a test post to see how the Anatole theme works.&lt;/p></description></item><item><title>The Notice Shortcode</title><link>https://dearbobby9.github.io/post/notice-shortcode/</link><pubDate>Fri, 18 Mar 2022 21:47:41 +0000</pubDate><guid>https://dearbobby9.github.io/post/notice-shortcode/</guid><description>&lt;p>The notice shortcode supports three different types of disclaimers. These are as following:&lt;/p>
+&lt;h2 id="info-notice">Info Notice&lt;/h2>
+&lt;pre tabindex="0">&lt;code>{{% notice info %}}
 Lorem Impsum..
 {{% /notice %}}
-&lt;/code&gt;&lt;/pre&gt;&lt;div
-  class=&#34;notice&#34;
-&gt;
-  &lt;span
-    class=&#34;notice__title&#34;
-  &gt;Info&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&#34;update-notice&#34;&gt;Update Notice&lt;/h2&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;{{% notice update %}}
+&lt;/code>&lt;/pre>&lt;div
+class="notice"
+>
+&lt;span
+class="notice__title"
+>Info&lt;/span>&lt;div class="notice__content">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+&lt;/div>
+&lt;/div>
+&lt;h2 id="update-notice">Update Notice&lt;/h2>
+&lt;pre tabindex="0">&lt;code>{{% notice update %}}
 Lorem Impsum..
 {{% /notice %}}
-&lt;/code&gt;&lt;/pre&gt;&lt;div
-  class=&#34;notice
-    notice--update
-  &#34;
-&gt;
-  &lt;span
-    class=&#34;notice__title
-      notice__title--update
-    &#34;
-  &gt;Update&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&#34;warning-notice&#34;&gt;Warning Notice&lt;/h2&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;{{% notice warning %}}
+&lt;/code>&lt;/pre>&lt;div
+class="notice
+notice--update
+"
+>
+&lt;span
+class="notice__title
+notice__title--update
+"
+>Update&lt;/span>&lt;div class="notice__content">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+&lt;/div>
+&lt;/div>
+&lt;h2 id="warning-notice">Warning Notice&lt;/h2>
+&lt;pre tabindex="0">&lt;code>{{% notice warning %}}
 Lorem Impsum..
 {{% /notice %}}
-&lt;/code&gt;&lt;/pre&gt;&lt;div
-  class=&#34;notice
-    notice--warning
-  &#34;
-&gt;
-  &lt;span
-    class=&#34;notice__title
-      notice__title--warning
-    &#34;
-  &gt;Warning&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  &lt;/div&gt;
-&lt;/div&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Series Part 2</title>
-      <link>http://localhost:1313/post/series-part-2/</link>
-      <pubDate>Sun, 15 Aug 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/series-part-2/</guid>
-      
-        <description>A brief guide to how to setup series part 2</description>
-      
-    </item>
-    
-    <item>
-      <title>Series Part 1</title>
-      <link>http://localhost:1313/post/series-part-1/</link>
-      <pubDate>Sat, 14 Aug 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/series-part-1/</guid>
-      
-        <description>A brief guide to how to setup series part 1</description>
-      
-    </item>
-    
-    <item>
-      <title>Redirect</title>
-      <link>http://localhost:1313/post/redirect/</link>
-      <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/redirect/</guid>
-      
-        <description>Usage of redirectUrl</description>
-      
-    </item>
-    
-    <item>
-      <title>The Figure Shortcode</title>
-      <link>http://localhost:1313/post/figure-shortcode/</link>
-      <pubDate>Sat, 13 Mar 2021 21:47:41 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/figure-shortcode/</guid>
-      
-        <description>&lt;p&gt;Hugo has &lt;code&gt;figure&lt;/code&gt; shortcode built-in, so you can easily add figure captions or hyperlink rel attributes to images. Documentations can be found here:&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://gohugo.io/content-management/shortcodes/#figure&#34;&gt;https://gohugo.io/content-management/shortcodes/#figure&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;This theme has 3 CSS classes made for figure elements:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;big&lt;/code&gt;: images will break the width limit of main content area.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;left&lt;/code&gt;: images will float to the left.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;right&lt;/code&gt;: images will float to the right.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If a figure has no class set, the image will behave just like a normal markdown image: &lt;code&gt;![]()&lt;/code&gt;.&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Markdown Syntax Guide</title>
-      <link>http://localhost:1313/post/markdown-syntax/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/markdown-syntax/</guid>
-      
-        <description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description>
-      
-    </item>
-    
-    <item>
-      <title>Rich Content</title>
-      <link>http://localhost:1313/post/rich-content/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/rich-content/</guid>
-      
-        <description>A brief description of Hugo Shortcodes</description>
-      
-    </item>
-    
-    <item>
-      <title>Placeholder Text</title>
-      <link>http://localhost:1313/post/placeholder-text/</link>
-      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/placeholder-text/</guid>
-      
-        <description>Lorem Ipsum Dolor Si Amet</description>
-      
-    </item>
-    
-    <item>
-      <title>Math Typesetting</title>
-      <link>http://localhost:1313/post/math-typesetting/</link>
-      <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/math-typesetting/</guid>
-      
-        <description>A brief guide to setup KaTeX</description>
-      
-    </item>
-    
-    <item>
-      <title>Emoji Support</title>
-      <link>http://localhost:1313/post/emoji-support/</link>
-      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/emoji-support/</guid>
-      
-        <description>Guide to emoji usage in Hugo</description>
-      
-    </item>
-    
-    <item>
-      <title>Guide to Thumbnails in Hugo</title>
-      <link>http://localhost:1313/post/image-test/</link>
-      <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/image-test/</guid>
-      
-        <description>Guide to Thumbnails in Hugo</description>
-      
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://localhost:1313/post/example_post/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/example_post/</guid>
-      
-        <description></description>
-      
-    </item>
-    
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;div
+class="notice
+notice--warning
+"
+>
+&lt;span
+class="notice__title
+notice__title--warning
+"
+>Warning&lt;/span>&lt;div class="notice__content">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+&lt;/div>
+&lt;/div></description></item><item><title>Series Part 2</title><link>https://dearbobby9.github.io/post/series-part-2/</link><pubDate>Sun, 15 Aug 2021 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/series-part-2/</guid><description>A brief guide to how to setup series part 2</description></item><item><title>Series Part 1</title><link>https://dearbobby9.github.io/post/series-part-1/</link><pubDate>Sat, 14 Aug 2021 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/series-part-1/</guid><description>A brief guide to how to setup series part 1</description></item><item><title>Redirect</title><link>https://dearbobby9.github.io/post/redirect/</link><pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/redirect/</guid><description>Usage of redirectUrl</description></item><item><title>The Figure Shortcode</title><link>https://dearbobby9.github.io/post/figure-shortcode/</link><pubDate>Sat, 13 Mar 2021 21:47:41 +0000</pubDate><guid>https://dearbobby9.github.io/post/figure-shortcode/</guid><description>&lt;p>Hugo has &lt;code>figure&lt;/code> shortcode built-in, so you can easily add figure captions or hyperlink rel attributes to images. Documentations can be found here:&lt;/p>
+&lt;p>&lt;a href="https://gohugo.io/content-management/shortcodes/#figure">https://gohugo.io/content-management/shortcodes/#figure&lt;/a>&lt;/p>
+&lt;p>This theme has 3 CSS classes made for figure elements:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>big&lt;/code>: images will break the width limit of main content area.&lt;/li>
+&lt;li>&lt;code>left&lt;/code>: images will float to the left.&lt;/li>
+&lt;li>&lt;code>right&lt;/code>: images will float to the right.&lt;/li>
+&lt;/ul>
+&lt;p>If a figure has no class set, the image will behave just like a normal markdown image: &lt;code>![]()&lt;/code>.&lt;/p></description></item><item><title>Markdown Syntax Guide</title><link>https://dearbobby9.github.io/post/markdown-syntax/</link><pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/markdown-syntax/</guid><description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description></item><item><title>Rich Content</title><link>https://dearbobby9.github.io/post/rich-content/</link><pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/rich-content/</guid><description>A brief description of Hugo Shortcodes</description></item><item><title>Placeholder Text</title><link>https://dearbobby9.github.io/post/placeholder-text/</link><pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/placeholder-text/</guid><description>Lorem Ipsum Dolor Si Amet</description></item><item><title>Math Typesetting</title><link>https://dearbobby9.github.io/post/math-typesetting/</link><pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/math-typesetting/</guid><description>A brief guide to setup KaTeX</description></item><item><title>Emoji Support</title><link>https://dearbobby9.github.io/post/emoji-support/</link><pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/emoji-support/</guid><description>Guide to emoji usage in Hugo</description></item><item><title>Guide to Thumbnails in Hugo</title><link>https://dearbobby9.github.io/post/image-test/</link><pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/image-test/</guid><description>Guide to Thumbnails in Hugo</description></item><item><title/><link>https://dearbobby9.github.io/post/example_post/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://dearbobby9.github.io/post/example_post/</guid><description/></item></channel></rss>
