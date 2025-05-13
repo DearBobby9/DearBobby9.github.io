@@ -7,6 +7,7 @@ tags = [
     "redirect", "redirectUrl",
 ]
 redirectUrl="https://gohugo.io"
+draft = true
 +++
 
 Forwarding to [gohugo](https://gohugo.io) using `redirectUrl`

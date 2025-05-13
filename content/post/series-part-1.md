@@ -5,6 +5,7 @@ date: 2021-08-14
 description: A brief guide to how to setup series part 1
 series:
   - series-setup
+draft: true
 ---
 
 In this first part of the series we'll show you how to create a series

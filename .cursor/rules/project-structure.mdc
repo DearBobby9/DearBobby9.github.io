@@ -3,3 +3,19 @@ description:
 globs:
 alwaysApply: false
 ---
+# Hugo Website Project Structure
+
+This is a Hugo-based personal website using the Anatole theme. Here's the key structure:
+
+- `config.toml`: Main configuration file for the Hugo site
+- `content/`: Contains all the content for the website
+  - `post/`: Blog posts in Markdown format
+- `themes/`: Contains the Anatole theme
+- `static/`: Static files like images, CSS, and JavaScript
+- `layouts/`: Custom layout templates
+- `data/`: Data files for the website
+- `public/`: Generated static site (do not edit directly)
+
+## Key Files
+- [config.toml](mdc:config.toml): Site configuration
+- [content/post/my-first-post.md](mdc:content/post/my-first-post.md): Example blog post
