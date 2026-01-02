@@ -13,15 +13,15 @@ export function Hero() {
                 <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start lg:justify-between gap-12 lg:gap-24">
 
                     {/* Left: Narrative Content */}
-                    <div className="flex-1 text-left space-y-8 max-w-3xl">
+                    <div className="flex-1 text-left space-y-8 max-w-3xl px-4 md:px-0">
 
                         {/* Minimal Name Tag */}
-                        <div className="font-mono text-sm tracking-widest uppercase text-muted-foreground mb-4">
-                            Hi, I'm Difan Jia (Dee-Fae Jae)
+                        <div className="font-mono text-xs md:text-sm tracking-widest uppercase text-muted-foreground mb-4">
+                            Hi, I'm Difan "Bobby" Jia (Dee-Fae Bobby Jae)
                         </div>
 
                         {/* Huge Headline - FIXED: Removed mix-blend-difference */}
-                        <h1 className="leading-[0.9] text-7xl md:text-8xl lg:text-9xl tracking-tighter">
+                        <h1 className="leading-[0.9] text-[3.5rem] md:text-8xl lg:text-9xl tracking-tighter">
                             Researcher <span className="font-serif italic font-light">&</span> Designer
                         </h1>
 

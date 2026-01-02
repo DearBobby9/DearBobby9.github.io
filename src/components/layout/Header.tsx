@@ -44,7 +44,7 @@ export function Header() {
                     href="/"
                     className="text-lg font-semibold tracking-tight transition-colors hover:text-muted-foreground"
                 >
-                    DIFAN JIA
+                    DIFAN  JIA
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -98,25 +98,37 @@ export function Header() {
                                 <span className="sr-only">Toggle menu</span>
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="right" className="w-[280px] bg-background">
+                        <SheetContent side="right" className="w-full sm:w-[400px] bg-background/95 backdrop-blur-xl border-l border-border/40 p-0">
                             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                            <nav className="flex flex-col gap-4 mt-8">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        onClick={() => setIsOpen(false)}
-                                        className={cn(
-                                            "text-lg font-medium transition-colors hover:text-foreground py-2",
-                                            pathname === item.href
-                                                ? "text-foreground"
-                                                : "text-muted-foreground"
-                                        )}
-                                    >
-                                        {item.name}
-                                    </Link>
-                                ))}
-                            </nav>
+
+                            <div className="flex flex-col h-full justify-center px-8">
+                                <div className="font-mono text-xs text-muted-foreground mb-8 tracking-widest uppercase text-center">
+                                    Menu
+                                </div>
+
+                                <nav className="flex flex-col gap-6 items-center">
+                                    {navItems.map((item) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={() => setIsOpen(false)}
+                                            className={cn(
+                                                "text-4xl md:text-5xl font-serif font-light italic tracking-tight transition-all duration-300 hover:text-foreground hover:scale-105",
+                                                pathname === item.href
+                                                    ? "text-foreground"
+                                                    : "text-muted-foreground"
+                                            )}
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    ))}
+                                </nav>
+
+                                <div className="mt-12 text-center">
+                                    <div className="w-12 h-[1px] bg-border mx-auto mb-8" />
+                                    {/* Re-add Socials in Menu optionally? No, keep clean. */}
+                                </div>
+                            </div>
                         </SheetContent>
                     </Sheet>
                 </div>
