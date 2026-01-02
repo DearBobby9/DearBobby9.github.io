@@ -22,7 +22,7 @@ export function Hero() {
 
                         {/* Huge Headline - FIXED: Removed mix-blend-difference */}
                         <h1 className="leading-[0.9] text-7xl md:text-8xl lg:text-9xl tracking-tighter">
-                            Research Engineer <span className="font-serif italic font-light">&</span> Designer
+                            Researcher <span className="font-serif italic font-light">&</span> Designer
                         </h1>
 
                         {/* Divide & Connect Line */}
