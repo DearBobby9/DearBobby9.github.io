@@ -1,19 +1,60 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+// import { Button } from "@/components/ui/button"; // Removed
+// import { Badge } from "@/components/ui/badge"; // Removed
 import { FileText, Mail, Github } from "lucide-react";
 
-const tags = ["XR", "HCI", "CAD", "Spatial Computing", "Fabrication"];
+// const tags = ["XR", "HCI", "CAD", "Spatial Computing", "Fabrication"]; // Removed
 
 export function Hero() {
     return (
-        <section className="section pt-24 md:pt-32 lg:pt-40">
+        <section className="section min-h-[90vh] flex flex-col justify-center pt-24 md:pt-32">
             <div className="container-custom">
-                <div className="flex flex-col items-center text-center">
-                    {/* Avatar */}
-                    <div className="relative mb-8 md:mb-12">
-                        <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-border">
+                <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start lg:justify-between gap-12 lg:gap-24">
+
+                    {/* Left: Narrative Content */}
+                    <div className="flex-1 text-left space-y-8 max-w-3xl">
+
+                        {/* Minimal Name Tag */}
+                        <div className="font-mono text-sm tracking-widest uppercase text-muted-foreground mb-4">
+                            Hi, I'm Difan Jia
+                        </div>
+
+                        {/* Huge Headline - FIXED: Removed mix-blend-difference */}
+                        <h1 className="leading-[0.9] text-7xl md:text-8xl lg:text-9xl tracking-tighter">
+                            Research Engineer <span className="font-serif italic font-light">&</span> Designer
+                        </h1>
+
+                        {/* Divide & Connect Line */}
+                        <hr className="w-24 border-t-2 border-foreground/30 my-8" />
+
+                        {/* Narrative Paragraph */}
+                        <p className="text-xl md:text-2xl leading-relaxed font-light text-muted-foreground/90 max-w-2xl mt-8">
+                            I explore the intersection of <span className="text-foreground font-medium">Mixed Reality</span>, <span className="text-foreground font-medium">Digital Fabrication</span>, and <span className="text-foreground font-medium">Spatial Computing</span>.
+                            Currently building tools that bridge the gap between virtual design and physical making.
+                        </p>
+
+                        {/* Editorial Links (Not Buttons) */}
+                        <div className="flex flex-wrap gap-8 pt-8 font-mono text-sm">
+                            <Link href="/about" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Download CV</span>
+                                <FileText className="h-3 w-3" />
+                            </Link>
+                            <Link href="mailto:keithtmaxwell99@gmail.com" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Email</span>
+                                <Mail className="h-3 w-3" />
+                            </Link>
+                            <Link href="https://github.com/DearBobby9" target="_blank" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">GitHub</span>
+                                <Github className="h-3 w-3" />
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Right: Minimal Avatar/Visual */}
+                    <div className="w-full max-w-[280px] lg:max-w-xs shrink-0 self-start lg:self-center lg:mt-12">
+                        <div className="aspect-[4/5] relative grayscale hover:grayscale-0 transition-all duration-700 ease-out">
+                            {/* Simple rectangular crop, no round borders */}
                             <Image
                                 src="/images/profile.png"
                                 alt="Difan Jia"
@@ -22,58 +63,6 @@ export function Hero() {
                                 priority
                             />
                         </div>
-                        {/* Subtle glow effect */}
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-b from-transparent to-background/80 pointer-events-none" />
-                    </div>
-
-                    {/* Name */}
-                    <h1 className="mb-4">
-                        DIFAN JIA
-                    </h1>
-
-                    {/* Tagline with blinking cursor */}
-                    <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl">
-                        XR + Fabrication + Spatial Computing
-                        <span className="cursor-blink ml-1 text-foreground">_</span>
-                    </p>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap justify-center gap-2 mb-10">
-                        {tags.map((tag) => (
-                            <Badge
-                                key={tag}
-                                variant="outline"
-                                className="font-mono text-xs px-3 py-1"
-                            >
-                                {tag}
-                            </Badge>
-                        ))}
-                    </div>
-
-                    {/* CTA Buttons */}
-                    <div className="flex flex-wrap justify-center gap-4">
-                        <Button asChild size="lg" className="gap-2">
-                            <Link href="/about">
-                                <FileText className="h-4 w-4" />
-                                Download CV
-                            </Link>
-                        </Button>
-                        <Button asChild variant="outline" size="lg" className="gap-2">
-                            <Link href="mailto:keithtmaxwell99@gmail.com">
-                                <Mail className="h-4 w-4" />
-                                Email
-                            </Link>
-                        </Button>
-                        <Button asChild variant="ghost" size="lg" className="gap-2">
-                            <Link
-                                href="https://github.com/DearBobby9"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Github className="h-4 w-4" />
-                                GitHub
-                            </Link>
-                        </Button>
                     </div>
                 </div>
             </div>

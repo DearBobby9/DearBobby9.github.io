@@ -56,8 +56,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
 
         // Theme detection for proper coloring
         const isDark = document.documentElement.classList.contains("dark");
-        const baseColor = isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)";
-        const highlightColor = isDark ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)";
+        // const baseColor/highlightColor removed - calculated dynamically in render
 
         interface Dot {
             x: number;
@@ -139,7 +138,8 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
                 let size = DOT_SIZE;
-                let color = baseColor;
+                // let color = baseColor; // REMOVED: Calculated dynamically below.
+                let color: string;
                 let scale = 1;
 
 
@@ -149,11 +149,9 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     const angle = Math.atan2(dy, dx);
 
                     // Oscillation for "breathing" effect
-                    // Frequency: time * 0.002
-                    // Phase: dot position (creates wave effect)
                     const oscillation = Math.sin(time * 0.002 + dist * 0.05);
 
-                    // Displacement amount (max 20px) + Breathing (Tripled amplitude to 15px)
+                    // Displacement
                     const moveDist = force * 20 + (force * oscillation * 15);
 
                     // Displace dot
@@ -164,13 +162,21 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     dot.x += (tx - dot.x) * 0.15;
                     dot.y += (ty - dot.y) * 0.15;
 
-                    // Scale up dots near cursor with pulse (Increased to 0.5)
-                    scale = 1 + force * 1.5 + (force * oscillation * 0.5); // Pulse scale
-                    color = highlightColor;
+                    // Scale & Opacity Logic (Dynamic Invisibility)
+                    scale = 1 + force * 1.5 + (force * oscillation * 0.5);
+
+                    // HIGHLIGHT: High opacity (up to 0.4) near cursor
+                    // Interpolate between baseColor and highlightColor? No, just set alpha
+                    // Let's use rgba interpolation or just replace color
+                    const alpha = 0.05 + force * 0.35; // 0.05 base -> 0.4 max
+                    color = isDark ? `rgba(255, 255, 255, ${alpha})` : `rgba(0, 0, 0, ${alpha})`;
                 } else {
                     // Return to origin
                     dot.x += (dot.originX - dot.x) * 0.1;
                     dot.y += (dot.originY - dot.y) * 0.1;
+
+                    // BASE: Very low opacity (0.05) when idle
+                    color = isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)";
                 }
 
                 // Draw dot

@@ -13,12 +13,7 @@ import {
     SheetTrigger,
     SheetTitle,
 } from "@/components/ui/sheet";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// Dropdown imports removed
 
 const navigation = [
     { name: "Projects", href: "/projects" },
@@ -72,32 +67,28 @@ export function Header() {
 
                 {/* Right side: Language Switcher */}
                 <div className="flex items-center gap-4">
-                    {/* Language Switcher */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 px-2 text-xs font-mono"
-                            >
-                                {locale === "en" ? "EN" : "中文"}
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="min-w-[80px]">
-                            <DropdownMenuItem
-                                onClick={() => setLocale("en")}
-                                className="text-xs font-mono cursor-pointer"
-                            >
-                                EN
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => setLocale("zh")}
-                                className="text-xs font-mono cursor-pointer"
-                            >
-                                中文
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {/* Language Switcher - Hidden for now */}
+                    {/* <div className="flex items-center gap-2 font-mono text-xs">
+                        <button
+                            onClick={() => setLocale("en")}
+                            className={cn(
+                                "transition-colors hover:text-foreground",
+                                locale === "en" ? "text-foreground font-semibold" : "text-muted-foreground/50"
+                            )}
+                        >
+                            EN
+                        </button>
+                        <span className="text-muted-foreground/20">/</span>
+                        <button
+                            onClick={() => setLocale("zh")}
+                            className={cn(
+                                "transition-colors hover:text-foreground",
+                                locale === "zh" ? "text-foreground font-semibold" : "text-muted-foreground/50"
+                            )}
+                        >
+                            中文
+                        </button>
+                    </div> */}
 
                     {/* Mobile Menu */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
