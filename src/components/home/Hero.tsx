@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 // import { Button } from "@/components/ui/button"; // Removed
 // import { Badge } from "@/components/ui/badge"; // Removed
-import { FileText, Mail, Github } from "lucide-react";
+import { FileText, Mail, GraduationCap } from "lucide-react";
 
 // const tags = ["XR", "HCI", "CAD", "Spatial Computing", "Fabrication"]; // Removed
 
@@ -17,7 +17,7 @@ export function Hero() {
 
                         {/* Minimal Name Tag */}
                         <div className="font-mono text-sm tracking-widest uppercase text-muted-foreground mb-4">
-                            Hi, I'm Difan Jia
+                            Hi, I'm Difan Jia (Dee-Fae Jae)
                         </div>
 
                         {/* Huge Headline - FIXED: Removed mix-blend-difference */}
@@ -44,9 +44,16 @@ export function Hero() {
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Email</span>
                                 <Mail className="h-3 w-3" />
                             </Link>
-                            <Link href="https://github.com/DearBobby9" target="_blank" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
-                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">GitHub</span>
-                                <Github className="h-3 w-3" />
+                            <Link href="https://x.com/DearBobby9" target="_blank" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">X</span>
+                                {/* Custom X Logo (Twitter) */}
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3">
+                                    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+                                </svg>
+                            </Link>
+                            <Link href="https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en" target="_blank" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Scholar</span>
+                                <GraduationCap className="h-3 w-3" />
                             </Link>
                         </div>
                     </div>

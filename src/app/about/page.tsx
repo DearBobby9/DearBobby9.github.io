@@ -78,7 +78,7 @@ export default function AboutPage() {
                                 <Twitter className="h-5 w-5" />
                             </Link>
                             <Link
-                                href="https://scholar.google.com"
+                                href="https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-muted-foreground hover:text-foreground transition-colors"
