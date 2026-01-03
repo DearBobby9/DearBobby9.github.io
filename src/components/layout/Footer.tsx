@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Github, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { siteConfig } from "@/data/site";
+import { navigation } from "@/data/navigation";
 
 const XIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -11,17 +13,17 @@ const XIcon = ({ className }: { className?: string }) => (
 const socialLinks = [
     {
         name: "Email",
-        href: "mailto:keithtmaxwell99@gmail.com",
+        href: `mailto:${siteConfig.email}`,
         icon: Mail,
     },
     {
         name: "X (Twitter)",
-        href: "https://x.com/DearBobby9",
+        href: siteConfig.socials.x,
         icon: XIcon,
     },
     {
         name: "GitHub",
-        href: "https://github.com/DearBobby9",
+        href: siteConfig.socials.github,
         icon: Github,
     },
 ];
@@ -36,7 +38,7 @@ export function Footer() {
                     {/* Left: Name and copyright */}
                     <div className="flex flex-col items-center md:items-start gap-2">
                         <span className="text-lg font-semibold tracking-tight">
-                            DIFAN JIA
+                            {siteConfig.name.toUpperCase()}
                         </span>
                         <span className="text-xs text-muted-foreground font-mono">
                             © {currentYear} All rights reserved
@@ -74,18 +76,15 @@ export function Footer() {
 
                 {/* Bottom: Quick links */}
                 <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-muted-foreground font-mono">
-                    <Link href="/projects" className="hover:text-foreground transition-colors">
-                        Projects
-                    </Link>
-                    <Link href="/publications" className="hover:text-foreground transition-colors">
-                        Publications
-                    </Link>
-                    <Link href="/blog" className="hover:text-foreground transition-colors">
-                        Blog
-                    </Link>
-                    <Link href="/about" className="hover:text-foreground transition-colors">
-                        About
-                    </Link>
+                    {navigation.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className="hover:text-foreground transition-colors"
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
                 </div>
             </div>
         </footer>

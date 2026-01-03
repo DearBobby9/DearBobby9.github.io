@@ -7,48 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FileText, Github, ExternalLink, Play, LayoutGrid, List } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Placeholder data - will be replaced with MDX content
-const projects = [
-    {
-        slug: "xr-fabrication-toolkit",
-        title: "XR Fabrication Toolkit",
-        oneLiner: "Bridging virtual design with physical fabrication through spatial interfaces",
-        year: "2025",
-        category: "Research",
-        tags: ["XR", "Fabrication", "HCI"],
-        links: { paper: "#", code: "https://github.com/DearBobby9", demo: "#" },
-    },
-    {
-        slug: "spatial-computing-interface",
-        title: "Spatial Computing Interface",
-        oneLiner: "Novel interaction paradigms for 3D content creation in mixed reality",
-        year: "2024",
-        category: "Research",
-        tags: ["Spatial", "CAD", "XR"],
-        links: { paper: "#", video: "#" },
-    },
-    {
-        slug: "collaborative-ar-system",
-        title: "Collaborative AR System",
-        oneLiner: "Real-time multi-user collaboration in augmented reality environments",
-        year: "2024",
-        category: "Research",
-        tags: ["AR", "Collaboration", "HCI"],
-        links: { paper: "#", code: "#" },
-    },
-    {
-        slug: "personal-website",
-        title: "Personal Website",
-        oneLiner: "A minimalist academic portfolio with interactive background effects",
-        year: "2025",
-        category: "Build",
-        tags: ["Next.js", "React", "Design"],
-        links: { code: "https://github.com/DearBobby9/DearBobby9.github.io" },
-    },
-];
-
-const categories = ["All", "Research", "Build", "Writing"];
+import { projects, projectCategories } from "@/data/projects";
 
 export default function ProjectsPage() {
     const [activeCategory, setActiveCategory] = useState("All");
@@ -72,7 +31,7 @@ export default function ProjectsPage() {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                     {/* Category filters */}
                     <div className="flex gap-2">
-                        {categories.map((cat) => (
+                        {projectCategories.map((cat) => (
                             <Button
                                 key={cat}
                                 variant={activeCategory === cat ? "default" : "ghost"}

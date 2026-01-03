@@ -1,29 +1,5 @@
 import Link from "next/link";
-
-// Placeholder data - will be replaced with actual blog posts
-const latestPosts = [
-    {
-        slug: "future-of-hci",
-        title: "Thoughts on the Future of Human-Computer Interaction",
-        date: "2025-12-15",
-        readingTime: "6 min",
-        summary: "Exploring emerging trends in HCI and what they mean for designers and researchers.",
-    },
-    {
-        slug: "xr-fabrication-workflow",
-        title: "My XR Fabrication Workflow: From Concept to Physical Object",
-        date: "2025-11-28",
-        readingTime: "8 min",
-        summary: "A deep dive into my process for designing and fabricating objects using XR tools.",
-    },
-    {
-        slug: "academic-journey",
-        title: "Reflections on My Academic Journey",
-        date: "2025-10-10",
-        readingTime: "5 min",
-        summary: "Personal insights and lessons learned from research and academia.",
-    },
-];
+import { recentPosts } from "@/data/posts";
 
 function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -51,7 +27,7 @@ export function LatestWriting() {
 
                 {/* Posts list */}
                 <div className="max-w-3xl space-y-1">
-                    {latestPosts.map((post) => (
+                    {recentPosts.map((post) => (
                         <Link
                             key={post.slug}
                             href={`/blog/${post.slug}`}

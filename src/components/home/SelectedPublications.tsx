@@ -3,62 +3,7 @@
 import Link from "next/link";
 import { FileText, ExternalLink, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-// Placeholder data - will be replaced with actual publication data
-const publications = [
-    {
-        id: "pub-1",
-        title: "Spatial Fabrication: A Novel Approach to XR-Assisted Manufacturing",
-        authors: ["Difan Jia", "Author B", "Author C"],
-        venue: "CHI 2026",
-        year: "2026",
-        note: "Under review",
-        links: {
-            pdf: "#",
-            doi: "#",
-        },
-        bibtex: `@inproceedings{jia2026spatial,
-  title={Spatial Fabrication: A Novel Approach to XR-Assisted Manufacturing},
-  author={Jia, Difan and others},
-  booktitle={CHI},
-  year={2026}
-}`,
-    },
-    {
-        id: "pub-2",
-        title: "Interactive 3D Modeling in Mixed Reality Environments",
-        authors: ["Author A", "Difan Jia", "Author C"],
-        venue: "UIST 2025",
-        year: "2025",
-        links: {
-            pdf: "#",
-            doi: "#",
-        },
-        bibtex: `@inproceedings{author2025interactive,
-  title={Interactive 3D Modeling in Mixed Reality Environments},
-  author={Author, A and Jia, Difan and others},
-  booktitle={UIST},
-  year={2025}
-}`,
-    },
-    {
-        id: "pub-3",
-        title: "Understanding User Behavior in Collaborative AR Systems",
-        authors: ["Difan Jia", "Author B"],
-        venue: "CHI 2025",
-        year: "2025",
-        links: {
-            pdf: "#",
-            doi: "#",
-        },
-        bibtex: `@inproceedings{jia2025understanding,
-  title={Understanding User Behavior in Collaborative AR Systems},
-  author={Jia, Difan and others},
-  booktitle={CHI},
-  year={2025}
-}`,
-    },
-];
+import { selectedPublications } from "@/data/publications";
 
 export function SelectedPublications() {
     return (
@@ -77,7 +22,7 @@ export function SelectedPublications() {
 
                 {/* Publications list */}
                 <div className="max-w-4xl space-y-6">
-                    {publications.map((pub) => (
+                    {selectedPublications.map((pub) => (
                         <PublicationItem key={pub.id} publication={pub} />
                     ))}
                 </div>

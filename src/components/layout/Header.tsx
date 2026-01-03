@@ -13,28 +13,14 @@ import {
     SheetTrigger,
     SheetTitle,
 } from "@/components/ui/sheet";
-// Dropdown imports removed
-
-const navigation = [
-    { name: "Projects", href: "/projects" },
-    { name: "Publications", href: "/publications" },
-    { name: "Blog", href: "/blog" },
-    { name: "About", href: "/about" },
-];
-
-const navigationZh = [
-    { name: "项目", href: "/projects" },
-    { name: "论文", href: "/publications" },
-    { name: "博客", href: "/blog" },
-    { name: "关于", href: "/about" },
-];
+import { navigation } from "@/data/navigation";
+import { siteConfig } from "@/data/site";
 
 export function Header() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = React.useState(false);
-    const [locale, setLocale] = React.useState<"en" | "zh">("en");
 
-    const navItems = locale === "zh" ? navigationZh : navigation;
+    const navItems = navigation;
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
@@ -44,7 +30,7 @@ export function Header() {
                     href="/"
                     className="text-lg font-semibold tracking-tight transition-colors hover:text-muted-foreground"
                 >
-                    DIFAN  JIA
+                    {siteConfig.name.toUpperCase()}
                 </Link>
 
                 {/* Desktop Navigation */}

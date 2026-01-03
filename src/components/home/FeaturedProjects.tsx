@@ -3,47 +3,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Github, FileText, Play } from "lucide-react";
-
-// Placeholder data - will be replaced with actual content from MDX
-const featuredProjects = [
-    {
-        slug: "project-a",
-        title: "XR Fabrication Toolkit",
-        oneLiner: "Bridging virtual design with physical fabrication through spatial interfaces",
-        year: "2025",
-        tags: ["XR", "Fabrication", "HCI"],
-        image: "/images/projects/project-a.png",
-        links: {
-            paper: "#",
-            code: "https://github.com/DearBobby9",
-            demo: "#",
-        },
-    },
-    {
-        slug: "project-b",
-        title: "Spatial Computing Interface",
-        oneLiner: "Novel interaction paradigms for 3D content creation in mixed reality",
-        year: "2024",
-        tags: ["Spatial", "CAD", "XR"],
-        image: "/images/projects/project-b.png",
-        links: {
-            paper: "#",
-            video: "#",
-        },
-    },
-    {
-        slug: "project-c",
-        title: "Collaborative AR System",
-        oneLiner: "Real-time multi-user collaboration in augmented reality environments",
-        year: "2024",
-        tags: ["AR", "Collaboration", "HCI"],
-        image: "/images/projects/project-c.png",
-        links: {
-            paper: "#",
-            code: "#",
-        },
-    },
-];
+import { featuredProjects, type Project } from "@/data/projects";
 
 export function FeaturedProjects() {
     return (
@@ -69,21 +29,6 @@ export function FeaturedProjects() {
             </div>
         </section>
     );
-}
-
-interface Project {
-    slug: string;
-    title: string;
-    oneLiner: string;
-    year: string;
-    tags: string[];
-    image: string;
-    links: {
-        paper?: string;
-        code?: string;
-        demo?: string;
-        video?: string;
-    };
 }
 
 function ProjectCard({ project }: { project: Project }) {

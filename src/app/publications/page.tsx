@@ -5,64 +5,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FileText, ExternalLink, Copy, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getPublicationsByYear, type Publication } from "@/data/publications";
 
-// Placeholder data - will be replaced with JSON data
-const publicationsByYear: Record<string, Publication[]> = {
-    "2026": [
-        {
-            id: "pub-1",
-            title: "Spatial Fabrication: A Novel Approach to XR-Assisted Manufacturing",
-            authors: ["Difan Jia", "Author B", "Author C"],
-            venue: "CHI 2026",
-            note: "Under review",
-            links: { pdf: "#", doi: "#" },
-            bibtex: `@inproceedings{jia2026spatial,
-  title={Spatial Fabrication},
-  author={Jia, Difan},
-  booktitle={CHI},
-  year={2026}
-}`,
-        },
-    ],
-    "2025": [
-        {
-            id: "pub-2",
-            title: "Interactive 3D Modeling in Mixed Reality Environments",
-            authors: ["Author A", "Difan Jia", "Author C"],
-            venue: "UIST 2025",
-            links: { pdf: "#", doi: "#" },
-            bibtex: `@inproceedings{author2025interactive,
-  title={Interactive 3D Modeling},
-  author={Author, A and Jia, Difan},
-  booktitle={UIST},
-  year={2025}
-}`,
-        },
-        {
-            id: "pub-3",
-            title: "Understanding User Behavior in Collaborative AR Systems",
-            authors: ["Difan Jia", "Author B"],
-            venue: "CHI 2025",
-            links: { pdf: "#", doi: "#" },
-            bibtex: `@inproceedings{jia2025understanding,
-  title={Understanding User Behavior},
-  author={Jia, Difan},
-  booktitle={CHI},
-  year={2025}
-}`,
-        },
-    ],
-};
-
-interface Publication {
-    id: string;
-    title: string;
-    authors: string[];
-    venue: string;
-    note?: string;
-    links: { pdf?: string; doi?: string };
-    bibtex: string;
-}
+const publicationsByYear = getPublicationsByYear();
 
 export default function PublicationsPage() {
     const [expandedYears, setExpandedYears] = useState<Set<string>>(
