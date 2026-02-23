@@ -7,6 +7,25 @@ interface InteractiveBackgroundProps {
     className?: string;
 }
 
+// Indigo family — subtle single-hue variation
+const COLORS_LIGHT: [number, number, number][] = [
+    [79, 70, 229],    // indigo-600
+    [89, 80, 235],
+    [99, 102, 241],   // indigo-500
+    [109, 112, 245],
+    [119, 122, 248],
+    [129, 140, 251],  // indigo-400
+];
+
+const COLORS_DARK: [number, number, number][] = [
+    [119, 130, 238],
+    [129, 140, 248],  // indigo-400
+    [139, 150, 255],
+    [149, 160, 255],
+    [159, 168, 255],
+    [165, 180, 252],  // indigo-300
+];
+
 export function InteractiveBackground({ className }: InteractiveBackgroundProps) {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -49,14 +68,19 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
 
         // Grid configuration
         const DOT_SPACING = 30;
-        const MOUSE_RADIUS = 250; // Influence radius
+        const MOUSE_RADIUS = 250;
         const DOT_SIZE = 1.2;
-        const DOT_COLOR = "rgba(128, 128, 128, 0.25)"; // Subtle gray
-        const ACTIVE_DOT_COLOR = "rgba(0, 0, 0, 0.8)"; // Variable based on theme ideally, but hardcoding for now or reading CSS var
 
-        // Theme detection for proper coloring
-        const isDark = document.documentElement.classList.contains("dark");
-        // const baseColor/highlightColor removed - calculated dynamically in render
+        // [Enhancement 3] Dynamic dark mode detection
+        let isDark = document.documentElement.classList.contains("dark");
+
+        const observer = new MutationObserver(() => {
+            isDark = document.documentElement.classList.contains("dark");
+        });
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
 
         interface Dot {
             x: number;
@@ -65,6 +89,8 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             originY: number;
             vx: number;
             vy: number;
+            phase: number;      // random phase for idle micro-animation
+            colorIndex: number;  // index into color palette
         }
 
         let dots: Dot[] = [];
@@ -85,16 +111,23 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                         originY: y,
                         vx: 0,
                         vy: 0,
+                        phase: Math.random() * Math.PI * 2,
+                        colorIndex: Math.floor(Math.random() * COLORS_LIGHT.length),
                     });
                 }
             }
         };
 
+        // [Enhancement 1] DPR-aware resize
         const resize = () => {
+            const dpr = window.devicePixelRatio || 1;
             width = window.innerWidth;
             height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             initDots();
         };
 
@@ -102,13 +135,12 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         resize();
         window.addEventListener("resize", resize);
 
-        // Mouse Tracking
+        // Mouse tracking
         const handleMouseMove = (e: MouseEvent) => {
             mouse.targetX = e.clientX;
             mouse.targetY = e.clientY;
         };
 
-        // Reset mouse when leaving window
         const handleMouseLeave = () => {
             mouse.targetX = -1000;
             mouse.targetY = -1000;
@@ -117,11 +149,10 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         window.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseleave", handleMouseLeave);
 
-        // Animation Loop
+        // Animation loop
         const render = () => {
             if (!ctx) return;
 
-            // Clear canvas
             ctx.clearRect(0, 0, width, height);
 
             // Smooth mouse movement
@@ -129,63 +160,72 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             mouse.y += (mouse.targetY - mouse.y) * 0.1;
 
             const time = performance.now();
+            const palette = isDark ? COLORS_DARK : COLORS_LIGHT;
 
-            // Update and draw dots
             dots.forEach((dot) => {
-                // Calculate distance to smooth mouse position
-                const dx = mouse.x - dot.originX; // Vector from dot origin to mouse
+                const dx = mouse.x - dot.originX;
                 const dy = mouse.y - dot.originY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
-                let size = DOT_SIZE;
-                // let color = baseColor; // REMOVED: Calculated dynamically below.
+                const [r, g, b] = palette[dot.colorIndex];
                 let color: string;
                 let scale = 1;
 
-
-                // Interaction logic
                 if (dist < MOUSE_RADIUS) {
-                    const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS; // 0 to 1
+                    const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
                     const angle = Math.atan2(dy, dx);
 
-                    // Oscillation for "breathing" effect
+                    // Breathing oscillation
                     const oscillation = Math.sin(time * 0.002 + dist * 0.05);
 
-                    // Displacement
+                    // Displacement (repulsion from mouse)
                     const moveDist = force * 20 + (force * oscillation * 15);
-
-                    // Displace dot
                     const tx = dot.originX - Math.cos(angle) * moveDist;
                     const ty = dot.originY - Math.sin(angle) * moveDist;
 
-                    // Smoothly move dot current pos to target pos
                     dot.x += (tx - dot.x) * 0.15;
                     dot.y += (ty - dot.y) * 0.15;
 
-                    // Scale & Opacity Logic (Dynamic Invisibility)
+                    // Scale & color
                     scale = 1 + force * 1.5 + (force * oscillation * 0.5);
+                    const alpha = 0.08 + force * 0.45;
+                    color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
 
-                    // HIGHLIGHT: High opacity (up to 0.4) near cursor
-                    // Interpolate between baseColor and highlightColor? No, just set alpha
-                    // Let's use rgba interpolation or just replace color
-                    const alpha = 0.05 + force * 0.35; // 0.05 base -> 0.4 max
-                    color = isDark ? `rgba(255, 255, 255, ${alpha})` : `rgba(0, 0, 0, ${alpha})`;
+                    // [Enhancement 4] Shape variation — ellipse near mouse
+                    const stretch = 1 + force * 1.8;
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.ellipse(
+                        dot.x,
+                        dot.y,
+                        DOT_SIZE * scale * stretch,
+                        DOT_SIZE * scale,
+                        angle + Math.PI / 2,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
                 } else {
-                    // Return to origin
-                    dot.x += (dot.originX - dot.x) * 0.1;
-                    dot.y += (dot.originY - dot.y) * 0.1;
+                    // [Enhancement 2] Idle micro-animation
+                    const driftX = Math.sin(time * 0.0008 + dot.phase) * 1.5;
+                    const driftY = Math.cos(time * 0.0006 + dot.phase * 1.3) * 1.5;
 
-                    // BASE: Very low opacity (0.05) when idle
-                    color = isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)";
+                    const targetX = dot.originX + driftX;
+                    const targetY = dot.originY + driftY;
+
+                    dot.x += (targetX - dot.x) * 0.08;
+                    dot.y += (targetY - dot.y) * 0.08;
+
+                    // Pulsing idle opacity
+                    const alpha = 0.04 + Math.sin(time * 0.001 + dot.phase) * 0.03;
+                    color = `rgba(${r}, ${g}, ${b}, ${Math.max(0.01, alpha)})`;
+
+                    // Draw circle for idle dots
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(dot.x, dot.y, DOT_SIZE * scale, 0, Math.PI * 2);
+                    ctx.fill();
                 }
-
-                // Draw dot
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.arc(dot.x, dot.y, size * scale, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Optional: Draw connecting lines if very close (web effect) - skipping for performance/cleanliness
             });
 
             animationFrameId = requestAnimationFrame(render);
@@ -198,6 +238,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             window.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseleave", handleMouseLeave);
             cancelAnimationFrame(animationFrameId);
+            observer.disconnect();
         };
     }, [prefersReducedMotion]);
 
@@ -213,7 +254,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         >
             <canvas
                 ref={canvasRef}
-                className="absolute inset-0 block w-full h-full"
+                className="absolute inset-0 block"
             />
         </div>
     );
