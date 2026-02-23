@@ -147,9 +147,7 @@ function ProjectGridItem({ project }: { project: Project }) {
             <Card className="group h-full border-border/50 hover:bg-accent hover:border-border transition-all duration-300">
                 {/* Image placeholder */}
                 <div className="aspect-video bg-muted relative overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                        <span className="font-mono text-xs">[ Image ]</span>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
                 </div>
 
                 <CardContent className="p-5">

@@ -102,8 +102,8 @@
   }
 
   h1 {
-    /* Huge, lighter weight for classic feel */
-    @apply text-6xl md:text-7xl lg:text-9xl font-light tracking-tight;
+    /* Large heading with tight tracking */
+    @apply text-5xl md:text-6xl lg:text-7xl font-light tracking-tight;
     letter-spacing: -0.04em;
   }
 

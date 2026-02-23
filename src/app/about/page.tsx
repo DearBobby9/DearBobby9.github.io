@@ -2,7 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { FileText, Mail, Github, Twitter, GraduationCap } from "lucide-react";
+import { FileText, Mail, Github, GraduationCap } from "lucide-react";
+
+const XIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+    </svg>
+);
+
+export const metadata = {
+    title: "About",
+};
 
 const timeline = [
     {
@@ -66,22 +76,25 @@ export default function AboutPage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-muted-foreground hover:text-foreground transition-colors"
+                                aria-label="GitHub"
                             >
                                 <Github className="h-5 w-5" />
                             </Link>
                             <Link
-                                href="https://x.com/KeithMaxwell99"
+                                href="https://x.com/DearBobby9"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-muted-foreground hover:text-foreground transition-colors"
+                                aria-label="X (Twitter)"
                             >
-                                <Twitter className="h-5 w-5" />
+                                <XIcon className="h-5 w-5" />
                             </Link>
                             <Link
                                 href="https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-muted-foreground hover:text-foreground transition-colors"
+                                aria-label="Google Scholar"
                             >
                                 <GraduationCap className="h-5 w-5" />
                             </Link>

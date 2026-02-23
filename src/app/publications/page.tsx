@@ -58,7 +58,7 @@ export default function PublicationsPage() {
                             {/* Year header */}
                             <button
                                 onClick={() => toggleYear(year)}
-                                className="flex items-center gap-4 w-full text-left mb-4 group"
+                                className="flex items-center gap-4 w-full text-left mb-4 group cursor-pointer"
                             >
                                 <h2 className="text-2xl font-semibold">{year}</h2>
                                 <div className="flex-1 h-px bg-border" />

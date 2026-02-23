@@ -37,10 +37,7 @@ function ProjectCard({ project }: { project: Project }) {
             <Card className="group h-full overflow-hidden border-border/50 bg-card hover:bg-accent hover:border-border transition-all duration-300">
                 {/* Image placeholder */}
                 <div className="aspect-video bg-muted relative overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                        {/* Placeholder - will show actual image when available */}
-                        <span className="font-mono text-xs">[ Image ]</span>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
                     {/* Hover overlay */}
                     <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
                 </div>

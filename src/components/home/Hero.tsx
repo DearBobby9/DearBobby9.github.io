@@ -21,7 +21,7 @@ export function Hero() {
                         </div>
 
                         {/* Huge Headline - FIXED: Removed mix-blend-difference */}
-                        <h1 className="leading-[0.9] text-[3.5rem] md:text-8xl lg:text-9xl tracking-tighter">
+                        <h1 className="!text-[3.5rem] md:!text-8xl lg:!text-9xl leading-[0.9] tracking-tighter">
                             Researcher <span className="font-serif italic font-light">&</span> Designer
                         </h1>
 
@@ -36,7 +36,7 @@ export function Hero() {
 
                         {/* Editorial Links (Not Buttons) */}
                         <div className="flex flex-wrap gap-8 pt-8 font-mono text-sm">
-                            <Link href="/about" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                            <Link href="/cv.pdf" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Download CV</span>
                                 <FileText className="h-3 w-3" />
                             </Link>
@@ -44,14 +44,14 @@ export function Hero() {
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Email</span>
                                 <Mail className="h-3 w-3" />
                             </Link>
-                            <Link href="https://x.com/DearBobby9" target="_blank" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                            <Link href="https://x.com/DearBobby9" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">X</span>
                                 {/* Custom X Logo (Twitter) */}
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3">
                                     <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
                                 </svg>
                             </Link>
-                            <Link href="https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en" target="_blank" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                            <Link href="https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Scholar</span>
                                 <GraduationCap className="h-3 w-3" />
                             </Link>

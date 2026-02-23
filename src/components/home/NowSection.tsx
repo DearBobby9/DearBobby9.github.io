@@ -24,7 +24,7 @@ const updates = [
 
 export function NowSection() {
     return (
-        <section className="section py-16 md:py-20">
+        <section className="py-16 md:py-20">
             <div className="container-custom">
                 <div className="max-w-3xl mx-auto">
                     {/* Section header */}

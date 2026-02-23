@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { FileText, ExternalLink, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -46,8 +47,12 @@ interface Publication {
 }
 
 function PublicationItem({ publication }: { publication: Publication }) {
+    const [copied, setCopied] = useState(false);
+
     const handleCopyBibtex = () => {
         navigator.clipboard.writeText(publication.bibtex);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
     };
 
     return (
@@ -125,7 +130,7 @@ function PublicationItem({ publication }: { publication: Publication }) {
                         className="h-8 px-2 text-xs"
                     >
                         <Copy className="h-3.5 w-3.5 mr-1" />
-                        BibTeX
+                        {copied ? "Copied!" : "BibTeX"}
                     </Button>
                 </div>
             </div>
