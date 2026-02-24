@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,17 +6,11 @@ import { featuredProjects, type Project } from "@/data/projects";
 
 export function FeaturedProjects() {
     return (
-        <section className="section">
-            <div className="container-custom">
+        <section id="projects" className="section scroll-mt-20">
+            <div className="container-custom glass-panel">
                 {/* Section header */}
-                <div className="flex items-center justify-between mb-12">
-                    <h2>Featured Projects</h2>
-                    <Link
-                        href="/projects"
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        View all projects →
-                    </Link>
+                <div className="mb-12">
+                    <h2>Projects</h2>
                 </div>
 
                 {/* Projects grid */}
@@ -33,7 +26,7 @@ export function FeaturedProjects() {
 
 function ProjectCard({ project }: { project: Project }) {
     return (
-        <Link href={`/projects/${project.slug}`}>
+        <a href={project.links.paper || "#"} target={project.links.paper ? "_blank" : undefined} rel={project.links.paper ? "noopener noreferrer" : undefined}>
             <Card className="group h-full overflow-hidden border-border/50 bg-card hover:bg-accent hover:border-border transition-all duration-300">
                 {/* Project image */}
                 <div className="aspect-video bg-muted relative overflow-hidden">
@@ -104,6 +97,6 @@ function ProjectCard({ project }: { project: Project }) {
                     </div>
                 </CardContent>
             </Card>
-        </Link>
+        </a>
     );
 }

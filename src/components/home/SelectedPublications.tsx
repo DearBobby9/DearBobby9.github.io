@@ -9,17 +9,11 @@ import { selectedPublications, type Publication } from "@/data/publications";
 
 export function SelectedPublications() {
     return (
-        <section className="section bg-muted/30">
-            <div className="container-custom">
+        <section id="publications" className="section scroll-mt-20">
+            <div className="container-custom glass-panel">
                 {/* Section header */}
-                <div className="flex items-center justify-between mb-12">
-                    <h2>Selected Publications</h2>
-                    <Link
-                        href="/publications"
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        View all publications →
-                    </Link>
+                <div className="mb-12">
+                    <h2>Publications</h2>
                 </div>
 
                 {/* Publications list */}

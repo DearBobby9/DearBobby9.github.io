@@ -13,7 +13,7 @@ export function Hero() {
                 <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start lg:justify-between gap-12 lg:gap-24">
 
                     {/* Left: Narrative Content */}
-                    <div className="flex-1 text-left space-y-8 max-w-3xl px-4 md:px-0">
+                    <div className="flex-1 text-left space-y-8 max-w-3xl glass-panel">
 
                         {/* Minimal Name Tag */}
                         <div className="font-mono text-xs md:text-sm tracking-widest uppercase text-muted-foreground mb-4">

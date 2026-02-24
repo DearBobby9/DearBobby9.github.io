@@ -157,6 +157,11 @@
     @apply py-16 md:py-24 lg:py-32;
   }
 
+  /* Glass panel - frosted backdrop for text readability over particle bg */
+  .glass-panel {
+    @apply bg-background/5 backdrop-blur-[2px] rounded-2xl px-6 py-6 md:px-8 md:py-8;
+  }
+
   /* Card hover - Invert effect (premium monochrome interaction) */
   .card-hover {
     @apply transition-all duration-300;

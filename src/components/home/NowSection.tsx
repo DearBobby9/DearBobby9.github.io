@@ -26,7 +26,7 @@ export function NowSection() {
     return (
         <section className="py-16 md:py-20">
             <div className="container-custom">
-                <div className="max-w-3xl mx-auto">
+                <div className="max-w-3xl mx-auto glass-panel">
                     {/* Section header */}
                     <div className="flex items-center gap-4 mb-8">
                         <h2 className="text-lg font-semibold">Now</h2>

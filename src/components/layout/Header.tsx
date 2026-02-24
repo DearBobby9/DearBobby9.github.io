@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -16,11 +16,53 @@ import {
 import { navigation } from "@/data/navigation";
 import { siteConfig } from "@/data/site";
 
+function useScrollToHash() {
+    const pathname = usePathname();
+    const router = useRouter();
+
+    return React.useCallback(
+        (href: string, e?: React.MouseEvent) => {
+            // Only handle anchor links like /#publications
+            if (!href.startsWith("/#")) return false;
+
+            const hash = href.slice(1); // e.g. "#publications"
+            const id = hash.slice(1); // e.g. "publications"
+
+            if (pathname === "/") {
+                // Already on homepage — just scroll
+                e?.preventDefault();
+                const el = document.getElementById(id);
+                if (el) {
+                    el.scrollIntoView({ behavior: "smooth" });
+                    window.history.pushState(null, "", hash);
+                }
+                return true;
+            } else {
+                // On another page — navigate to homepage with hash
+                e?.preventDefault();
+                router.push(href);
+                return true;
+            }
+        },
+        [pathname, router]
+    );
+}
+
 export function Header() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = React.useState(false);
+    const scrollToHash = useScrollToHash();
 
     const navItems = navigation;
+
+    // Determine if a nav item is active
+    const isActive = (href: string) => {
+        if (href.startsWith("/#")) {
+            // Anchor links are "active" when on homepage
+            return pathname === "/";
+        }
+        return pathname === href;
+    };
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/30 backdrop-blur-xl">
@@ -39,9 +81,10 @@ export function Header() {
                         <Link
                             key={item.href}
                             href={item.href}
+                            onClick={(e) => scrollToHash(item.href, e)}
                             className={cn(
                                 "text-sm font-medium transition-colors hover:text-foreground",
-                                pathname === item.href
+                                isActive(item.href)
                                     ? "text-foreground"
                                     : "text-muted-foreground"
                             )}
@@ -51,31 +94,8 @@ export function Header() {
                     ))}
                 </nav>
 
-                {/* Right side: Language Switcher */}
+                {/* Right side */}
                 <div className="flex items-center gap-4">
-                    {/* Language Switcher - Hidden for now */}
-                    {/* <div className="flex items-center gap-2 font-mono text-xs">
-                        <button
-                            onClick={() => setLocale("en")}
-                            className={cn(
-                                "transition-colors hover:text-foreground",
-                                locale === "en" ? "text-foreground font-semibold" : "text-muted-foreground/50"
-                            )}
-                        >
-                            EN
-                        </button>
-                        <span className="text-muted-foreground/20">/</span>
-                        <button
-                            onClick={() => setLocale("zh")}
-                            className={cn(
-                                "transition-colors hover:text-foreground",
-                                locale === "zh" ? "text-foreground font-semibold" : "text-muted-foreground/50"
-                            )}
-                        >
-                            中文
-                        </button>
-                    </div> */}
-
                     {/* Mobile Menu */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild className="md:hidden">
@@ -97,10 +117,13 @@ export function Header() {
                                         <Link
                                             key={item.href}
                                             href={item.href}
-                                            onClick={() => setIsOpen(false)}
+                                            onClick={(e) => {
+                                                scrollToHash(item.href, e);
+                                                setIsOpen(false);
+                                            }}
                                             className={cn(
                                                 "text-4xl md:text-5xl font-serif font-light italic tracking-tight transition-all duration-300 hover:text-foreground hover:scale-105",
-                                                pathname === item.href
+                                                isActive(item.href)
                                                     ? "text-foreground"
                                                     : "text-muted-foreground"
                                             )}
@@ -112,7 +135,6 @@ export function Header() {
 
                                 <div className="mt-12 text-center">
                                     <div className="w-12 h-[1px] bg-border mx-auto mb-8" />
-                                    {/* Re-add Socials in Menu optionally? No, keep clean. */}
                                 </div>
                             </div>
                         </SheetContent>

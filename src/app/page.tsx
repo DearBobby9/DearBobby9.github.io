@@ -3,7 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { NowSection } from "@/components/home/NowSection";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { SelectedPublications } from "@/components/home/SelectedPublications";
-import { LatestWriting } from "@/components/home/LatestWriting";
+// import { LatestWriting } from "@/components/home/LatestWriting";
 
 export default function Home() {
   return (
@@ -20,8 +20,8 @@ export default function Home() {
       {/* Featured Projects */}
       <FeaturedProjects />
 
-      {/* Latest Writing */}
-      <LatestWriting />
+      {/* Latest Writing — hidden until real posts are added */}
+      {/* <LatestWriting /> */}
     </>
   );
 }
