@@ -37,7 +37,7 @@ function PublicationItem({ publication }: { publication: Publication }) {
     };
 
     return (
-        <div className="group p-4 -mx-4 rounded-sm hover:bg-background transition-colors">
+        <div className="group p-4 -mx-4 rounded-sm border-l-2 border-transparent hover:border-foreground/30 hover:translate-x-0.5 transition-all duration-200">
             <div className="flex flex-col md:flex-row gap-5">
                 {/* Teaser image */}
                 {publication.image && (
