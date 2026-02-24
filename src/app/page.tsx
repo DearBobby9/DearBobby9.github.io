@@ -14,11 +14,11 @@ export default function Home() {
       {/* Now / Latest Updates */}
       <NowSection />
 
-      {/* Featured Projects */}
-      <FeaturedProjects />
-
       {/* Selected Publications */}
       <SelectedPublications />
+
+      {/* Featured Projects */}
+      <FeaturedProjects />
 
       {/* Latest Writing */}
       <LatestWriting />

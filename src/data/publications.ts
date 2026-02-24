@@ -8,6 +8,7 @@ export interface Publication {
     venue: string;
     year: string;
     note?: string;
+    image?: string;
     links: {
         pdf?: string;
         doi?: string;
@@ -23,6 +24,7 @@ export const publications: Publication[] = [
         venue: "CHI 2026",
         year: "2026",
         note: "Accepted",
+        image: "/images/projects/ar-embedded-vis.png",
         links: {
             pdf: "https://arxiv.org/pdf/2507.14316",
         },
@@ -39,6 +41,7 @@ export const publications: Publication[] = [
         authors: ["Xiaoan Liu", "Difan Jia", "Xianhao Carton Liu", "Mar Gonzalez-Franco", "Chen Zhu-Tian"],
         venue: "UIST 2025",
         year: "2025",
+        image: "/images/projects/reality-proxy.jpg",
         links: {
             pdf: "https://arxiv.org/pdf/2507.17248",
             doi: "https://doi.org/10.1145/3746059.3747709",
