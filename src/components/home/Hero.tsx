@@ -22,7 +22,7 @@ export function Hero() {
 
                         {/* Huge Headline - FIXED: Removed mix-blend-difference */}
                         <h1 className="!text-[3.5rem] md:!text-8xl lg:!text-9xl leading-[0.9] tracking-tighter">
-                            Researcher <span className="font-serif italic font-light">&</span> Designer
+                            Researcher <span className="font-serif italic font-light">&</span> Builder
                         </h1>
 
                         {/* Divide & Connect Line */}
@@ -30,8 +30,7 @@ export function Hero() {
 
                         {/* Narrative Paragraph */}
                         <p className="text-xl md:text-2xl leading-relaxed font-light text-muted-foreground/90 max-w-2xl mt-8">
-                            I explore the intersection of <span className="text-foreground font-medium">Mixed Reality</span>, <span className="text-foreground font-medium">Digital Fabrication</span>, and <span className="text-foreground font-medium">Spatial Computing</span>.
-                            Currently building tools that bridge the gap between virtual design and physical making.
+                            I design interactive systems at the intersection of <span className="text-foreground font-medium">AR</span>, <span className="text-foreground font-medium">spatial computing</span>, and <span className="text-foreground font-medium">AI</span> — exploring how intelligent, embodied interfaces can reshape the way we create, visualize, and engage with digital content in the real world.
                         </p>
 
                         {/* Editorial Links (Not Buttons) */}
@@ -40,11 +39,11 @@ export function Hero() {
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Download CV</span>
                                 <FileText className="h-3 w-3" />
                             </Link>
-                            <Link href="mailto:keithtmaxwell99@gmail.com" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                            <Link href="mailto:difan.jia@utdallas.edu" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Email</span>
                                 <Mail className="h-3 w-3" />
                             </Link>
-                            <Link href="https://x.com/DearBobby9" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                            <Link href="https://x.com/KeithMaxwell99" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
                                 <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">X</span>
                                 {/* Custom X Logo (Twitter) */}
                                 <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3">
