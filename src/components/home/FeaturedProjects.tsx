@@ -35,10 +35,18 @@ function ProjectCard({ project }: { project: Project }) {
     return (
         <Link href={`/projects/${project.slug}`}>
             <Card className="group h-full overflow-hidden border-border/50 bg-card hover:bg-accent hover:border-border transition-all duration-300">
-                {/* Image placeholder */}
+                {/* Project image */}
                 <div className="aspect-video bg-muted relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
-                    {/* Hover overlay */}
+                    {project.image ? (
+                        <Image
+                            src={project.image}
+                            alt={project.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
+                    )}
                     <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
                 </div>
 

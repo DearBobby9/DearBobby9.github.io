@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FileText, Github, ExternalLink, Play, LayoutGrid, List } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { projects, projectCategories } from "@/data/projects";
+import { projects, projectCategories, type Project } from "@/data/projects";
 
 export default function ProjectsPage() {
     const [activeCategory, setActiveCategory] = useState("All");
@@ -85,21 +86,6 @@ export default function ProjectsPage() {
     );
 }
 
-interface Project {
-    slug: string;
-    title: string;
-    oneLiner: string;
-    year: string;
-    category: string;
-    tags: string[];
-    links: {
-        paper?: string;
-        code?: string;
-        demo?: string;
-        video?: string;
-    };
-}
-
 function ProjectListItem({ project }: { project: Project }) {
     return (
         <Link
@@ -145,9 +131,18 @@ function ProjectGridItem({ project }: { project: Project }) {
     return (
         <Link href={`/projects/${project.slug}`}>
             <Card className="group h-full border-border/50 hover:bg-accent hover:border-border transition-all duration-300">
-                {/* Image placeholder */}
+                {/* Project image */}
                 <div className="aspect-video bg-muted relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
+                    {project.image ? (
+                        <Image
+                            src={project.image}
+                            alt={project.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
+                    )}
                 </div>
 
                 <CardContent className="p-5">
