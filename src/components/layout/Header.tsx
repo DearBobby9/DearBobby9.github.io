@@ -23,7 +23,7 @@ export function Header() {
     const navItems = navigation;
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
+        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/30 backdrop-blur-xl">
             <div className="container-custom flex h-16 items-center justify-between">
                 {/* Logo / Name */}
                 <Link

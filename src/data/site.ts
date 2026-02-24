@@ -12,12 +12,12 @@ export const siteConfig = {
     bio: `I explore the intersection of Mixed Reality, Digital Fabrication, and Spatial Computing. Currently building tools that bridge the gap between virtual design and physical making.`,
 
     // Email
-    email: "keithtmaxwell99@gmail.com",
+    email: "difan.jia@utdallas.edu",
 
     // Social links - update these to change all social icons across the site
     socials: {
         github: "https://github.com/DearBobby9",
-        x: "https://x.com/DearBobby9",
+        x: "https://x.com/KeithMaxwell99",
         scholar: "https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en",
         linkedin: "", // Add if needed
     },

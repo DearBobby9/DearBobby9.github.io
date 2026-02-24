@@ -71,6 +71,13 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         const MOUSE_RADIUS = 250;
         const DOT_SIZE = 1.2;
 
+        // Ripple configuration — particle-driven, no stroke rings
+        const RIPPLE_MAX_RADIUS = 700;
+        const RIPPLE_SPEED = 2.5;
+        const RIPPLE_BAND_WIDTH = 80;       // wider wave band
+        const RIPPLE_DOT_FORCE = 35;        // strong outward push
+        const RIPPLE_INITIAL_STRENGTH = 1.0; // full initial energy
+
         // [Enhancement 3] Dynamic dark mode detection
         let isDark = document.documentElement.classList.contains("dark");
 
@@ -89,11 +96,21 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             originY: number;
             vx: number;
             vy: number;
-            phase: number;      // random phase for idle micro-animation
-            colorIndex: number;  // index into color palette
+            phase: number;
+            colorIndex: number;
+        }
+
+        interface Ripple {
+            x: number;
+            y: number;
+            radius: number;
+            maxRadius: number;
+            speed: number;
+            strength: number;   // force decay factor
         }
 
         let dots: Dot[] = [];
+        let ripples: Ripple[] = [];
 
         const initDots = () => {
             dots = [];
@@ -146,8 +163,21 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             mouse.targetY = -1000;
         };
 
+        // Click ripple
+        const handleClick = (e: MouseEvent) => {
+            ripples.push({
+                x: e.clientX,
+                y: e.clientY,
+                radius: 0,
+                maxRadius: RIPPLE_MAX_RADIUS,
+                speed: RIPPLE_SPEED,
+                strength: RIPPLE_INITIAL_STRENGTH,
+            });
+        };
+
         window.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseleave", handleMouseLeave);
+        window.addEventListener("click", handleClick);
 
         // Animation loop
         const render = () => {
@@ -162,10 +192,49 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             const time = performance.now();
             const palette = isDark ? COLORS_DARK : COLORS_LIGHT;
 
+            // Update ripples — smooth cubic decay
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                const ripple = ripples[i];
+                ripple.radius += ripple.speed;
+                const progress = ripple.radius / ripple.maxRadius;
+                const decay = (1 - progress);
+                ripple.strength = RIPPLE_INITIAL_STRENGTH * decay * decay * decay;
+
+                if (ripple.radius > ripple.maxRadius) {
+                    ripples.splice(i, 1);
+                }
+            }
+
             dots.forEach((dot) => {
                 const dx = mouse.x - dot.originX;
                 const dy = mouse.y - dot.originY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
+
+                // Accumulate ripple forces
+                let rippleForceX = 0;
+                let rippleForceY = 0;
+                let rippleIntensity = 0; // for visual brightness boost
+
+                for (const ripple of ripples) {
+                    const rdx = dot.originX - ripple.x;
+                    const rdy = dot.originY - ripple.y;
+                    const dotDist = Math.sqrt(rdx * rdx + rdy * rdy);
+                    const ringDist = Math.abs(dotDist - ripple.radius);
+
+                    if (ringDist < RIPPLE_BAND_WIDTH && dotDist > 0) {
+                        // Smooth bell-curve force within the band
+                        const t = ringDist / RIPPLE_BAND_WIDTH;
+                        const bandForce = Math.cos(t * Math.PI * 0.5); // cos falloff: 1 at center, 0 at edge
+                        const force = bandForce * ripple.strength * RIPPLE_DOT_FORCE;
+
+                        const angle = Math.atan2(rdy, rdx);
+                        rippleForceX += Math.cos(angle) * force;
+                        rippleForceY += Math.sin(angle) * force;
+
+                        // Track max intensity for glow
+                        rippleIntensity = Math.max(rippleIntensity, bandForce * ripple.strength);
+                    }
+                }
 
                 const [r, g, b] = palette[dot.colorIndex];
                 let color: string;
@@ -178,18 +247,18 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     // Breathing oscillation
                     const oscillation = Math.sin(time * 0.002 + dist * 0.05);
 
-                    // Displacement (repulsion from mouse)
+                    // Displacement (repulsion from mouse + ripple)
                     const moveDist = force * 20 + (force * oscillation * 15);
-                    const tx = dot.originX - Math.cos(angle) * moveDist;
-                    const ty = dot.originY - Math.sin(angle) * moveDist;
+                    const tx = dot.originX - Math.cos(angle) * moveDist + rippleForceX;
+                    const ty = dot.originY - Math.sin(angle) * moveDist + rippleForceY;
 
                     dot.x += (tx - dot.x) * 0.15;
                     dot.y += (ty - dot.y) * 0.15;
 
-                    // Scale & color
-                    scale = 1 + force * 1.5 + (force * oscillation * 0.5);
-                    const alpha = 0.08 + force * 0.45;
-                    color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                    // Scale & color — combine mouse proximity + ripple intensity
+                    scale = 1 + force * 1.5 + (force * oscillation * 0.5) + rippleIntensity * 2.5;
+                    const alpha = 0.08 + force * 0.45 + rippleIntensity * 0.5;
+                    color = `rgba(${r}, ${g}, ${b}, ${Math.min(alpha, 0.9)})`;
 
                     // [Enhancement 4] Shape variation — ellipse near mouse
                     const stretch = 1 + force * 1.8;
@@ -210,23 +279,26 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     const driftX = Math.sin(time * 0.0008 + dot.phase) * 1.5;
                     const driftY = Math.cos(time * 0.0006 + dot.phase * 1.3) * 1.5;
 
-                    const targetX = dot.originX + driftX;
-                    const targetY = dot.originY + driftY;
+                    const targetX = dot.originX + driftX + rippleForceX;
+                    const targetY = dot.originY + driftY + rippleForceY;
 
-                    dot.x += (targetX - dot.x) * 0.08;
-                    dot.y += (targetY - dot.y) * 0.08;
+                    dot.x += (targetX - dot.x) * 0.12;
+                    dot.y += (targetY - dot.y) * 0.12;
 
-                    // Pulsing idle opacity
-                    const alpha = 0.04 + Math.sin(time * 0.001 + dot.phase) * 0.03;
-                    color = `rgba(${r}, ${g}, ${b}, ${Math.max(0.01, alpha)})`;
+                    // Scale & opacity — dramatic boost from ripple
+                    scale = 1 + rippleIntensity * 3;
+                    const baseAlpha = 0.04 + Math.sin(time * 0.001 + dot.phase) * 0.03;
+                    const alpha = baseAlpha + rippleIntensity * 0.55;
+                    color = `rgba(${r}, ${g}, ${b}, ${Math.min(Math.max(0.01, alpha), 0.85)})`;
 
-                    // Draw circle for idle dots
                     ctx.fillStyle = color;
                     ctx.beginPath();
                     ctx.arc(dot.x, dot.y, DOT_SIZE * scale, 0, Math.PI * 2);
                     ctx.fill();
                 }
             });
+
+            // No stroke rings — ripple is expressed entirely through particle movement and glow
 
             animationFrameId = requestAnimationFrame(render);
         };
@@ -237,6 +309,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             window.removeEventListener("resize", resize);
             window.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseleave", handleMouseLeave);
+            window.removeEventListener("click", handleClick);
             cancelAnimationFrame(animationFrameId);
             observer.disconnect();
         };
