@@ -11,7 +11,7 @@ export const navigation: NavItem[] = [
     { name: "Home", nameZh: "首页", href: "/" },
     { name: "Publications", nameZh: "论文", href: "/#publications" },
     { name: "Projects", nameZh: "项目", href: "/#projects" },
-    { name: "Blog", nameZh: "博客", href: "/blog" },
+    // { name: "Blog", nameZh: "博客", href: "/blog" },
     { name: "About", nameZh: "关于", href: "/about" },
 ];
 
