@@ -59,20 +59,77 @@
 
   /* Typography - Plan A: Editorial Lab */
   --font-heading: var(--font-heading);
-  /* Fraunces */
   --font-body: var(--font-body);
-  /* Space Grotesk */
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  /* Light Mode - Pure Black & White (default) */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0 0 0);
-  /* ... keeps colors ... */
-
-  /* ... */
+  /* Light Mode — Zinc academic palette */
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #ef4444;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #18181b;
+  --chart-1: #e76e50;
+  --chart-2: #2a9d90;
+  --chart-3: #274754;
+  --chart-4: #e9c46a;
+  --chart-5: #f4a261;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #09090b;
+  --sidebar-primary: #18181b;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f4f4f5;
+  --sidebar-accent-foreground: #18181b;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #18181b;
 }
 
-/* ... dark mode ... */
+.dark {
+  /* Dark Mode — Zinc academic palette */
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #09090b;
+  --card-foreground: #fafafa;
+  --popover: #09090b;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --destructive: #7f1d1d;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #d4d4d8;
+  --chart-1: #e76e50;
+  --chart-2: #2a9d90;
+  --chart-3: #67b7ce;
+  --chart-4: #e9c46a;
+  --chart-5: #f4a261;
+  --sidebar: #09090b;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #fafafa;
+  --sidebar-primary-foreground: #18181b;
+  --sidebar-accent: #27272a;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #d4d4d8;
+}
 
 @layer base {
   * {
@@ -159,7 +216,8 @@
 
   /* Glass panel - frosted backdrop for text readability over particle bg */
   .glass-panel {
-    @apply bg-background/5 backdrop-blur-[2px] rounded-2xl px-6 py-6 md:px-8 md:py-8;
+    @apply bg-background/5 backdrop-blur-[2px] rounded-2xl px-6 py-6 md:px-8 md:py-8
+           dark:bg-white/[0.03] dark:backdrop-blur-[3px] dark:border dark:border-white/[0.06];
   }
 
   /* Card hover - Invert effect (premium monochrome interaction) */

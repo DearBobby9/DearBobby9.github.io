@@ -3,7 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -51,7 +52,11 @@ function useScrollToHash() {
 export function Header() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = React.useState(false);
+    const [mounted, setMounted] = React.useState(false);
+    const { theme, setTheme } = useTheme();
     const scrollToHash = useScrollToHash();
+
+    React.useEffect(() => setMounted(true), []);
 
     const navItems = navigation;
 
@@ -95,7 +100,24 @@ export function Header() {
                 </nav>
 
                 {/* Right side */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                    {/* Theme toggle */}
+                    {mounted && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-9 w-9"
+                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                            aria-label="Toggle theme"
+                        >
+                            {theme === "dark" ? (
+                                <Sun className="h-4 w-4" />
+                            ) : (
+                                <Moon className="h-4 w-4" />
+                            )}
+                        </Button>
+                    )}
+
                     {/* Mobile Menu */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild className="md:hidden">
