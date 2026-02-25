@@ -5,6 +5,7 @@ import { InteractiveBackground } from "@/components/background/InteractiveBackgr
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PaletteProvider } from "@/components/PaletteProvider";
 
 const fraunces = Fraunces({
   variable: "--font-heading",
@@ -67,14 +68,16 @@ export default function RootLayout({
         className={`${fraunces.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ThemeProvider>
-          <InteractiveBackground />
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <PaletteProvider>
+            <InteractiveBackground />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </PaletteProvider>
         </ThemeProvider>
       </body>
     </html>

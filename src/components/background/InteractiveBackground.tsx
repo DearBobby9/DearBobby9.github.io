@@ -2,34 +2,24 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { usePalette } from "@/components/PaletteProvider";
+import { COLOR_PALETTES } from "@/data/colorPalettes";
 
 interface InteractiveBackgroundProps {
     className?: string;
 }
 
-// Indigo family — subtle single-hue variation
-const COLORS_LIGHT: [number, number, number][] = [
-    [79, 70, 229],    // indigo-600
-    [89, 80, 235],
-    [99, 102, 241],   // indigo-500
-    [109, 112, 245],
-    [119, 122, 248],
-    [129, 140, 251],  // indigo-400
-];
-
-const COLORS_DARK: [number, number, number][] = [
-    [119, 130, 238],
-    [129, 140, 248],  // indigo-400
-    [139, 150, 255],
-    [149, 160, 255],
-    [159, 168, 255],
-    [165, 180, 252],  // indigo-300
-];
-
 export function InteractiveBackground({ className }: InteractiveBackgroundProps) {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+    const { paletteId } = usePalette();
+
+    // Ref so the canvas render loop can read the current palette without restarting
+    const paletteRef = React.useRef(COLOR_PALETTES[paletteId]);
+    React.useEffect(() => {
+        paletteRef.current = COLOR_PALETTES[paletteId];
+    }, [paletteId]);
 
     // Check for reduced motion preference
     React.useEffect(() => {
@@ -68,14 +58,14 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
 
         // Grid configuration
         const DOT_SPACING = 30;
-        const MOUSE_RADIUS = 250;
+        const MOUSE_RADIUS = 375;
         const DOT_SIZE = 1.2;
 
         // Ripple configuration — particle-driven, no stroke rings
-        const RIPPLE_MAX_RADIUS = 700;
-        const RIPPLE_SPEED = 2.5;
-        const RIPPLE_BAND_WIDTH = 80;       // wider wave band
-        const RIPPLE_DOT_FORCE = 35;        // strong outward push
+        const RIPPLE_MAX_RADIUS = 1050;
+        const RIPPLE_SPEED = 3.75;
+        const RIPPLE_BAND_WIDTH = 120;      // wider wave band
+        const RIPPLE_DOT_FORCE = 52.5;      // strong outward push
         const RIPPLE_INITIAL_STRENGTH = 1.0; // full initial energy
 
         // [Enhancement 3] Dynamic dark mode detection
@@ -129,7 +119,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                         vx: 0,
                         vy: 0,
                         phase: Math.random() * Math.PI * 2,
-                        colorIndex: Math.floor(Math.random() * COLORS_LIGHT.length),
+                        colorIndex: Math.floor(Math.random() * paletteRef.current.light.length),
                     });
                 }
             }
@@ -190,7 +180,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             mouse.y += (mouse.targetY - mouse.y) * 0.1;
 
             const time = performance.now();
-            const palette = isDark ? COLORS_DARK : COLORS_LIGHT;
+            const palette = isDark ? paletteRef.current.dark : paletteRef.current.light;
 
             // Update ripples — smooth cubic decay
             for (let i = ripples.length - 1; i >= 0; i--) {
@@ -236,7 +226,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     }
                 }
 
-                const [r, g, b] = palette[dot.colorIndex];
+                const [r, g, b] = palette[dot.colorIndex % palette.length];
                 let color: string;
                 let scale = 1;
 

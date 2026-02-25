@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, Sun, Moon } from "lucide-react";
+import { Menu, Sun, Moon, Palette } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
@@ -14,8 +14,19 @@ import {
     SheetTrigger,
     SheetTitle,
 } from "@/components/ui/sheet";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { navigation } from "@/data/navigation";
 import { siteConfig } from "@/data/site";
+import { usePalette } from "@/components/PaletteProvider";
+import { COLOR_PALETTES, PALETTE_ORDER } from "@/data/colorPalettes";
 
 function useScrollToHash() {
     const pathname = usePathname();
@@ -62,6 +73,7 @@ export function Header() {
     const [isOpen, setIsOpen] = React.useState(false);
     const [mounted, setMounted] = React.useState(false);
     const { theme, setTheme } = useTheme();
+    const { paletteId, setPaletteId } = usePalette();
     const scrollToHash = useScrollToHash();
 
     React.useEffect(() => setMounted(true), []);
@@ -122,6 +134,50 @@ export function Header() {
                                 <Moon className="h-4 w-4" />
                             )}
                         </Button>
+                    )}
+
+                    {/* Palette selector (desktop only) */}
+                    {mounted && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="hidden md:inline-flex h-9 w-9"
+                                    aria-label="Change color palette"
+                                >
+                                    <Palette className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Color Palette</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuRadioGroup
+                                    value={paletteId}
+                                    onValueChange={(v) => setPaletteId(v as typeof paletteId)}
+                                >
+                                    {PALETTE_ORDER.map((id) => {
+                                        const p = COLOR_PALETTES[id];
+                                        return (
+                                            <DropdownMenuRadioItem key={id} value={id}>
+                                                <span className="flex items-center gap-2">
+                                                    <span className="flex gap-0.5">
+                                                        {p.light.slice(0, 3).map((c, i) => (
+                                                            <span
+                                                                key={i}
+                                                                className="inline-block w-2.5 h-2.5 rounded-full"
+                                                                style={{ backgroundColor: `rgb(${c[0]}, ${c[1]}, ${c[2]})` }}
+                                                            />
+                                                        ))}
+                                                    </span>
+                                                    {p.name}
+                                                </span>
+                                            </DropdownMenuRadioItem>
+                                        );
+                                    })}
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     )}
 
                     {/* Mobile Menu */}
