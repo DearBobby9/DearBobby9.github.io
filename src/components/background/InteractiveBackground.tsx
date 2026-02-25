@@ -61,11 +61,11 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         const DOT_SIZE = 1.2;
 
         // Ripple configuration — particle-driven, no stroke rings
-        const RIPPLE_MAX_RADIUS = 1050;
+        const RIPPLE_MAX_RADIUS = 1400;
         const RIPPLE_SPEED = 3.75;
-        const RIPPLE_BAND_WIDTH = 120;      // wider wave band
+        const RIPPLE_BAND_WIDTH = 180;      // wider wave band
         const RIPPLE_DOT_FORCE = 52.5;      // strong outward push
-        const RIPPLE_INITIAL_STRENGTH = 1.0; // full initial energy
+        const RIPPLE_INITIAL_STRENGTH = 2.0; // doubled initial energy
 
         // [Enhancement 3] Dynamic dark mode detection
         let isDark = document.documentElement.classList.contains("dark");
@@ -211,13 +211,13 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             const time = performance.now();
             const palette = isDark ? paletteRef.current.dark : paletteRef.current.light;
 
-            // Update ripples — smooth cubic decay
+            // Update ripples — slower decay for longer-lasting waves
             for (let i = ripples.length - 1; i >= 0; i--) {
                 const ripple = ripples[i];
                 ripple.radius += ripple.speed;
                 const progress = ripple.radius / ripple.maxRadius;
                 const decay = (1 - progress);
-                ripple.strength = RIPPLE_INITIAL_STRENGTH * decay * decay * decay;
+                ripple.strength = RIPPLE_INITIAL_STRENGTH * Math.pow(decay, 1.8);
 
                 if (ripple.radius > ripple.maxRadius) {
                     ripples.splice(i, 1);
@@ -267,7 +267,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     const oscillation = Math.sin(time * 0.002 + dist * 0.05);
 
                     // Displacement (repulsion from mouse + ripple)
-                    const moveDist = force * 20 + (force * oscillation * 15);
+                    const moveDist = force * 20 + (force * oscillation * 22.5);
                     const tx = dot.originX - Math.cos(angle) * moveDist + rippleForceX;
                     const ty = dot.originY - Math.sin(angle) * moveDist + rippleForceY;
 
@@ -275,7 +275,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     dot.y += (ty - dot.y) * 0.15;
 
                     // Scale & color — combine mouse proximity + ripple intensity
-                    scale = 1 + force * 1.5 + (force * oscillation * 0.5) + rippleIntensity * 2.5;
+                    scale = 1 + force * 1.5 + (force * oscillation * 0.75) + rippleIntensity * 2.5;
                     const alpha = 0.08 + force * 0.45 + rippleIntensity * 0.5;
                     color = `rgba(${r}, ${g}, ${b}, ${Math.min(alpha, 0.9)})`;
 
@@ -295,8 +295,8 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     ctx.fill();
                 } else {
                     // [Enhancement 2] Idle micro-animation
-                    const driftX = Math.sin(time * 0.0008 + dot.phase) * 1.5;
-                    const driftY = Math.cos(time * 0.0006 + dot.phase * 1.3) * 1.5;
+                    const driftX = Math.sin(time * 0.0008 + dot.phase) * 2.25;
+                    const driftY = Math.cos(time * 0.0006 + dot.phase * 1.3) * 2.25;
 
                     const targetX = dot.originX + driftX + rippleForceX;
                     const targetY = dot.originY + driftY + rippleForceY;
@@ -306,7 +306,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
 
                     // Scale & opacity — dramatic boost from ripple
                     scale = 1 + rippleIntensity * 3;
-                    const baseAlpha = 0.04 + Math.sin(time * 0.001 + dot.phase) * 0.03;
+                    const baseAlpha = 0.04 + Math.sin(time * 0.001 + dot.phase) * 0.045;
                     const alpha = baseAlpha + rippleIntensity * 0.55;
                     color = `rgba(${r}, ${g}, ${b}, ${Math.min(Math.max(0.01, alpha), 0.85)})`;
 
