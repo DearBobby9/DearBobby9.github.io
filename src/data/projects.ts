@@ -45,18 +45,6 @@ export const projects: Project[] = [
         },
     },
     {
-        slug: "reality-proxy",
-        title: "Reality Proxy",
-        oneLiner: "Decoupling MR interaction from physical constraints via AI-powered abstract proxy representations",
-        year: "2025",
-        category: "Research",
-        tags: ["Mixed Reality", "Interaction", "AI"],
-        image: "/images/projects/reality-proxy.jpg",
-        links: {
-            paper: "https://doi.org/10.1145/3746059.3747709",
-        },
-    },
-    {
         slug: "ar-embedded-visualization",
         title: "AR Embedded Visualization & AI Reliance",
         oneLiner: "Studying how AR embedded visualizations affect human reliance on AI in spatial decision-making",
@@ -66,6 +54,18 @@ export const projects: Project[] = [
         image: "/images/projects/ar-embedded-vis.png",
         links: {
             paper: "https://arxiv.org/abs/2507.14316",
+        },
+    },
+    {
+        slug: "reality-proxy",
+        title: "Reality Proxy",
+        oneLiner: "Decoupling MR interaction from physical constraints via AI-powered abstract proxy representations",
+        year: "2025",
+        category: "Research",
+        tags: ["Mixed Reality", "Interaction", "AI"],
+        image: "/images/projects/reality-proxy.jpg",
+        links: {
+            paper: "https://doi.org/10.1145/3746059.3747709",
         },
     },
 ];

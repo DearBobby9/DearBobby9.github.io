@@ -57,7 +57,7 @@ export default function AboutPage() {
                         {/* Photo */}
                         <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-2 border-border mx-auto lg:mx-0 mb-8">
                             <Image
-                                src="/images/profile.png"
+                                src="/images/profile.jpg"
                                 alt="Difan Jia"
                                 fill
                                 className="object-cover"

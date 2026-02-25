@@ -41,6 +41,7 @@ export const publications: Publication[] = [
         authors: ["Xiaoan Liu", "Difan Jia", "Xianhao Carton Liu", "Mar Gonzalez-Franco", "Chen Zhu-Tian"],
         venue: "UIST 2025",
         year: "2025",
+        note: "Accepted",
         image: "/images/projects/reality-proxy.jpg",
         links: {
             pdf: "https://arxiv.org/pdf/2507.17248",
