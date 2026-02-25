@@ -1,24 +1,23 @@
 import Link from "next/link";
 
-// Placeholder data - will be replaced with actual content
 const updates = [
     {
         year: "2026",
-        type: "Paper",
-        title: "New research on spatial computing interfaces",
-        href: "/publications",
-    },
-    {
-        year: "2025",
         type: "Project",
-        title: "XR fabrication toolkit released",
-        href: "/projects",
+        title: "NoteV advanced to the next round of UTD Big Idea Pitch — excited to present this smart-glasses idea, stay tuned!",
+        href: "/#projects",
+    },
+    {
+        year: "2026",
+        type: "Paper",
+        title: "CHI '26 — AR Embedded Visualizations & AI Reliance in Spatial Decision-Making",
+        href: "/#publications",
     },
     {
         year: "2025",
-        type: "Blog",
-        title: "Thoughts on the future of HCI",
-        href: "/blog",
+        type: "Paper",
+        title: "UIST '25 — Reality Proxy: Fluid MR Interaction via Abstract Representations",
+        href: "/#publications",
     },
 ];
 

@@ -15,9 +15,35 @@ export interface Project {
         demo?: string;
         video?: string;
     };
+    inspiration?: {
+        name: string;
+        url: string;
+    };
+    backedBy?: {
+        name: string;
+        url: string;
+    };
 }
 
 export const projects: Project[] = [
+    {
+        slug: "notev",
+        title: "NoteV",
+        oneLiner: "A multimodal knowledge AI agent for Meta Ray-Ban smart glasses that sees and hears your lectures",
+        year: "2026",
+        category: "Build",
+        tags: ["Smart Glasses", "AI", "EdTech", "Wearable"],
+        image: "/images/projects/notev.png",
+        links: {},
+        inspiration: {
+            name: "VisionClaw",
+            url: "https://github.com/sseanliu/VisionClaw",
+        },
+        backedBy: {
+            name: "UTD Draper Pitch Competition",
+            url: "https://innovation.utdallas.edu/draper-pitch-competition/",
+        },
+    },
     {
         slug: "reality-proxy",
         title: "Reality Proxy",

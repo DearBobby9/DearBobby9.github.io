@@ -99,7 +99,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         }
 
         let dots: Dot[] = [];
-        let ripples: Ripple[] = [];
+        const ripples: Ripple[] = [];
 
         const initDots = () => {
             dots = [];

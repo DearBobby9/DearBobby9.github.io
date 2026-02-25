@@ -17,7 +17,7 @@ export function Hero() {
 
                         {/* Minimal Name Tag */}
                         <div className="font-mono text-xs md:text-sm tracking-widest uppercase text-muted-foreground mb-4">
-                            Hi, I'm Difan "Bobby" Jia (Dee-Fae Bobby Jae)
+                            Hi, I&apos;m Difan &ldquo;Bobby&rdquo; Jia (Dee-Fae Bobby Jae)
                         </div>
 
                         {/* Huge Headline - FIXED: Removed mix-blend-difference */}
