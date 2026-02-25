@@ -45,6 +45,18 @@ export const projects: Project[] = [
         },
     },
     {
+        slug: "refbib",
+        title: "RefBib",
+        oneLiner: "Extract real BibTeX from academic PDF references — no AI hallucinations, just real citations from CrossRef, Semantic Scholar, and DBLP",
+        year: "2026",
+        category: "Build",
+        tags: ["Academic Tools", "Python", "Next.js"],
+        image: "/images/projects/refbib.png",
+        links: {
+            code: "https://github.com/DearBobby9/RefBib",
+        },
+    },
+    {
         slug: "ar-embedded-visualization",
         title: "AR Embedded Visualization & AI Reliance",
         oneLiner: "Studying how AR embedded visualizations affect human reliance on AI in spatial decision-making",
@@ -70,8 +82,8 @@ export const projects: Project[] = [
     },
 ];
 
-// Helper: Get featured projects (first 3)
-export const featuredProjects = projects.slice(0, 3);
+// Helper: Get featured projects (all projects shown on homepage)
+export const featuredProjects = projects;
 
 // Helper: Get all unique categories
 export const projectCategories = ["All", "Research", "Build", "Writing"] as const;
