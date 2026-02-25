@@ -1,7 +1,7 @@
 // src/data/colorPalettes.ts
 // All particle background color palettes — edit here to add/modify palettes
 
-export type PaletteId = "jewel" | "indigo" | "academic" | "pastel";
+export type PaletteId = "jewel" | "indigo" | "academic" | "pastel" | "custom";
 
 export interface ColorPalette {
     id: PaletteId;
@@ -10,7 +10,54 @@ export interface ColorPalette {
     dark: [number, number, number][];
 }
 
-export const COLOR_PALETTES: Record<PaletteId, ColorPalette> = {
+// RGB ↔ HSL conversion + dark variant generation
+function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    if (max === min) return [0, 0, l * 100];
+    const d = max - min;
+    const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    let h = 0;
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+    else if (max === g) h = ((b - r) / d + 2) / 6;
+    else h = ((r - g) / d + 4) / 6;
+    return [h * 360, s * 100, l * 100];
+}
+
+function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+    h /= 360; s /= 100; l /= 100;
+    if (s === 0) { const v = Math.round(l * 255); return [v, v, v]; }
+    const hue2rgb = (p: number, q: number, t: number) => {
+        if (t < 0) t += 1; if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    return [
+        Math.round(hue2rgb(p, q, h + 1 / 3) * 255),
+        Math.round(hue2rgb(p, q, h) * 255),
+        Math.round(hue2rgb(p, q, h - 1 / 3) * 255),
+    ];
+}
+
+export function generateDarkVariant(rgb: [number, number, number]): [number, number, number] {
+    const [h, s, l] = rgbToHsl(rgb[0], rgb[1], rgb[2]);
+    return hslToRgb(h, Math.max(s - 5, 10), Math.min(l + 30, 90));
+}
+
+export const DEFAULT_CUSTOM_COLORS: [number, number, number][] = [
+    [60, 120, 220],   // blue
+    [220, 100, 100],  // coral
+    [50, 170, 110],   // green
+];
+
+export type PresetPaletteId = Exclude<PaletteId, "custom">;
+
+export const COLOR_PALETTES: Record<PresetPaletteId, ColorPalette> = {
     jewel: {
         id: "jewel",
         name: "Jewel Tones",
@@ -118,4 +165,4 @@ export const COLOR_PALETTES: Record<PaletteId, ColorPalette> = {
 };
 
 export const DEFAULT_PALETTE: PaletteId = "indigo";
-export const PALETTE_ORDER: PaletteId[] = ["indigo", "jewel", "academic", "pastel"];
+export const PALETTE_ORDER: PresetPaletteId[] = ["indigo", "jewel", "academic", "pastel"];

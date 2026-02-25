@@ -3,7 +3,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { usePalette } from "@/components/PaletteProvider";
-import { COLOR_PALETTES } from "@/data/colorPalettes";
 
 interface InteractiveBackgroundProps {
     className?: string;
@@ -13,13 +12,13 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
-    const { paletteId } = usePalette();
+    const { getActivePalette, paletteId, customColors } = usePalette();
 
     // Ref so the canvas render loop can read the current palette without restarting
-    const paletteRef = React.useRef(COLOR_PALETTES[paletteId]);
+    const paletteRef = React.useRef(getActivePalette());
     React.useEffect(() => {
-        paletteRef.current = COLOR_PALETTES[paletteId];
-    }, [paletteId]);
+        paletteRef.current = getActivePalette();
+    }, [getActivePalette, paletteId, customColors]);
 
     // Check for reduced motion preference
     React.useEffect(() => {
@@ -165,9 +164,39 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             });
         };
 
+        // Touch tracking (mobile)
+        const handleTouchStart = (e: TouchEvent) => {
+            const touch = e.touches[0];
+            mouse.targetX = touch.clientX;
+            mouse.targetY = touch.clientY;
+            // Spawn ripple on tap
+            ripples.push({
+                x: touch.clientX,
+                y: touch.clientY,
+                radius: 0,
+                maxRadius: RIPPLE_MAX_RADIUS,
+                speed: RIPPLE_SPEED,
+                strength: RIPPLE_INITIAL_STRENGTH,
+            });
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            const touch = e.touches[0];
+            mouse.targetX = touch.clientX;
+            mouse.targetY = touch.clientY;
+        };
+
+        const handleTouchEnd = () => {
+            mouse.targetX = -1000;
+            mouse.targetY = -1000;
+        };
+
         window.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseleave", handleMouseLeave);
         window.addEventListener("click", handleClick);
+        window.addEventListener("touchstart", handleTouchStart, { passive: true });
+        window.addEventListener("touchmove", handleTouchMove, { passive: true });
+        window.addEventListener("touchend", handleTouchEnd);
 
         // Animation loop
         const render = () => {
@@ -300,6 +329,9 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             window.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseleave", handleMouseLeave);
             window.removeEventListener("click", handleClick);
+            window.removeEventListener("touchstart", handleTouchStart);
+            window.removeEventListener("touchmove", handleTouchMove);
+            window.removeEventListener("touchend", handleTouchEnd);
             cancelAnimationFrame(animationFrameId);
             observer.disconnect();
         };

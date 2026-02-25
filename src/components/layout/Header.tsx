@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, Sun, Moon, Palette } from "lucide-react";
+import { Menu, Sun, Moon, Palette, Plus, Minus } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ import {
 import { navigation } from "@/data/navigation";
 import { siteConfig } from "@/data/site";
 import { usePalette } from "@/components/PaletteProvider";
-import { COLOR_PALETTES, PALETTE_ORDER } from "@/data/colorPalettes";
+import { COLOR_PALETTES, PALETTE_ORDER, DEFAULT_CUSTOM_COLORS, generateDarkVariant } from "@/data/colorPalettes";
 
 function useScrollToHash() {
     const pathname = usePathname();
@@ -73,7 +73,7 @@ export function Header() {
     const [isOpen, setIsOpen] = React.useState(false);
     const [mounted, setMounted] = React.useState(false);
     const { theme, setTheme } = useTheme();
-    const { paletteId, setPaletteId } = usePalette();
+    const { paletteId, setPaletteId, customColors, setCustomColors } = usePalette();
     const scrollToHash = useScrollToHash();
 
     React.useEffect(() => setMounted(true), []);
@@ -162,7 +162,7 @@ export function Header() {
                                             <DropdownMenuRadioItem key={id} value={id}>
                                                 <span className="flex items-center gap-2">
                                                     <span className="flex gap-0.5">
-                                                        {p.light.slice(0, 3).map((c, i) => (
+                                                        {(theme === "dark" ? p.dark : p.light).slice(0, 3).map((c, i) => (
                                                             <span
                                                                 key={i}
                                                                 className="inline-block w-2.5 h-2.5 rounded-full"
@@ -175,7 +175,82 @@ export function Header() {
                                             </DropdownMenuRadioItem>
                                         );
                                     })}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuRadioItem
+                                        value="custom"
+                                        onSelect={(e) => {
+                                            e.preventDefault();
+                                            setPaletteId("custom");
+                                        }}
+                                    >
+                                        <span className="flex items-center gap-2">
+                                            <span className="flex gap-0.5">
+                                                {customColors.slice(0, 3).map((c, i) => {
+                                                    const dc = theme === "dark" ? generateDarkVariant(c) : c;
+                                                    return (
+                                                        <span
+                                                            key={i}
+                                                            className="inline-block w-2.5 h-2.5 rounded-full"
+                                                            style={{ backgroundColor: `rgb(${dc[0]}, ${dc[1]}, ${dc[2]})` }}
+                                                        />
+                                                    );
+                                                })}
+                                            </span>
+                                            Custom
+                                        </span>
+                                    </DropdownMenuRadioItem>
                                 </DropdownMenuRadioGroup>
+                                {paletteId === "custom" && (
+                                    <div
+                                        className="px-2 py-2 border-t border-border/40"
+                                        onPointerDown={(e) => e.stopPropagation()}
+                                        onFocusCapture={(e) => e.stopPropagation()}
+                                    >
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                            {customColors.map((c, i) => (
+                                                <label key={i} className="relative cursor-pointer">
+                                                    <span
+                                                        className="block w-6 h-6 rounded-full border-2 border-border/60 hover:scale-110 transition-transform"
+                                                        style={{ backgroundColor: `rgb(${c[0]}, ${c[1]}, ${c[2]})` }}
+                                                    />
+                                                    <input
+                                                        type="color"
+                                                        className="absolute inset-0 opacity-0 w-0 h-0"
+                                                        value={`#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`}
+                                                        onChange={(e) => {
+                                                            const hex = e.target.value;
+                                                            const r = parseInt(hex.slice(1, 3), 16);
+                                                            const g = parseInt(hex.slice(3, 5), 16);
+                                                            const b = parseInt(hex.slice(5, 7), 16);
+                                                            const next = [...customColors] as [number, number, number][];
+                                                            next[i] = [r, g, b];
+                                                            setCustomColors(next);
+                                                        }}
+                                                    />
+                                                </label>
+                                            ))}
+                                            {customColors.length < 6 && (
+                                                <button
+                                                    className="w-6 h-6 rounded-full border-2 border-dashed border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+                                                    onClick={() => {
+                                                        const fallback = DEFAULT_CUSTOM_COLORS[customColors.length % DEFAULT_CUSTOM_COLORS.length];
+                                                        setCustomColors([...customColors, fallback]);
+                                                    }}
+                                                >
+                                                    <Plus className="h-3 w-3" />
+                                                </button>
+                                            )}
+                                            {customColors.length > 2 && (
+                                                <button
+                                                    className="w-6 h-6 rounded-full border-2 border-dashed border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+                                                    onClick={() => setCustomColors(customColors.slice(0, -1))}
+                                                >
+                                                    <Minus className="h-3 w-3" />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     )}
@@ -218,7 +293,104 @@ export function Header() {
                                 </nav>
 
                                 <div className="mt-12 text-center">
-                                    <div className="w-12 h-[1px] bg-border mx-auto mb-8" />
+                                    <div className="w-12 h-[1px] bg-border mx-auto mb-6" />
+                                    <div className="flex flex-wrap justify-center gap-3">
+                                        {PALETTE_ORDER.map((id) => {
+                                            const p = COLOR_PALETTES[id];
+                                            const colors = theme === "dark" ? p.dark : p.light;
+                                            return (
+                                                <button
+                                                    key={id}
+                                                    onClick={() => setPaletteId(id)}
+                                                    className={cn(
+                                                        "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs transition-all duration-200",
+                                                        paletteId === id
+                                                            ? "bg-foreground/10 text-foreground"
+                                                            : "text-muted-foreground hover:text-foreground"
+                                                    )}
+                                                >
+                                                    <span className="flex gap-0.5">
+                                                        {colors.slice(0, 3).map((c, i) => (
+                                                            <span
+                                                                key={i}
+                                                                className="inline-block w-2 h-2 rounded-full"
+                                                                style={{ backgroundColor: `rgb(${c[0]}, ${c[1]}, ${c[2]})` }}
+                                                            />
+                                                        ))}
+                                                    </span>
+                                                    {p.name}
+                                                </button>
+                                            );
+                                        })}
+                                        <button
+                                            onClick={() => setPaletteId("custom")}
+                                            className={cn(
+                                                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs transition-all duration-200",
+                                                paletteId === "custom"
+                                                    ? "bg-foreground/10 text-foreground"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                            )}
+                                        >
+                                            <span className="flex gap-0.5">
+                                                {customColors.slice(0, 3).map((c, i) => {
+                                                    const dc = theme === "dark" ? generateDarkVariant(c) : c;
+                                                    return (
+                                                        <span
+                                                            key={i}
+                                                            className="inline-block w-2 h-2 rounded-full"
+                                                            style={{ backgroundColor: `rgb(${dc[0]}, ${dc[1]}, ${dc[2]})` }}
+                                                        />
+                                                    );
+                                                })}
+                                            </span>
+                                            Custom
+                                        </button>
+                                    </div>
+                                    {paletteId === "custom" && (
+                                        <div className="flex items-center justify-center gap-2 mt-4">
+                                            {customColors.map((c, i) => (
+                                                <label key={i} className="relative cursor-pointer">
+                                                    <span
+                                                        className="block w-7 h-7 rounded-full border-2 border-border/60 hover:scale-110 transition-transform"
+                                                        style={{ backgroundColor: `rgb(${c[0]}, ${c[1]}, ${c[2]})` }}
+                                                    />
+                                                    <input
+                                                        type="color"
+                                                        className="absolute inset-0 opacity-0 w-0 h-0"
+                                                        value={`#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`}
+                                                        onChange={(e) => {
+                                                            const hex = e.target.value;
+                                                            const r = parseInt(hex.slice(1, 3), 16);
+                                                            const g = parseInt(hex.slice(3, 5), 16);
+                                                            const b = parseInt(hex.slice(5, 7), 16);
+                                                            const next = [...customColors] as [number, number, number][];
+                                                            next[i] = [r, g, b];
+                                                            setCustomColors(next);
+                                                        }}
+                                                    />
+                                                </label>
+                                            ))}
+                                            {customColors.length < 6 && (
+                                                <button
+                                                    className="w-7 h-7 rounded-full border-2 border-dashed border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                                                    onClick={() => {
+                                                        const fallback = DEFAULT_CUSTOM_COLORS[customColors.length % DEFAULT_CUSTOM_COLORS.length];
+                                                        setCustomColors([...customColors, fallback]);
+                                                    }}
+                                                >
+                                                    <Plus className="h-3 w-3" />
+                                                </button>
+                                            )}
+                                            {customColors.length > 2 && (
+                                                <button
+                                                    className="w-7 h-7 rounded-full border-2 border-dashed border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                                                    onClick={() => setCustomColors(customColors.slice(0, -1))}
+                                                >
+                                                    <Minus className="h-3 w-3" />
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </SheetContent>
