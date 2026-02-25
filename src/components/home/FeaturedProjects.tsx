@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,23 +27,35 @@ export function FeaturedProjects() {
 
 function ProjectCard({ project }: { project: Project }) {
     const hasLinks = project.links.paper || project.links.code || project.links.demo || project.links.video;
+    const hasDetail = project.hasDetail === true;
+    const detailHref = `/projects/${project.slug}`;
+
+    const imageBlock = (
+        <div className="aspect-video bg-muted relative overflow-hidden">
+            {project.image ? (
+                <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+            ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
+            )}
+            <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
+        </div>
+    );
 
     return (
         <Card className="group h-full gap-0 py-0 overflow-hidden border-border/50 bg-card hover:bg-accent hover:border-border transition-all duration-300">
             {/* Project image */}
-            <div className="aspect-video bg-muted relative overflow-hidden">
-                {project.image ? (
-                    <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/60" />
-                )}
-                <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
-            </div>
+            {hasDetail ? (
+                <Link href={detailHref} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    {imageBlock}
+                </Link>
+            ) : (
+                imageBlock
+            )}
 
             <CardContent className="p-4 flex flex-col flex-1">
                 {/* Top: Content area */}
@@ -54,7 +67,13 @@ function ProjectCard({ project }: { project: Project }) {
 
                     {/* Title */}
                     <h3 className="text-lg font-semibold mt-1 mb-1.5 group-hover:text-accent-foreground transition-colors">
-                        {project.title}
+                        {hasDetail ? (
+                            <Link href={detailHref} className="hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                {project.title}
+                            </Link>
+                        ) : (
+                            project.title
+                        )}
                     </h3>
 
                     {/* One-liner */}

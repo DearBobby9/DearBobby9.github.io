@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FileText, ExternalLink, Copy } from "lucide-react";
+import { FileText, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { selectedPublications, type Publication } from "@/data/publications";
+import { BibtexCopyButton } from "@/components/publications/BibtexCopyButton";
 
 export function SelectedPublications() {
     return (
@@ -28,28 +28,20 @@ export function SelectedPublications() {
 }
 
 function PublicationItem({ publication }: { publication: Publication }) {
-    const [copied, setCopied] = useState(false);
-
-    const handleCopyBibtex = () => {
-        navigator.clipboard.writeText(publication.bibtex);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
-
     return (
         <div className="group p-4 -mx-4 rounded-sm border-l-2 border-transparent hover:border-foreground/30 hover:translate-x-0.5 transition-all duration-200">
             <div className="flex flex-col md:flex-row gap-5">
                 {/* Teaser image */}
                 {publication.image && (
                     <div className="w-full md:w-[280px] shrink-0">
-                        <div className="aspect-video bg-muted relative overflow-hidden rounded-sm">
+                        <Link href={`/publications/${publication.id}`} className="block aspect-video bg-muted relative overflow-hidden rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                             <Image
                                 src={publication.image}
                                 alt={publication.title}
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                             />
-                        </div>
+                        </Link>
                     </div>
                 )}
 
@@ -69,7 +61,9 @@ function PublicationItem({ publication }: { publication: Publication }) {
 
                     {/* Title */}
                     <h3 className="text-base md:text-lg font-medium mb-2 leading-snug">
-                        {publication.title}
+                        <Link href={`/publications/${publication.id}`} className="hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                            {publication.title}
+                        </Link>
                     </h3>
 
                     {/* Authors */}
@@ -114,15 +108,12 @@ function PublicationItem({ publication }: { publication: Publication }) {
                                 </Link>
                             </Button>
                         )}
-                        <Button
+                        <BibtexCopyButton
+                            bibtex={publication.bibtex}
                             variant="ghost"
                             size="sm"
-                            onClick={handleCopyBibtex}
                             className="h-8 px-2 text-xs"
-                        >
-                            <Copy className="h-3.5 w-3.5 mr-1" />
-                            {copied ? "Copied!" : "BibTeX"}
-                        </Button>
+                        />
                     </div>
                 </div>
             </div>

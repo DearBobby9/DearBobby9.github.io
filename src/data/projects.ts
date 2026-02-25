@@ -23,6 +23,7 @@ export interface Project {
         name: string;
         url: string;
     };
+    hasDetail?: boolean;
 }
 
 export const projects: Project[] = [
@@ -43,6 +44,7 @@ export const projects: Project[] = [
             name: "UTD Draper Pitch Competition",
             url: "https://innovation.utdallas.edu/draper-pitch-competition/",
         },
+        hasDetail: true,
     },
     {
         slug: "refbib",
@@ -56,6 +58,7 @@ export const projects: Project[] = [
             code: "https://github.com/DearBobby9/RefBib",
             demo: "https://ref-bib.vercel.app/",
         },
+        hasDetail: true,
     },
     {
         slug: "ar-embedded-visualization",
@@ -68,6 +71,7 @@ export const projects: Project[] = [
         links: {
             paper: "https://arxiv.org/abs/2507.14316",
         },
+        hasDetail: true,
     },
     {
         slug: "reality-proxy",
@@ -80,6 +84,7 @@ export const projects: Project[] = [
         links: {
             paper: "https://doi.org/10.1145/3746059.3747709",
         },
+        hasDetail: true,
     },
 ];
 

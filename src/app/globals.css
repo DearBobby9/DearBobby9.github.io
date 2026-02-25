@@ -216,8 +216,8 @@
 
   /* Glass panel - frosted backdrop for text readability over particle bg */
   .glass-panel {
-    @apply bg-background/5 backdrop-blur-[2px] rounded-2xl px-6 py-6 md:px-8 md:py-8
-           dark:bg-white/[0.03] dark:backdrop-blur-[3px] dark:border dark:border-white/[0.06];
+    @apply bg-background/10 backdrop-blur-[4px] rounded-2xl px-6 py-6 md:px-8 md:py-8
+           dark:bg-white/[0.06] dark:backdrop-blur-[6px] dark:border dark:border-white/[0.12];
   }
 
   /* Card hover - Invert effect (premium monochrome interaction) */
@@ -232,6 +232,66 @@
   /* Cursor blinking animation for hero */
   .cursor-blink {
     animation: blink 1s step-end infinite;
+  }
+
+  /* MDX content styles for detail pages */
+  .mdx-content {
+    @apply text-base text-muted-foreground;
+  }
+
+  .mdx-content>*+* {
+    @apply mt-4;
+  }
+
+  .mdx-content h2 {
+    @apply text-2xl md:text-3xl font-normal text-foreground mt-10 mb-3;
+    letter-spacing: -0.02em;
+  }
+
+  .mdx-content h3 {
+    @apply text-xl md:text-2xl font-medium text-foreground mt-8 mb-2;
+  }
+
+  .mdx-content p {
+    @apply text-base md:text-lg leading-relaxed text-muted-foreground;
+    font-weight: 300;
+  }
+
+  .mdx-content ul,
+  .mdx-content ol {
+    @apply ml-5 space-y-2;
+  }
+
+  .mdx-content ul {
+    list-style: disc;
+  }
+
+  .mdx-content ol {
+    list-style: decimal;
+  }
+
+  .mdx-content li {
+    @apply text-base md:text-lg leading-relaxed text-muted-foreground;
+  }
+
+  .mdx-content a {
+    @apply underline underline-offset-4 hover:text-foreground transition-colors;
+  }
+
+  .mdx-content img {
+    @apply w-full rounded-lg border border-border/50;
+  }
+
+  .mdx-content code {
+    @apply px-1.5 py-0.5 rounded bg-muted text-foreground text-sm font-mono;
+  }
+
+  .mdx-content pre {
+    @apply p-4 rounded-lg border border-border/60 bg-muted/40 overflow-x-auto;
+  }
+
+  .mdx-content pre code {
+    @apply p-0 bg-transparent;
   }
 
   @keyframes blink {

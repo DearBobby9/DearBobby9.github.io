@@ -27,6 +27,7 @@ export const publications: Publication[] = [
         image: "/images/projects/ar-embedded-vis.png",
         links: {
             pdf: "https://arxiv.org/pdf/2507.14316",
+            doi: "https://doi.org/10.1145/3772318.3790710",
         },
         bibtex: `@inproceedings{liu2026ar,
   title={Can AR Embedded Visualizations Foster Appropriate Reliance on AI in Spatial Decision-Making? A Comparative Study of AR X-Ray vs. 2D Minimap},
