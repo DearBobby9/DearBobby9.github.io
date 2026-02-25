@@ -216,8 +216,8 @@
 
   /* Glass panel - frosted backdrop for text readability over particle bg */
   .glass-panel {
-    @apply bg-background/10 backdrop-blur-[4px] rounded-2xl px-6 py-6 md:px-8 md:py-8
-           dark:bg-white/[0.06] dark:backdrop-blur-[6px] dark:border dark:border-white/[0.12];
+    @apply bg-background/15 backdrop-blur-[6px] rounded-2xl px-6 py-6 md:px-8 md:py-8
+           dark:bg-white/[0.09] dark:backdrop-blur-[9px] dark:border dark:border-white/[0.18];
   }
 
   /* Card hover - Invert effect (premium monochrome interaction) */
