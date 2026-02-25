@@ -54,6 +54,7 @@ export const projects: Project[] = [
         image: "/images/projects/refbib.png",
         links: {
             code: "https://github.com/DearBobby9/RefBib",
+            demo: "https://ref-bib.vercel.app/",
         },
     },
     {
