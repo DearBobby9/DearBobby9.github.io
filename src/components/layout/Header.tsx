@@ -23,6 +23,14 @@ function useScrollToHash() {
 
     return React.useCallback(
         (href: string, e?: React.MouseEvent) => {
+            // Home link — scroll to top if already on homepage
+            if (href === "/" && pathname === "/") {
+                e?.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                window.history.pushState(null, "", "/");
+                return true;
+            }
+
             // Only handle anchor links like /#publications
             if (!href.startsWith("/#")) return false;
 
@@ -62,11 +70,9 @@ export function Header() {
 
     // Determine if a nav item is active
     const isActive = (href: string) => {
-        if (href.startsWith("/#")) {
-            // Anchor links are "active" when on homepage
-            return pathname === "/";
-        }
-        return pathname === href;
+        if (href === "/") return pathname === "/";
+        if (href.startsWith("/#")) return pathname === "/";
+        return pathname === href || pathname.startsWith(href + "/");
     };
 
     return (
@@ -88,10 +94,10 @@ export function Header() {
                             href={item.href}
                             onClick={(e) => scrollToHash(item.href, e)}
                             className={cn(
-                                "text-sm font-medium transition-colors hover:text-foreground",
+                                "text-sm transition-colors hover:text-foreground",
                                 isActive(item.href)
-                                    ? "text-foreground"
-                                    : "text-muted-foreground"
+                                    ? "text-foreground font-semibold"
+                                    : "text-muted-foreground font-normal"
                             )}
                         >
                             {item.name}
