@@ -4,14 +4,19 @@ import { MessageCircle } from "lucide-react";
 
 export function ChatCTA() {
   return (
-    <button
-      onClick={() => window.dispatchEvent(new CustomEvent("open-chat"))}
-      className="group flex items-center gap-2 font-mono text-sm mt-4 hover:text-muted-foreground transition-colors cursor-pointer"
-    >
-      <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">
-        Chat with me
-      </span>
-      <MessageCircle className="h-3 w-3" />
-    </button>
+    <div className="mt-4 space-y-1.5">
+      <button
+        onClick={() => window.dispatchEvent(new CustomEvent("open-chat"))}
+        className="group flex items-center gap-2 font-mono text-sm hover:text-muted-foreground transition-colors cursor-pointer"
+      >
+        <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">
+          Chat with me
+        </span>
+        <MessageCircle className="h-3 w-3" />
+      </button>
+      <p className="font-mono text-[10px] text-muted-foreground/50 leading-tight">
+        AI clone — may be slow, expand &ldquo;Thought&rdquo; to watch it think and it&apos;s funny!
+      </p>
+    </div>
   );
 }
