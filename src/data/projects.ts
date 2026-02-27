@@ -34,7 +34,7 @@ export const projects: Project[] = [
         year: "2026",
         category: "Build",
         tags: ["Smart Glasses", "AI", "EdTech", "Wearable"],
-        image: "/images/projects/notev.png",
+        image: "/images/projects/notev.webp",
         links: {},
         inspiration: {
             name: "VisionClaw",
@@ -53,7 +53,7 @@ export const projects: Project[] = [
         year: "2026",
         category: "Build",
         tags: ["Academic Tools", "Python", "Next.js"],
-        image: "/images/projects/refbib.png",
+        image: "/images/projects/refbib.webp",
         links: {
             code: "https://github.com/DearBobby9/RefBib",
             demo: "https://ref-bib.vercel.app/",
@@ -67,7 +67,7 @@ export const projects: Project[] = [
         year: "2026",
         category: "Research",
         tags: ["AR", "Visualization", "Human-AI"],
-        image: "/images/projects/ar-embedded-vis.png",
+        image: "/images/projects/ar-embedded-vis.webp",
         links: {
             paper: "https://arxiv.org/abs/2507.14316",
         },
@@ -80,7 +80,7 @@ export const projects: Project[] = [
         year: "2025",
         category: "Research",
         tags: ["Mixed Reality", "Interaction", "AI"],
-        image: "/images/projects/reality-proxy.jpg",
+        image: "/images/projects/reality-proxy.webp",
         links: {
             paper: "https://doi.org/10.1145/3746059.3747709",
         },

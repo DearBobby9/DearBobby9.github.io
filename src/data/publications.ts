@@ -24,7 +24,7 @@ export const publications: Publication[] = [
         venue: "CHI 2026",
         year: "2026",
         note: "Accepted",
-        image: "/images/projects/ar-embedded-vis.png",
+        image: "/images/projects/ar-embedded-vis.webp",
         links: {
             pdf: "https://arxiv.org/pdf/2507.14316",
             doi: "https://doi.org/10.1145/3772318.3790710",
@@ -43,7 +43,7 @@ export const publications: Publication[] = [
         venue: "UIST 2025",
         year: "2025",
         note: "Accepted",
-        image: "/images/projects/reality-proxy.jpg",
+        image: "/images/projects/reality-proxy.webp",
         links: {
             pdf: "https://arxiv.org/pdf/2507.17248",
             doi: "https://doi.org/10.1145/3746059.3747709",

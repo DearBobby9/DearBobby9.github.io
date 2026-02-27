@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -11,8 +12,10 @@ const XIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-export const metadata = {
+export const metadata: Metadata = {
     title: "About",
+    description:
+        "Learn about Difan (Bobby) Jia — CS PhD student at UT Dallas researching mixed reality, spatial computing, and embodied interaction.",
 };
 
 const timeline = [
@@ -57,7 +60,7 @@ export default function AboutPage() {
                         {/* Photo */}
                         <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-2 border-border mx-auto lg:mx-0 mb-8">
                             <Image
-                                src="/images/profile.jpg"
+                                src="/images/profile-about.webp"
                                 alt="Difan Jia"
                                 fill
                                 className="object-cover"

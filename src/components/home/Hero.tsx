@@ -63,7 +63,7 @@ export function Hero() {
                         <div className="aspect-[4/5] relative grayscale hover:grayscale-0 transition-all duration-700 ease-out">
                             {/* Simple rectangular crop, no round borders */}
                             <Image
-                                src="/images/profile.png"
+                                src="/images/profile.webp"
                                 alt="Difan Jia"
                                 fill
                                 className="object-cover"

@@ -7,6 +7,8 @@ import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PaletteProvider } from "@/components/PaletteProvider";
 import { ChatWidget } from "@/components/chat/ChatWidget";
+import { JsonLd } from "@/components/JsonLd";
+import { Analytics } from "@/components/Analytics";
 
 const fraunces = Fraunces({
   variable: "--font-heading",
@@ -68,15 +70,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <JsonLd />
+        <Analytics />
+      </head>
       <body
         className={`${fraunces.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ThemeProvider>
           <PaletteProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-foreground focus:text-background focus:rounded-md focus:text-sm focus:font-medium"
+            >
+              Skip to content
+            </a>
             <InteractiveBackground />
             <div className="flex flex-col min-h-screen">
               <Header />
-              <main className="flex-1">
+              <main id="main" className="flex-1">
                 {children}
               </main>
               <Footer />

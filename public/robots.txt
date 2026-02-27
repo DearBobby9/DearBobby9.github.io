@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dearbobby9.github.io/sitemap.xml
