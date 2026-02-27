@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { MessageCircle, X, RotateCcw } from "lucide-react";
+import { MessageCircle, X, RotateCcw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useChatStream } from "@/hooks/use-chat-stream";
@@ -11,13 +11,17 @@ import { ThinkingIndicator } from "@/components/chat/ThinkingIndicator";
 import { MAX_TURNS } from "@/lib/chat-config";
 
 const SUGGESTION_CHIPS = [
-  "What does Bobby research?",
+  "What do you research?",
   "Tell me about NoteV",
   "What is Reality Proxy?",
 ];
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [permissionDismissed, setPermissionDismissed] = React.useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("chat-permission-dismissed") === "1";
+  });
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
   const {
@@ -50,6 +54,13 @@ export function ChatWidget() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [isOpen]);
+
+  // Open chat from external triggers (e.g. Hero "Chat with me" link)
+  React.useEffect(() => {
+    const handler = () => setIsOpen(true);
+    window.addEventListener("open-chat", handler);
+    return () => window.removeEventListener("open-chat", handler);
+  }, []);
 
   return (
     <>
@@ -98,7 +109,7 @@ export function ChatWidget() {
           <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-sm font-medium">Ask about Bobby</span>
+              <span className="text-sm font-medium">Chat with Bobby</span>
             </div>
             <div className="flex items-center gap-1">
               <Button
@@ -130,8 +141,25 @@ export function ChatWidget() {
               <div className="flex flex-col items-center justify-center h-full text-center px-4">
                 <MessageCircle className="h-8 w-8 text-muted-foreground/30 mb-3" />
                 <p className="text-sm text-muted-foreground">
-                  Hi! Ask me anything about Bobby&apos;s research, projects, or background.
+                  Hey! I&apos;m Bobby — ask me anything about my research, projects, or background.
                 </p>
+                {!permissionDismissed && (
+                  <div className="flex items-start gap-2 bg-muted/50 dark:bg-white/[0.06] border border-border/40 dark:border-white/[0.12] rounded-lg px-3 py-2.5 mt-3 max-w-[300px] text-left">
+                    <ShieldCheck className="h-3.5 w-3.5 text-muted-foreground shrink-0 mt-0.5" />
+                    <p className="flex-1 text-xs text-muted-foreground leading-relaxed">
+                      Your browser may ask for &quot;Local network&quot; access — this connects to the AI server and is safe to allow.
+                      <button
+                        onClick={() => {
+                          setPermissionDismissed(true);
+                          localStorage.setItem("chat-permission-dismissed", "1");
+                        }}
+                        className="ml-1.5 text-foreground/70 hover:text-foreground underline underline-offset-2 transition-colors"
+                      >
+                        Got it
+                      </button>
+                    </p>
+                  </div>
+                )}
                 <div className="flex flex-wrap justify-center gap-2 mt-4">
                   {SUGGESTION_CHIPS.map((q) => (
                     <button

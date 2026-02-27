@@ -53,7 +53,7 @@ export function ChatInput({ onSend, onStop, isStreaming, isDisabled }: ChatInput
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder={isDisabled ? "Conversation limit reached" : "Ask about Bobby's work..."}
+        placeholder={isDisabled ? "Conversation limit reached" : "Message Bobby..."}
         disabled={isDisabled}
         rows={1}
         className={cn(

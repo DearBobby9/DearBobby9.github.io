@@ -3,6 +3,7 @@ import Link from "next/link";
 // import { Button } from "@/components/ui/button"; // Removed
 // import { Badge } from "@/components/ui/badge"; // Removed
 import { FileText, Mail, GraduationCap } from "lucide-react";
+import { ChatCTA } from "@/components/home/ChatCTA";
 
 // const tags = ["XR", "HCI", "CAD", "Spatial Computing", "Fabrication"]; // Removed
 
@@ -69,6 +70,7 @@ export function Hero() {
                                 priority
                             />
                         </div>
+                        <ChatCTA />
                     </div>
                 </div>
             </div>
