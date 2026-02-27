@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PaletteProvider } from "@/components/PaletteProvider";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 
 const fraunces = Fraunces({
   variable: "--font-heading",
@@ -77,6 +78,7 @@ export default function RootLayout({
               </main>
               <Footer />
             </div>
+            <ChatWidget />
           </PaletteProvider>
         </ThemeProvider>
       </body>
