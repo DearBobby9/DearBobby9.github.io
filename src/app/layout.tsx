@@ -27,6 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://dearbobby9.github.io"),
   title: {
     default: "Difan Jia | XR + Fabrication + Spatial Computing",
     template: "%s | Difan Jia",
@@ -44,6 +45,7 @@ export const metadata: Metadata = {
     description:
       "Personal website of Difan (Bobby) Jia - Researcher and developer in XR, HCI, CAD, and spatial computing.",
     siteName: "Difan Jia",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
@@ -51,6 +53,7 @@ export const metadata: Metadata = {
     description:
       "Personal website of Difan (Bobby) Jia - Researcher and developer in XR, HCI, CAD, and spatial computing.",
     creator: "@KeithMaxwell99",
+    images: ["/og.png"],
   },
   robots: {
     index: true,
