@@ -15,7 +15,7 @@ export function ChatCTA() {
         <MessageCircle className="h-3 w-3" />
       </button>
       <p className="font-mono text-[10px] text-muted-foreground/50 leading-tight">
-        AI clone — may be slow, expand &ldquo;Thought&rdquo; to watch it think and it&apos;s funny!
+        AI clone — it&apos;s funny!
       </p>
     </div>
   );
