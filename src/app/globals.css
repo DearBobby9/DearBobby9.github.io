@@ -294,6 +294,67 @@
     @apply p-0 bg-transparent;
   }
 
+  /* Chat Markdown — compact styles for chatbot messages */
+  .chat-markdown p {
+    @apply text-xs leading-relaxed;
+    font-weight: 300;
+    margin: 0;
+  }
+
+  .chat-markdown p + p {
+    margin-top: 0.5em;
+  }
+
+  .chat-markdown strong {
+    font-weight: 600;
+  }
+
+  .chat-markdown em {
+    font-style: italic;
+  }
+
+  .chat-markdown code {
+    @apply px-1 py-0.5 rounded bg-foreground/10 text-[11px] font-mono;
+  }
+
+  .chat-markdown pre {
+    @apply my-1.5 p-2 rounded bg-foreground/10 overflow-x-auto;
+  }
+
+  .chat-markdown pre code {
+    @apply p-0 bg-transparent text-[11px];
+  }
+
+  .chat-markdown ul,
+  .chat-markdown ol {
+    @apply ml-4 my-1 space-y-0.5 text-xs;
+  }
+
+  .chat-markdown ul {
+    list-style: disc;
+  }
+
+  .chat-markdown ol {
+    list-style: decimal;
+  }
+
+  .chat-markdown a {
+    @apply underline underline-offset-2 hover:opacity-70 transition-opacity;
+  }
+
+  .chat-markdown blockquote {
+    @apply border-l-2 border-foreground/20 pl-2 my-1 text-xs opacity-80;
+  }
+
+  .chat-markdown h1,
+  .chat-markdown h2,
+  .chat-markdown h3,
+  .chat-markdown h4 {
+    @apply text-xs font-semibold mt-2 mb-0.5;
+    font-family: var(--font-body);
+    letter-spacing: normal;
+  }
+
   @keyframes blink {
     50% {
       opacity: 0;

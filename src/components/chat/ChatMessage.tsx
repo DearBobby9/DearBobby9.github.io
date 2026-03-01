@@ -1,5 +1,7 @@
 "use client";
 
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import type { ChatMessage as ChatMessageType } from "@/hooks/use-chat-stream";
 
@@ -22,12 +24,20 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
           isStreaming && message.content === "" && "min-w-[60px] min-h-[32px]"
         )}
       >
-        <p className="whitespace-pre-wrap break-words font-[300]">
-          {message.content}
-          {isStreaming && (
-            <span className="inline-block w-[2px] h-4 ml-0.5 bg-foreground/70 animate-pulse align-text-bottom" />
-          )}
-        </p>
+        {isUser ? (
+          <p className="whitespace-pre-wrap break-words font-[300]">
+            {message.content}
+          </p>
+        ) : (
+          <div className="chat-markdown break-words font-[300]">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {message.content}
+            </ReactMarkdown>
+            {isStreaming && (
+              <span className="inline-block w-[2px] h-4 ml-0.5 bg-foreground/70 animate-pulse align-text-bottom" />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
