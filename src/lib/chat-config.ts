@@ -5,8 +5,8 @@ import { publications } from "@/data/publications";
 // ----- Endpoint -----
 export const CHAT_ENDPOINT =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:1234/v1/chat/completions"
-    : "https://difandemac-studio.taildcf2a5.ts.net/v1/chat/completions";
+    ? "http://localhost:1234/api/v1/chat"
+    : "https://difandemac-studio.taildcf2a5.ts.net/api/v1/chat";
 
 // ----- Model -----
 // LM Studio ignores this when only one model is loaded.
