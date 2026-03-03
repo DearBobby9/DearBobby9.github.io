@@ -10,7 +10,7 @@ export const CHAT_ENDPOINT =
 
 // ----- Model -----
 // LM Studio ignores this when only one model is loaded.
-export const CHAT_MODEL = "qwen3-4b-instruct-2507-mlx";
+export const CHAT_MODEL = "qwen/qwen3.5-9b";
 
 // ----- Limits -----
 export const MAX_TURNS = 10;
