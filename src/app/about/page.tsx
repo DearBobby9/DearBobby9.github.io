@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 const timeline = [
     {
         period: "2025 – Present",
-        title: "PhD Student & Research Assistant",
+        title: "PhD Student & Teaching Assistant",
         organization: "University of Texas at Dallas",
         description: (
             <>
@@ -32,7 +32,7 @@ const timeline = [
     },
     {
         period: "2023 – 2025",
-        title: "B.S. in Computer Science",
+        title: "B.A. in Computer Science",
         organization: "University of Minnesota, Twin Cities",
         description: (
             <>
