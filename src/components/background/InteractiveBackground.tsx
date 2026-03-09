@@ -198,6 +198,15 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         window.addEventListener("touchmove", handleTouchMove, { passive: true });
         window.addEventListener("touchend", handleTouchEnd);
 
+        // Pre-squared constants to avoid sqrt in hot path
+        const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
+        const RIPPLE_BAND_SQ_OUTER: number[] = []; // computed per-ripple each frame
+
+        // Batch rendering: group dots by fillStyle to minimize state changes
+        // Key = rgba string, Value = array of [x, y, radius] or [x, y, rx, ry, rotation]
+        type CircleDraw = { x: number; y: number; r: number };
+        type EllipseDraw = { x: number; y: number; rx: number; ry: number; rot: number };
+
         // Animation loop
         const render = () => {
             if (!ctx) return;
@@ -205,8 +214,8 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             ctx.clearRect(0, 0, width, height);
 
             // Smooth mouse movement
-            mouse.x += (mouse.targetX - mouse.x) * 0.1;
-            mouse.y += (mouse.targetY - mouse.y) * 0.1;
+            mouse.x += (mouse.targetX - mouse.x) * 0.18;
+            mouse.y += (mouse.targetY - mouse.y) * 0.18;
 
             const time = performance.now();
             const palette = isDark ? paletteRef.current.dark : paletteRef.current.light;
@@ -224,100 +233,174 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                 }
             }
 
-            dots.forEach((dot) => {
+            // Pre-compute ripple bounding boxes for fast rejection
+            const activeRipples = ripples.map(r => ({
+                ...r,
+                innerR: r.radius - RIPPLE_BAND_WIDTH,
+                outerR: r.radius + RIPPLE_BAND_WIDTH,
+            }));
+
+            // Batch maps: collect draws by color, then flush once
+            const circleBatches = new Map<string, CircleDraw[]>();
+            const ellipseBatches = new Map<string, EllipseDraw[]>();
+
+            const hasRipples = activeRipples.length > 0;
+            const mouseInView = mouse.x > -500 && mouse.y > -500;
+
+            for (let i = 0, len = dots.length; i < len; i++) {
+                const dot = dots[i];
                 const dx = mouse.x - dot.originX;
                 const dy = mouse.y - dot.originY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+                // Use squared distance to avoid sqrt for far dots
+                const distSq = dx * dx + dy * dy;
 
-                // Accumulate ripple forces
+                // Accumulate ripple forces — only if ripples exist
                 let rippleForceX = 0;
                 let rippleForceY = 0;
-                let rippleIntensity = 0; // for visual brightness boost
+                let rippleIntensity = 0;
 
-                for (const ripple of ripples) {
-                    const rdx = dot.originX - ripple.x;
-                    const rdy = dot.originY - ripple.y;
-                    const dotDist = Math.sqrt(rdx * rdx + rdy * rdy);
-                    const ringDist = Math.abs(dotDist - ripple.radius);
+                if (hasRipples) {
+                    for (let ri = 0; ri < activeRipples.length; ri++) {
+                        const ripple = activeRipples[ri];
+                        const rdx = dot.originX - ripple.x;
+                        const rdy = dot.originY - ripple.y;
+                        const dotDistSq = rdx * rdx + rdy * rdy;
 
-                    if (ringDist < RIPPLE_BAND_WIDTH && dotDist > 0) {
-                        // Smooth bell-curve force within the band
-                        const t = ringDist / RIPPLE_BAND_WIDTH;
-                        const bandForce = Math.cos(t * Math.PI * 0.5); // cos falloff: 1 at center, 0 at edge
-                        const force = bandForce * ripple.strength * RIPPLE_DOT_FORCE;
+                        // Fast rejection: skip if clearly outside the band
+                        // dotDist must be between innerR and outerR
+                        if (dotDistSq < ripple.innerR * ripple.innerR && ripple.innerR > 0) continue;
+                        if (dotDistSq > ripple.outerR * ripple.outerR) continue;
 
-                        const angle = Math.atan2(rdy, rdx);
-                        rippleForceX += Math.cos(angle) * force;
-                        rippleForceY += Math.sin(angle) * force;
+                        const dotDist = Math.sqrt(dotDistSq);
+                        const ringDist = Math.abs(dotDist - ripple.radius);
 
-                        // Track max intensity for glow
-                        rippleIntensity = Math.max(rippleIntensity, bandForce * ripple.strength);
+                        if (ringDist < RIPPLE_BAND_WIDTH && dotDist > 0) {
+                            const t = ringDist / RIPPLE_BAND_WIDTH;
+                            const bandForce = Math.cos(t * Math.PI * 0.5);
+                            const force = bandForce * ripple.strength * RIPPLE_DOT_FORCE;
+
+                            const invDist = 1 / dotDist;
+                            rippleForceX += rdx * invDist * force;
+                            rippleForceY += rdy * invDist * force;
+
+                            rippleIntensity = Math.max(rippleIntensity, bandForce * ripple.strength);
+                        }
                     }
                 }
 
                 const [r, g, b] = palette[dot.colorIndex % palette.length];
-                let color: string;
                 let scale = 1;
+                let alpha: number;
 
-                if (dist < MOUSE_RADIUS) {
+                if (mouseInView && distSq < MOUSE_RADIUS_SQ) {
+                    const dist = Math.sqrt(distSq);
                     const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
                     const angle = Math.atan2(dy, dx);
 
-                    // Breathing oscillation
                     const oscillation = Math.sin(time * 0.002 + dist * 0.05);
-
-                    // Displacement (repulsion from mouse + ripple)
                     const moveDist = force * 20 + (force * oscillation * 22.5);
-                    const tx = dot.originX - Math.cos(angle) * moveDist + rippleForceX;
-                    const ty = dot.originY - Math.sin(angle) * moveDist + rippleForceY;
+                    const cosA = Math.cos(angle);
+                    const sinA = Math.sin(angle);
+                    const tx = dot.originX - cosA * moveDist + rippleForceX;
+                    const ty = dot.originY - sinA * moveDist + rippleForceY;
 
-                    dot.x += (tx - dot.x) * 0.15;
-                    dot.y += (ty - dot.y) * 0.15;
+                    dot.x += (tx - dot.x) * 0.25;
+                    dot.y += (ty - dot.y) * 0.25;
 
-                    // Scale & color — combine mouse proximity + ripple intensity
                     scale = 1 + force * 1.5 + (force * oscillation * 0.75) + rippleIntensity * 2.5;
-                    const alpha = 0.08 + force * 0.45 + rippleIntensity * 0.5;
-                    color = `rgba(${r}, ${g}, ${b}, ${Math.min(alpha, 0.9)})`;
+                    alpha = Math.min(0.08 + force * 0.45 + rippleIntensity * 0.5, 0.9);
 
-                    // [Enhancement 4] Shape variation — ellipse near mouse
+                    // Quantize alpha to reduce unique fillStyle strings
+                    alpha = Math.round(alpha * 50) / 50;
+                    const color = `rgba(${r},${g},${b},${alpha})`;
+
                     const stretch = 1 + force * 1.8;
-                    ctx.fillStyle = color;
-                    ctx.beginPath();
-                    ctx.ellipse(
-                        dot.x,
-                        dot.y,
-                        DOT_SIZE * scale * stretch,
-                        DOT_SIZE * scale,
-                        angle + Math.PI / 2,
-                        0,
-                        Math.PI * 2
-                    );
-                    ctx.fill();
+                    let batch = ellipseBatches.get(color);
+                    if (!batch) { batch = []; ellipseBatches.set(color, batch); }
+                    batch.push({
+                        x: dot.x, y: dot.y,
+                        rx: DOT_SIZE * scale * stretch,
+                        ry: DOT_SIZE * scale,
+                        rot: angle + Math.PI / 2,
+                    });
                 } else {
-                    // [Enhancement 2] Idle micro-animation
-                    const driftX = Math.sin(time * 0.0008 + dot.phase) * 2.25;
-                    const driftY = Math.cos(time * 0.0006 + dot.phase * 1.3) * 2.25;
+                    const driftX = Math.sin(time * 0.0015 + dot.phase) * 2.25;
+                    const driftY = Math.cos(time * 0.0012 + dot.phase * 1.3) * 2.25;
 
                     const targetX = dot.originX + driftX + rippleForceX;
                     const targetY = dot.originY + driftY + rippleForceY;
 
-                    dot.x += (targetX - dot.x) * 0.12;
-                    dot.y += (targetY - dot.y) * 0.12;
+                    dot.x += (targetX - dot.x) * 0.2;
+                    dot.y += (targetY - dot.y) * 0.2;
 
-                    // Scale & opacity — dramatic boost from ripple
                     scale = 1 + rippleIntensity * 3;
                     const baseAlpha = 0.04 + Math.sin(time * 0.001 + dot.phase) * 0.045;
-                    const alpha = baseAlpha + rippleIntensity * 0.55;
-                    color = `rgba(${r}, ${g}, ${b}, ${Math.min(Math.max(0.01, alpha), 0.85)})`;
+                    alpha = Math.min(Math.max(0.01, baseAlpha + rippleIntensity * 0.55), 0.85);
 
-                    ctx.fillStyle = color;
+                    // Quantize alpha to batch more aggressively for idle dots
+                    alpha = Math.round(alpha * 20) / 20;
+                    const color = `rgba(${r},${g},${b},${alpha})`;
+
+                    const radius = DOT_SIZE * scale;
+                    // For tiny idle dots, use fillRect (no arc path needed)
+                    if (scale < 1.5) {
+                        const size = radius * 2;
+                        let batch = circleBatches.get(color);
+                        if (!batch) { batch = []; circleBatches.set(color, batch); }
+                        batch.push({ x: dot.x - radius, y: dot.y - radius, r: size });
+                    } else {
+                        let batch = circleBatches.get(color);
+                        if (!batch) { batch = []; circleBatches.set(color, batch); }
+                        batch.push({ x: dot.x, y: dot.y, r: -radius }); // negative = arc mode
+                    }
+                }
+            }
+
+            // Flush circle batches — one fillStyle change per unique color
+            circleBatches.forEach((draws, color) => {
+                ctx.fillStyle = color;
+                // Split into rect draws (r > 0 = size) and arc draws (r < 0 = radius)
+                let hasRect = false;
+                let hasArc = false;
+                for (let i = 0; i < draws.length; i++) {
+                    if (draws[i].r > 0) { hasRect = true; } else { hasArc = true; }
+                    if (hasRect && hasArc) break;
+                }
+
+                if (hasRect) {
+                    for (let i = 0; i < draws.length; i++) {
+                        const d = draws[i];
+                        if (d.r > 0) ctx.fillRect(d.x, d.y, d.r, d.r);
+                    }
+                }
+                if (hasArc) {
                     ctx.beginPath();
-                    ctx.arc(dot.x, dot.y, DOT_SIZE * scale, 0, Math.PI * 2);
+                    for (let i = 0; i < draws.length; i++) {
+                        const d = draws[i];
+                        if (d.r < 0) {
+                            const radius = -d.r;
+                            ctx.moveTo(d.x + radius, d.y);
+                            ctx.arc(d.x, d.y, radius, 0, Math.PI * 2);
+                        }
+                    }
                     ctx.fill();
                 }
             });
 
-            // No stroke rings — ripple is expressed entirely through particle movement and glow
+            // Flush ellipse batches
+            ellipseBatches.forEach((draws, color) => {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                for (let i = 0; i < draws.length; i++) {
+                    const d = draws[i];
+                    ctx.moveTo(
+                        d.x + d.rx * Math.cos(d.rot),
+                        d.y + d.rx * Math.sin(d.rot)
+                    );
+                    ctx.ellipse(d.x, d.y, d.rx, d.ry, d.rot, 0, Math.PI * 2);
+                }
+                ctx.fill();
+            });
 
             animationFrameId = requestAnimationFrame(render);
         };
