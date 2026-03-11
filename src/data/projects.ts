@@ -51,10 +51,10 @@ export const projects: Project[] = [
     {
         slug: "refbib",
         title: "RefBib",
-        oneLiner: "Extract real BibTeX from academic PDF references — no AI hallucinations, just real citations from CrossRef, Semantic Scholar, and DBLP",
+        oneLiner: "Drop a PDF, get .bib — extract real BibTeX from academic references with zero AI hallucinations, verified by CrossRef, Semantic Scholar, and DBLP",
         year: "2026",
         category: "Build",
-        tags: ["Academic Tools", "Python", "Next.js"],
+        tags: ["Academic Tools", "Python", "Next.js", "GROBID"],
         image: "/images/projects/refbib.webp",
         links: {
             code: "https://github.com/DearBobby9/RefBib",

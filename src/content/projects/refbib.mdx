@@ -1,21 +1,53 @@
 ## Overview
 
-RefBib extracts references from academic PDFs and resolves them into reliable BibTeX records. The goal is deterministic citation quality instead of hallucinated metadata.
+RefBib extracts references from academic PDFs and resolves them into standardized BibTeX entries — in one click. No LLMs, no hallucinated metadata. Every citation is verified against real academic databases: CrossRef, Semantic Scholar, DBLP, or GROBID's structured parsing.
+
+<div className="app-gallery">
+  <figure>
+    <img src="/images/projects/refbib/extract-light.png" alt="RefBib Extract page — light mode" />
+    <figcaption>Extract — Light</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/projects/refbib/extract-dark.png" alt="RefBib Extract page — dark mode" />
+    <figcaption>Extract — Dark</figcaption>
+  </figure>
+</div>
 
 ## Pipeline
 
-1. Parse reference sections from input PDFs.
-2. Normalize candidate entries and query citation databases.
-3. Rank and validate returned records before export.
+1. **Upload** — Drop up to 20 PDFs with sequential batch processing. Append more at any stage without losing results.
+2. **Parse** — GROBID extracts structured references from each PDF with multi-instance fallback.
+3. **Resolve** — Waterfall resolution: CrossRef → Semantic Scholar → DBLP → GROBID fallback. Each entry gets a match status (Matched / Fuzzy / Unmatched).
+4. **Deduplicate** — DOI, fingerprint, and bigram similarity detect duplicates across papers. Conflicts enter a resolution queue.
+5. **Export** — Download deduplicated `.bib` or occurrence-preserving BibTeX. Copy-to-clipboard for quick use.
 
-![RefBib interface](/images/projects/refbib.png)
+<div className="app-gallery">
+  <figure>
+    <img src="/images/projects/refbib/workspace-light.png" alt="Workspace with references and export actions" />
+    <figcaption>Workspace</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/projects/refbib/analytics-light.png" alt="Analytics — year distribution, match quality, and top venues" />
+    <figcaption>Analytics</figcaption>
+  </figure>
+</div>
 
-## Data Sources
+## Key Features
 
-- CrossRef
-- Semantic Scholar
-- DBLP
+- **Workspace** — Local-first reference management with automatic deduplication, conflict resolution, search, and status filtering.
+- **Analytics** — Citation year distribution, venue breakdown, match quality donut chart, and most-cited references ranking.
+- **Manual Override** — BibTeX editor for individual entries, DOI resolution for unmatched refs, Google Scholar links for every reference.
+- **Light/Dark Theme** — Full theme support across all views.
+- **Self-Hostable** — One-command setup (`./start.sh`), optional password protection, configurable GROBID instances.
+
+## Tech Stack
+
+- **Frontend** — Next.js (App Router), shadcn/ui, Tailwind CSS, Recharts
+- **Backend** — Python, FastAPI, httpx, lxml
+- **PDF Processing** — GROBID with TEI XML output (local Docker or remote instances)
+- **Data Sources** — CrossRef, Semantic Scholar, DBLP
+- **Deployment** — Fly.io (backend) + Vercel (frontend)
 
 ## My Role
 
-Built the full product stack, including parsing logic, retrieval strategy, scoring heuristics, and web deployment.
+Everything — parsing pipeline, waterfall resolution strategy, scoring heuristics, workspace UX, analytics visualizations, and deployment infrastructure. Built entirely through Claude Code.
