@@ -1,22 +1,60 @@
 ## Overview
 
-NoteV is a multimodal knowledge AI agent designed for lecture scenarios with smart glasses. The system captures what the learner sees and hears, then transforms it into structured notes in near real-time.
+NoteV is an AI classroom assistant designed for Meta Ray-Ban smart glasses that captures audio and visual content during lectures, then generates structured multimodal notes. The system works equally well with just an iPhone camera — no smart glasses required.
 
-## How It Works
+<div className="phone-gallery">
+  <figure>
+    <img src="/images/projects/notev/home-glasses-connected.png" alt="Home — Glasses Connected" />
+    <figcaption>Home</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/projects/notev/timeline-transcript.png" alt="Polished Timeline with transcript and slides" />
+    <figcaption>Polished Timeline</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/projects/notev/ai-chat-course-setup.png" alt="AI Chat with course setup" />
+    <figcaption>AI Chat</figcaption>
+  </figure>
+</div>
 
-1. Smart glasses capture first-person video and audio during class.
-2. The backend transcribes speech and parses visual context.
-3. A multimodal pipeline merges events into clean, searchable notes.
+## Three-Layer Output
 
-![NoteV teaser](/images/projects/notev.png)
+1. **Polished Timeline** — AI-refined transcript with embedded images, highlighted bookmarks, and persistent section headers.
+2. **AI Notes** — Structured notes segmented by slide transitions, complete with timestamps and a navigation table of contents.
+3. **Action Items** — Extracted tasks with categories, priority levels, and due dates; supports batch export to iOS Reminders and Calendar.
+
+## Smart Recording
+
+- **Dual Capture Sources** — Meta Ray-Ban glasses via DAT SDK or iPhone rear camera with automatic fallback.
+- **Real-Time Speech Processing** — Deepgram WebSocket streaming with connection persistence and graceful disconnection.
+- **Intelligent Bookmarking** — Automatically identifies key moments using a 4-tier keyword taxonomy with confidence metrics.
+- **Visual Intelligence** — 5-second sampling intervals, SSIM change detection, perceptual hashing for slide deduplication.
+- **Slide Content Analysis** — LLM vision extracts slide information (titles, bullet points, equations, diagrams).
+
+## AI Chat
+
+- Unified conversational interface for note queries, course setup, settings, and reminder creation.
+- Voice-powered input via Deepgram transcription.
+- Interactive action cards for user confirmation on course additions, setting changes, and reminder generation.
+- Full access to session transcripts, generated notes, slide images, and task lists.
+
+## Architecture
+
+The system is organized into four layers:
+
+- **Capture Layer** — `CaptureProvider` protocol supporting Meta Ray-Ban DAT SDK v0.4.0 and `AVCaptureSession` for iPhone fallback.
+- **Processing Layer** — `AudioPipeline` (Deepgram nova-3 primary, Apple Speech fallback), `FramePipeline` (SSIM + perceptual hash deduplication), `SmartBookmarkDetector`, and `SessionRecorder` orchestration.
+- **Generation Layer** — `TranscriptPolisher`, `SlideAnalyzer` (LLM vision), `NoteGenerator` (multimodal LLM), and `TodoExtractor`.
+- **Presentation Layer** — Three output views (Timeline, Notes, Actions), AI Chat interface, and course management dashboard.
 
 ## Tech Stack
 
-- Meta Ray-Ban smart glasses SDK
-- Python + FastAPI backend
-- Whisper-based speech recognition
-- Structured note pipeline with retrieval-friendly output
+- **Platform** — iOS 17+, Swift 6, SwiftUI
+- **Smart Glasses** — Meta Ray-Ban Gen-2 (DAT SDK v0.4.0)
+- **Speech-to-Text** — Deepgram nova-3 WebSocket (primary); Apple Speech (fallback)
+- **LLM** — OpenAI GPT-4o, Anthropic Claude, Google Gemini (user-configurable)
+- **Native APIs** — EventKit, PDFKit, Speech, AVFoundation
 
 ## My Role
 
-Led system design and end-to-end prototyping, including multimodal data flow, API integration, and note-generation UX.
+Led full-stack design and development — system architecture, multimodal capture pipeline, AI note generation, chat interface, and course management UX.

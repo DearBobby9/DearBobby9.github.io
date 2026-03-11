@@ -30,12 +30,14 @@ export const projects: Project[] = [
     {
         slug: "notev",
         title: "NoteV",
-        oneLiner: "A multimodal knowledge AI agent for Meta Ray-Ban smart glasses that sees and hears your lectures",
+        oneLiner: "Every AI note-taker can hear. Ours can see — a multimodal AI assistant for Meta Ray-Ban smart glasses that captures and structures your lectures",
         year: "2026",
         category: "Build",
-        tags: ["Smart Glasses", "AI", "EdTech", "Wearable"],
+        tags: ["Smart Glasses", "AI", "EdTech", "iOS", "Swift"],
         image: "/images/projects/notev.webp",
-        links: {},
+        links: {
+            code: "https://github.com/DearBobby9/NoteV_Glasses",
+        },
         inspiration: {
             name: "VisionClaw",
             url: "https://github.com/sseanliu/VisionClaw",

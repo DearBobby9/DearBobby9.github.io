@@ -294,6 +294,65 @@
     @apply p-0 bg-transparent;
   }
 
+  /* Phone screenshot gallery */
+  .phone-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 2rem 1.5rem;
+    margin: 1.5rem -1.5rem;
+    background: linear-gradient(145deg, hsl(0 0% 4%), hsl(180 5% 8%));
+    border-radius: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .phone-gallery figure {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+  }
+
+  .phone-gallery img {
+    height: 480px;
+    width: auto !important;
+    border-radius: 1.25rem;
+    border: 1px solid hsl(0 0% 18%) !important;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
+    object-fit: contain;
+  }
+
+  .phone-gallery figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: hsl(0 0% 45%);
+  }
+
+  @media (max-width: 768px) {
+    .phone-gallery {
+      gap: 1rem;
+      padding: 1.5rem 1rem;
+      margin: 1.5rem -1rem;
+    }
+
+    .phone-gallery img {
+      height: 380px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .phone-gallery img {
+      height: 320px;
+    }
+  }
+
   /* Chat Markdown — compact styles for chatbot messages */
   .chat-markdown p {
     @apply text-xs leading-relaxed;
