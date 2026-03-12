@@ -67,11 +67,12 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         const RIPPLE_DOT_FORCE = 52.5;      // strong outward push
         const RIPPLE_INITIAL_STRENGTH = 2.0; // doubled initial energy
 
-        // [Enhancement 3] Dynamic dark mode detection
-        let isDark = document.documentElement.classList.contains("dark");
+        // [Enhancement 3] Dynamic dark mode detection with smooth interpolation
+        let darkProgress = document.documentElement.classList.contains("dark") ? 1 : 0;
+        let darkTarget = darkProgress;
 
         const observer = new MutationObserver(() => {
-            isDark = document.documentElement.classList.contains("dark");
+            darkTarget = document.documentElement.classList.contains("dark") ? 1 : 0;
         });
         observer.observe(document.documentElement, {
             attributes: true,
@@ -213,12 +214,18 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
 
             ctx.clearRect(0, 0, width, height);
 
+            // Smooth dark mode interpolation — 0.12 factor ≈ 0.6s to 99% at 60fps
+            darkProgress += (darkTarget - darkProgress) * 0.12;
+            if (Math.abs(darkTarget - darkProgress) < 0.001) darkProgress = darkTarget;
+            const dp = darkProgress; // 0 = light, 1 = dark
+
             // Smooth mouse movement
             mouse.x += (mouse.targetX - mouse.x) * 0.18;
             mouse.y += (mouse.targetY - mouse.y) * 0.18;
 
             const time = performance.now();
-            const palette = isDark ? paletteRef.current.dark : paletteRef.current.light;
+            const lightPalette = paletteRef.current.light;
+            const darkPalette = paletteRef.current.dark;
 
             // Update ripples — slower decay for longer-lasting waves
             for (let i = ripples.length - 1; i >= 0; i--) {
@@ -288,7 +295,11 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     }
                 }
 
-                const [r, g, b] = palette[dot.colorIndex % palette.length];
+                const ci = dot.colorIndex % lightPalette.length;
+                const lc = lightPalette[ci], dc = darkPalette[ci % darkPalette.length];
+                const r = Math.round(lc[0] + (dc[0] - lc[0]) * dp);
+                const g = Math.round(lc[1] + (dc[1] - lc[1]) * dp);
+                const b = Math.round(lc[2] + (dc[2] - lc[2]) * dp);
                 let scale = 1;
                 let alpha: number;
 
@@ -426,7 +437,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
         <div
             ref={containerRef}
             className={cn(
-                "fixed inset-0 -z-10 bg-background pointer-events-none transition-colors duration-300",
+                "fixed inset-0 -z-10 bg-background pointer-events-none transition-colors duration-600 ease-in-out",
                 className
             )}
         >

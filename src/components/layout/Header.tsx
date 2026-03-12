@@ -72,7 +72,7 @@ export function Header() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = React.useState(false);
     const [mounted, setMounted] = React.useState(false);
-    const { theme, setTheme } = useTheme();
+    const { theme, resolvedTheme, setTheme } = useTheme();
     const { paletteId, setPaletteId, customColors, setCustomColors } = usePalette();
     const scrollToHash = useScrollToHash();
 
@@ -119,19 +119,23 @@ export function Header() {
 
                 {/* Right side */}
                 <div className="flex items-center gap-2">
-                    {/* Theme toggle */}
+                    {/* Theme toggle — glow on hover, spin on click */}
                     {mounted && (
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-9 w-9"
-                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                            className={cn(
+                                "h-9 w-9 theme-toggle",
+                                resolvedTheme === "dark" ? "theme-toggle--dark" : "theme-toggle--light"
+                            )}
+                            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                             aria-label="Toggle theme"
                         >
-                            {theme === "dark" ? (
-                                <Sun className="h-4 w-4" />
+                            <span className="theme-toggle__glow" aria-hidden="true" />
+                            {resolvedTheme === "dark" ? (
+                                <Sun key="sun" className="h-4 w-4 theme-toggle__icon" />
                             ) : (
-                                <Moon className="h-4 w-4" />
+                                <Moon key="moon" className="h-4 w-4 theme-toggle__icon" />
                             )}
                         </Button>
                     )}
@@ -162,7 +166,7 @@ export function Header() {
                                             <DropdownMenuRadioItem key={id} value={id}>
                                                 <span className="flex items-center gap-2">
                                                     <span className="flex gap-0.5">
-                                                        {(theme === "dark" ? p.dark : p.light).slice(0, 3).map((c, i) => (
+                                                        {(resolvedTheme === "dark" ? p.dark : p.light).slice(0, 3).map((c, i) => (
                                                             <span
                                                                 key={i}
                                                                 className="inline-block w-2.5 h-2.5 rounded-full"
@@ -186,7 +190,7 @@ export function Header() {
                                         <span className="flex items-center gap-2">
                                             <span className="flex gap-0.5">
                                                 {customColors.slice(0, 3).map((c, i) => {
-                                                    const dc = theme === "dark" ? generateDarkVariant(c) : c;
+                                                    const dc = resolvedTheme === "dark" ? generateDarkVariant(c) : c;
                                                     return (
                                                         <span
                                                             key={i}
@@ -297,7 +301,7 @@ export function Header() {
                                     <div className="flex flex-wrap justify-center gap-3">
                                         {PALETTE_ORDER.map((id) => {
                                             const p = COLOR_PALETTES[id];
-                                            const colors = theme === "dark" ? p.dark : p.light;
+                                            const colors = resolvedTheme === "dark" ? p.dark : p.light;
                                             return (
                                                 <button
                                                     key={id}
@@ -333,7 +337,7 @@ export function Header() {
                                         >
                                             <span className="flex gap-0.5">
                                                 {customColors.slice(0, 3).map((c, i) => {
-                                                    const dc = theme === "dark" ? generateDarkVariant(c) : c;
+                                                    const dc = resolvedTheme === "dark" ? generateDarkVariant(c) : c;
                                                     return (
                                                         <span
                                                             key={i}
