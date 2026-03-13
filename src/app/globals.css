@@ -454,43 +454,101 @@
     letter-spacing: normal;
   }
 
-  /* Theme toggle — glow ring + icon spin */
+  /* Theme toggle — boundaryless diffused aura */
   .theme-toggle {
     position: relative;
     overflow: visible;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--foreground);
+    transition: color 0.3s ease;
   }
 
-  .theme-toggle__glow {
+  .theme-toggle:hover {
+    background: transparent;
+  }
+
+  /* Diffused radial aura — box-shadow based (immune to backdrop-filter clipping) */
+  .theme-toggle__aura {
     position: absolute;
-    inset: 3px;
-    border-radius: 6px;
+    width: 8px;
+    height: 8px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: transparent;
     opacity: 0;
-    transition: opacity 0.35s ease, box-shadow 0.35s ease;
     pointer-events: none;
+    transition: opacity 0.4s ease;
   }
 
-  .theme-toggle:hover .theme-toggle__glow {
+  .theme-toggle:hover .theme-toggle__aura {
     opacity: 1;
   }
 
-  /* Light mode → warm orange glow (sun preview) */
-  .theme-toggle--light:hover .theme-toggle__glow {
-    box-shadow:
-      0 0 14px 3px rgba(255, 157, 0, 0.3),
-      inset 0 0 10px rgba(255, 157, 0, 0.12);
+  .theme-toggle--light .theme-toggle__aura {
+    box-shadow: 0 0 18px 10px rgba(255, 170, 40, 0.35);
   }
 
-  /* Dark mode → purple glow (moon preview) */
-  .theme-toggle--dark:hover .theme-toggle__glow {
-    box-shadow:
-      0 0 14px 3px rgba(168, 85, 247, 0.35),
-      inset 0 0 10px rgba(168, 85, 247, 0.15);
+  .theme-toggle--dark .theme-toggle__aura {
+    box-shadow: 0 0 18px 10px rgba(168, 85, 247, 0.4);
   }
 
+  /* Click burst — box-shadow based, expands via animation */
+  .theme-toggle__burst {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .theme-toggle__burst.active {
+    animation: theme-burst 0.55s ease-out forwards;
+  }
+
+  .theme-toggle--light .theme-toggle__burst.active {
+    box-shadow: 0 0 24px 14px rgba(255, 180, 60, 0.5);
+  }
+
+  .theme-toggle--dark .theme-toggle__burst.active {
+    box-shadow: 0 0 24px 14px rgba(168, 85, 247, 0.55);
+  }
+
+  @keyframes theme-burst {
+    0% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.5); }
+    60% { opacity: 0.4; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(3); }
+  }
+
+  /* Icon — spin-in + hover drop-shadow */
   .theme-toggle__icon {
     position: relative;
     z-index: 1;
     animation: theme-icon-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    filter: drop-shadow(0 0 0px transparent);
+    transition: filter 0.35s ease;
+  }
+
+  .theme-toggle--light:hover .theme-toggle__icon {
+    filter: drop-shadow(0 0 4px rgba(255, 160, 0, 0.5));
+  }
+
+  .theme-toggle--dark:hover .theme-toggle__icon {
+    filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.55));
   }
 
   @keyframes theme-icon-enter {
@@ -502,6 +560,127 @@
       opacity: 1;
       transform: rotate(0deg) scale(1);
     }
+  }
+
+  /* Palette toggle — rainbow aura */
+  .palette-toggle {
+    position: relative;
+    overflow: visible;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--foreground);
+    transition: color 0.3s ease;
+  }
+
+  .palette-toggle:hover {
+    background: transparent;
+  }
+
+  /* Rainbow aura — rotating conic gradient via box-shadows */
+  .palette-toggle__aura {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    /* Multi-color box-shadows to simulate rainbow */
+    box-shadow:
+      -8px -4px 14px 4px rgba(255, 80, 80, 0.35),
+       0px -8px 14px 4px rgba(255, 180, 40, 0.35),
+       8px -4px 14px 4px rgba(80, 220, 100, 0.35),
+       8px  4px 14px 4px rgba(60, 160, 255, 0.35),
+      -8px  4px 14px 4px rgba(168, 85, 247, 0.35),
+       0px  8px 14px 4px rgba(255, 100, 180, 0.35);
+  }
+
+  .palette-toggle:hover .palette-toggle__aura,
+  .palette-toggle[data-state="open"] .palette-toggle__aura {
+    opacity: 1;
+  }
+
+  /* Water ripple rings — thin rings expanding outward like 涟漪 */
+  .palette-toggle__ring {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.3);
+    border-radius: 50%;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .palette-toggle__ring:nth-child(2) {
+    border: 1.5px solid rgba(255, 120, 80, 0.6);
+  }
+  .palette-toggle__ring:nth-child(3) {
+    border: 1.5px solid rgba(255, 190, 60, 0.55);
+  }
+  .palette-toggle__ring:nth-child(4) {
+    border: 1.5px solid rgba(100, 200, 140, 0.5);
+  }
+  .palette-toggle__ring:nth-child(5) {
+    border: 1.5px solid rgba(100, 160, 255, 0.5);
+  }
+
+  .palette-toggle__ring.active {
+    animation: palette-ripple 0.9s ease-out forwards;
+  }
+  .palette-toggle__ring.active:nth-child(3) { animation-delay: 0.1s; }
+  .palette-toggle__ring.active:nth-child(4) { animation-delay: 0.2s; }
+  .palette-toggle__ring.active:nth-child(5) { animation-delay: 0.3s; }
+
+  @keyframes palette-ripple {
+    0% {
+      opacity: 0.7;
+      transform: translate(-50%, -50%) scale(0.3);
+    }
+    40% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(3.5);
+    }
+  }
+
+  .palette-toggle__icon {
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 0 0px transparent);
+    transition: filter 0.35s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .palette-toggle:hover .palette-toggle__icon,
+  .palette-toggle[data-state="open"] .palette-toggle__icon {
+    filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.4))
+            drop-shadow(0 0 3px rgba(255, 160, 40, 0.3));
+  }
+
+  /* Palette icon wiggle on click */
+  .palette-toggle__icon.clicked {
+    animation: palette-wiggle 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes palette-wiggle {
+    0% { transform: rotate(0deg) scale(1); }
+    40% { transform: rotate(-15deg) scale(0.9); }
+    100% { transform: rotate(0deg) scale(1); }
   }
 
   @keyframes blink {

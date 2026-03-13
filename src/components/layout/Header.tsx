@@ -76,6 +76,7 @@ export function Header() {
     const { paletteId, setPaletteId, customColors, setCustomColors } = usePalette();
     const scrollToHash = useScrollToHash();
 
+    const paletteRef = React.useRef<HTMLButtonElement>(null);
     React.useEffect(() => setMounted(true), []);
 
     const navItems = navigation;
@@ -119,39 +120,66 @@ export function Header() {
 
                 {/* Right side */}
                 <div className="flex items-center gap-2">
-                    {/* Theme toggle — glow on hover, spin on click */}
+                    {/* Theme toggle — boundaryless diffused aura */}
                     {mounted && (
-                        <Button
-                            variant="ghost"
-                            size="icon"
+                        <button
                             className={cn(
-                                "h-9 w-9 theme-toggle",
+                                "theme-toggle",
                                 resolvedTheme === "dark" ? "theme-toggle--dark" : "theme-toggle--light"
                             )}
-                            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                            onClick={(e) => {
+                                // Trigger burst animation
+                                const burst = e.currentTarget.querySelector('.theme-toggle__burst');
+                                if (burst) {
+                                    burst.classList.remove('active');
+                                    void (burst as HTMLElement).offsetWidth;
+                                    burst.classList.add('active');
+                                }
+                                setTheme(resolvedTheme === "dark" ? "light" : "dark");
+                            }}
                             aria-label="Toggle theme"
                         >
-                            <span className="theme-toggle__glow" aria-hidden="true" />
+                            <span className="theme-toggle__aura" aria-hidden="true" />
+                            <span className="theme-toggle__burst" aria-hidden="true" />
                             {resolvedTheme === "dark" ? (
                                 <Sun key="sun" className="h-4 w-4 theme-toggle__icon" />
                             ) : (
                                 <Moon key="moon" className="h-4 w-4 theme-toggle__icon" />
                             )}
-                        </Button>
+                        </button>
                     )}
 
                     {/* Palette selector (desktop only) */}
                     {mounted && (
-                        <DropdownMenu>
+                        <DropdownMenu onOpenChange={(open) => {
+                            if (!open) return;
+                            const btn = paletteRef.current;
+                            if (!btn) return;
+                            btn.querySelectorAll('.palette-toggle__ring').forEach((ring) => {
+                                ring.classList.remove('active');
+                                void (ring as HTMLElement).offsetWidth;
+                                ring.classList.add('active');
+                            });
+                            const icon = btn.querySelector('.palette-toggle__icon');
+                            if (icon) {
+                                icon.classList.remove('clicked');
+                                void (icon as HTMLElement).offsetWidth;
+                                icon.classList.add('clicked');
+                            }
+                        }}>
                             <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="hidden md:inline-flex h-9 w-9"
+                                <button
+                                    ref={paletteRef}
+                                    className="hidden md:inline-flex palette-toggle"
                                     aria-label="Change color palette"
                                 >
-                                    <Palette className="h-4 w-4" />
-                                </Button>
+                                    <span className="palette-toggle__aura" aria-hidden="true" />
+                                    <span className="palette-toggle__ring" aria-hidden="true" />
+                                    <span className="palette-toggle__ring" aria-hidden="true" />
+                                    <span className="palette-toggle__ring" aria-hidden="true" />
+                                    <span className="palette-toggle__ring" aria-hidden="true" />
+                                    <Palette className="h-4 w-4 palette-toggle__icon" />
+                                </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Color Palette</DropdownMenuLabel>
