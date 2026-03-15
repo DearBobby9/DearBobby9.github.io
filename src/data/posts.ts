@@ -10,7 +10,17 @@ export interface Post {
     tags: string[];
 }
 
-export const posts: Post[] = [];
+export const posts: Post[] = [
+    {
+        slug: "macbook-setup-2025",
+        title: "My MacBook Setup for CS in 2025",
+        date: "2026-03-15",
+        readingTime: "5 min read",
+        summary:
+            "The 16 apps I install on every new Mac — from launcher to terminal to AI tools. An opinionated guide for CS students and developers.",
+        tags: ["Setup", "Productivity", "Tools"],
+    },
+];
 
 // Helper: Get all unique tags
 export const allPostTags = Array.from(new Set(posts.flatMap((p) => p.tags)));

@@ -255,7 +255,7 @@
 
   .mdx-content p {
     @apply text-base md:text-lg leading-relaxed text-muted-foreground;
-    font-weight: 300;
+    font-weight: 400;
   }
 
   .mdx-content ul,

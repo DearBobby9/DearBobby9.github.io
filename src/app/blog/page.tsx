@@ -23,7 +23,7 @@ export default function BlogPage() {
 
     return (
         <section className="section pt-24 md:pt-32">
-            <div className="container-custom">
+            <div className="container-custom glass-panel">
                 {/* Page header */}
                 <h1 className="mb-4">Blog</h1>
                 <p className="text-lg text-muted-foreground mb-12 max-w-2xl">

@@ -12,6 +12,10 @@ export async function getPublicationMDX(id: string) {
     return getMDXContent("publications", id);
 }
 
+export async function getBlogContent(slug: string) {
+    return getMDXContent("blog", slug);
+}
+
 async function getMDXContent(type: string, name: string) {
     const filePath = path.join(contentDir, type, `${name}.mdx`);
 
