@@ -12,8 +12,8 @@ export interface Post {
 
 export const posts: Post[] = [
     {
-        slug: "macbook-setup-2025",
-        title: "My MacBook Setup for CS in 2025",
+        slug: "macbook-setup-2026",
+        title: "My MacBook Setup for CS in 2026",
         date: "2026-03-15",
         readingTime: "5 min read",
         summary:
