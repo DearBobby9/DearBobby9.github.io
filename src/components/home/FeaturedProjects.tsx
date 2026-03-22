@@ -9,9 +9,17 @@ export function FeaturedProjects() {
     return (
         <section id="projects" className="section scroll-mt-20">
             <div className="container-custom glass-panel">
-                {/* Section header */}
-                <div className="mb-12">
-                    <h2>Projects</h2>
+                {/* Section header — split layout with eyebrow (#6, #9) */}
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-14">
+                    <div className="md:w-3/5">
+                        <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground block mb-3">Featured Work</span>
+                        <h2>Projects</h2>
+                    </div>
+                    <div className="md:w-2/5 md:pt-10">
+                        <p className="text-sm text-muted-foreground max-w-[40ch]" style={{ lineHeight: '1.85' }}>
+                            Systems built at the intersection of AR, spatial computing, and fabrication.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Projects grid */}
@@ -31,7 +39,7 @@ function ProjectCard({ project }: { project: Project }) {
     const detailHref = `/projects/${project.slug}`;
 
     const imageBlock = (
-        <div className="aspect-video bg-muted relative overflow-hidden">
+        <div className="aspect-video bg-foreground/[3%] ring-1 ring-inset ring-foreground/[0.04] relative overflow-hidden">
             {project.image ? (
                 <Image
                     src={project.image}
@@ -47,7 +55,7 @@ function ProjectCard({ project }: { project: Project }) {
     );
 
     return (
-        <Card className="group h-full gap-0 py-0 overflow-hidden border-border/50 bg-card hover:bg-accent hover:border-border transition-all duration-300">
+        <Card className="group h-full gap-0 py-0 overflow-hidden bg-card hover:bg-accent hover:shadow-md hover:ring-foreground/[0.12] transition-all duration-300">
             {/* Project image */}
             {hasDetail ? (
                 <Link href={detailHref} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -115,7 +123,7 @@ function ProjectCard({ project }: { project: Project }) {
                 </div>
 
                 {/* Bottom: Tags + Links on same row, pushed to bottom */}
-                <div className="mt-auto pt-3 border-t border-border/40 flex items-center justify-between">
+                <div className="mt-auto pt-3 border-t border-foreground/[0.06] flex items-center justify-between">
                     <div className="flex flex-wrap gap-1.5">
                         {project.tags.slice(0, 3).map((tag) => (
                             <Badge

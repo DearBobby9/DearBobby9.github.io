@@ -58,7 +58,7 @@ export default function AboutPage() {
                     {/* Left column - Photo and quick info */}
                     <div className="lg:col-span-4">
                         {/* Photo */}
-                        <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-2 border-border mx-auto lg:mx-0 mb-8">
+                        <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden ring-2 ring-foreground/[0.1] mx-auto lg:mx-0 mb-8">
                             <Image
                                 src="/images/profile-about.webp"
                                 alt="Difan Jia"

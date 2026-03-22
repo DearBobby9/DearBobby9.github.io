@@ -32,7 +32,7 @@ export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="border-t border-border/40">
+        <footer className="shadow-[inset_0_1px_0_0] shadow-foreground/[0.06]">
             <div className="container-custom py-12 md:py-16 glass-panel my-8">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     {/* Left: Name and copyright */}

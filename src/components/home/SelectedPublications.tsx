@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FileText, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { selectedPublications, type Publication } from "@/data/publications";
 import { BibtexCopyButton } from "@/components/publications/BibtexCopyButton";
 
@@ -11,9 +10,17 @@ export function SelectedPublications() {
     return (
         <section id="publications" className="section scroll-mt-20">
             <div className="container-custom glass-panel">
-                {/* Section header */}
-                <div className="mb-12">
-                    <h2>Publications</h2>
+                {/* Section header — split layout with eyebrow (#6, #9) */}
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-14">
+                    <div className="md:w-3/5">
+                        <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground block mb-3">Selected Work</span>
+                        <h2>Publications</h2>
+                    </div>
+                    <div className="md:w-2/5 md:pt-10">
+                        <p className="text-sm text-muted-foreground max-w-[40ch]" style={{ lineHeight: '1.85' }}>
+                            Peer-reviewed research in AR, spatial computing, and human-computer interaction.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Publications list */}
@@ -34,7 +41,7 @@ function PublicationItem({ publication }: { publication: Publication }) {
                 {/* Teaser image */}
                 {publication.image && (
                     <div className="w-full md:w-[280px] shrink-0">
-                        <Link href={`/publications/${publication.id}`} className="block aspect-video bg-muted relative overflow-hidden rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <Link href={`/publications/${publication.id}`} className="block aspect-video bg-foreground/[2.5%] ring-1 ring-inset ring-foreground/[0.05] relative overflow-hidden rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                             <Image
                                 src={publication.image}
                                 alt={publication.title}
@@ -80,39 +87,33 @@ function PublicationItem({ publication }: { publication: Publication }) {
                         ))}
                     </p>
 
-                    {/* Actions */}
+                    {/* Actions — pill buttons (#12) */}
                     <div className="flex gap-2">
                         {publication.links.pdf && (
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                asChild
-                                className="h-8 px-2 text-xs"
+                            <Link
+                                href={publication.links.pdf}
+                                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent transition-colors ring-1 ring-foreground/[0.08]"
                             >
-                                <Link href={publication.links.pdf}>
-                                    <FileText className="h-3.5 w-3.5 mr-1" />
-                                    PDF
-                                </Link>
-                            </Button>
+                                <FileText className="h-3.5 w-3.5" />
+                                PDF
+                            </Link>
                         )}
                         {publication.links.doi && (
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                asChild
-                                className="h-8 px-2 text-xs"
+                            <Link
+                                href={publication.links.doi}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent transition-colors ring-1 ring-foreground/[0.08]"
                             >
-                                <Link href={publication.links.doi} target="_blank" rel="noopener noreferrer">
-                                    <ExternalLink className="h-3.5 w-3.5 mr-1" />
-                                    DOI
-                                </Link>
-                            </Button>
+                                <ExternalLink className="h-3.5 w-3.5" />
+                                DOI
+                            </Link>
                         )}
                         <BibtexCopyButton
                             bibtex={publication.bibtex}
                             variant="ghost"
                             size="sm"
-                            className="h-8 px-2 text-xs"
+                            className="rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent ring-1 ring-foreground/[0.08]"
                         />
                     </div>
                 </div>

@@ -22,7 +22,7 @@ export function Hero() {
                         </div>
 
                         {/* Huge Headline - FIXED: Removed mix-blend-difference */}
-                        <h1 className="!text-[3.5rem] md:!text-8xl lg:!text-9xl leading-[0.9] tracking-tighter">
+                        <h1 className="!text-[3.5rem] md:!text-8xl lg:!text-9xl leading-[0.9] tracking-tighter" style={{ textWrap: 'balance' as const }}>
                             Researcher <span className="font-serif italic font-light">&</span> Builder
                         </h1>
 
@@ -30,7 +30,7 @@ export function Hero() {
                         <hr className="w-24 border-t-2 border-foreground/30 my-8" />
 
                         {/* Narrative Paragraph */}
-                        <p className="text-xl md:text-2xl leading-relaxed font-light text-muted-foreground/90 max-w-2xl mt-8">
+                        <p className="text-xl md:text-2xl leading-[2] font-light text-muted-foreground/90 max-w-[58ch] mt-8" style={{ textWrap: 'pretty' as const }}>
                             I design interactive systems at the intersection of <span className="text-foreground font-medium">AR</span>, <span className="text-foreground font-medium">spatial computing</span>, and <span className="text-foreground font-medium">AI</span> — exploring how intelligent, embodied interfaces can reshape the way we create, visualize, and engage with digital content in the real world.
                         </p>
 

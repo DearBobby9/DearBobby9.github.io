@@ -26,7 +26,7 @@ export default function BlogPage() {
             <div className="container-custom glass-panel">
                 {/* Page header */}
                 <h1 className="mb-4">Blog</h1>
-                <p className="text-lg text-muted-foreground mb-12 max-w-2xl">
+                <p className="text-lg text-muted-foreground mb-12 max-w-2xl" style={{ lineHeight: '1.85' }}>
                     Thoughts on XR, HCI, research, and technology.
                 </p>
 

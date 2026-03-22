@@ -89,7 +89,7 @@ export function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/30 backdrop-blur-xl">
+        <header className="sticky top-0 z-50 w-full shadow-[inset_0_-1px_0_0] shadow-foreground/[0.06] bg-background/30 backdrop-blur-xl">
             <div className="container-custom flex h-16 items-center justify-between">
                 {/* Logo / Name */}
                 <Link

@@ -25,11 +25,13 @@ export function NowSection() {
     return (
         <section className="py-16 md:py-20">
             <div className="container-custom">
-                <div className="max-w-3xl mx-auto glass-panel">
-                    {/* Section header */}
-                    <div className="flex items-center gap-4 mb-8">
-                        <h2 className="text-lg font-semibold">Now</h2>
-                        <div className="flex-1 h-px bg-border" />
+                <div className="max-w-3xl glass-panel">
+                    {/* Section header — inline heading (#10) */}
+                    <div className="mb-10 max-w-[65ch]">
+                        <p className="text-xl md:text-2xl font-heading" style={{ textWrap: 'balance' as const }}>
+                            <span className="text-foreground font-semibold">Now</span>
+                            <span className="text-muted-foreground font-normal"> — what I&apos;m currently working on and recent milestones.</span>
+                        </p>
                     </div>
 
                     {/* Updates list */}
@@ -43,7 +45,7 @@ export function NowSection() {
                                 <span className="font-mono text-xs text-muted-foreground w-12 shrink-0">
                                     {update.year}
                                 </span>
-                                <span className="font-mono text-xs text-muted-foreground/60 w-16 shrink-0">
+                                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/60 w-16 shrink-0">
                                     {update.type}
                                 </span>
                                 <span className="text-sm md:text-base">

@@ -168,6 +168,7 @@
   h2 {
     @apply text-3xl md:text-4xl lg:text-5xl font-normal tracking-tight;
     letter-spacing: -0.03em;
+    text-wrap: balance;
   }
 
   h3 {
@@ -177,7 +178,7 @@
   p {
     @apply text-base md:text-lg leading-relaxed;
     font-weight: 300;
-    /* Lighter body text */
+    text-wrap: pretty;
   }
 
   /* Meta text - years, tags, technical info */
@@ -210,15 +211,21 @@
     max-width: 1120px;
   }
 
-  /* Section spacing - Editorial feel */
+  /* Section spacing - Editorial feel + canvas grid divider (#16) */
   .section {
-    @apply py-16 md:py-24 lg:py-32;
+    @apply py-16 md:py-24 lg:py-32 relative;
+  }
+  .section::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-px bg-foreground/[0.06];
   }
 
   /* Glass panel - frosted backdrop for text readability over particle bg */
+  /* #1 ring replaces border, #3 inset ring for subtle edge definition */
   .glass-panel {
     @apply bg-background/15 backdrop-blur-[6px] rounded-2xl px-6 py-6 md:px-8 md:py-8
-           dark:bg-white/[0.09] dark:backdrop-blur-[9px] dark:border dark:border-white/[0.18];
+           ring-1 ring-inset ring-foreground/[0.05]
+           dark:bg-white/[0.09] dark:backdrop-blur-[9px] dark:ring-white/[0.1];
   }
 
   /* Card hover - Invert effect (premium monochrome interaction) */
@@ -711,6 +718,10 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
   }
 
   /* Hide scrollbar but keep functionality */
