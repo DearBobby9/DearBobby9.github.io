@@ -8,6 +8,7 @@ import {
   WARN_AT_TURN,
   MAX_MESSAGE_LENGTH,
   STREAM_TIMEOUT_MS,
+  SYSTEM_PROMPT,
 } from "@/lib/chat-config";
 
 export interface ChatMessage {
@@ -33,7 +34,6 @@ export function useChatStream() {
 
   const abortRef = useRef<AbortController | null>(null);
   const manualAbortRef = useRef(false);
-  const previousResponseIdRef = useRef<string | null>(null);
 
   const turnCount = messages.filter((m) => m.role === "user").length;
   const isAtLimit = turnCount >= MAX_TURNS;
@@ -56,6 +56,13 @@ export function useChatStream() {
         content: "",
       };
 
+      // Build OpenAI-format messages array: system + history + new user message
+      const apiMessages = [
+        { role: "system" as const, content: SYSTEM_PROMPT },
+        ...messages.map((m) => ({ role: m.role, content: m.content })),
+        { role: "user" as const, content: trimmed },
+      ];
+
       setMessages((prev) => [...prev, userMsg, assistantMsg]);
       setStatus("streaming");
       setThinkingStatus("idle");
@@ -77,11 +84,10 @@ export function useChatStream() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             model: CHAT_MODEL,
-            input: trimmed,
-            previous_response_id: previousResponseIdRef.current ?? undefined,
+            messages: apiMessages,
             stream: true,
             temperature: 0.7,
-            max_output_tokens: 4096,
+            max_tokens: 1024,
           }),
           signal: controller.signal,
         });
@@ -100,10 +106,8 @@ export function useChatStream() {
         const decoder = new TextDecoder();
         let buffer = "";
         const assistantId = assistantMsg.id;
-        let currentEvent = "";
-        let streamDone = false;
 
-        while (!streamDone) {
+        while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
@@ -114,60 +118,26 @@ export function useChatStream() {
           for (const line of lines) {
             const trimmedLine = line.trim();
             if (!trimmedLine || trimmedLine.startsWith(":")) continue;
+            if (!trimmedLine.startsWith("data: ")) continue;
 
-            if (trimmedLine.startsWith("event:")) {
-              currentEvent = trimmedLine.slice(6).trim();
-              continue;
-            }
+            const data = trimmedLine.slice(6);
+            if (data === "[DONE]") break;
 
-            if (trimmedLine.startsWith("data: ")) {
-              const data = trimmedLine.slice(6);
-              if (data === "[DONE]") { streamDone = true; break; }
-
-              try {
-                const parsed = JSON.parse(data);
-                if (currentEvent === "message.delta") {
-                  const delta = parsed.content;
-                  if (typeof delta !== "string" || !delta) continue;
-                  setMessages((prev) =>
-                    prev.map((m) => {
-                      if (m.id !== assistantId) return m;
-                      const chunk = m.content === "" ? delta.trimStart() : delta;
-                      if (!chunk) return m;
-                      return { ...m, content: m.content + chunk };
-                    })
-                  );
-                  continue;
-                }
-
-                if (currentEvent === "chat.end") {
-                  const responseId = parsed?.result?.response_id;
-                  if (typeof responseId === "string" && responseId) {
-                    previousResponseIdRef.current = responseId;
-                  }
-
-                  const output = parsed?.result?.output;
-                  if (Array.isArray(output)) {
-                    const messageNode = output.find(
-                      (item) => item?.type === "message" && typeof item?.content === "string"
-                    );
-                    const finalContent = messageNode?.content?.trim();
-                    if (finalContent) {
-                      setMessages((prev) =>
-                        prev.map((m) =>
-                          m.id === assistantId && m.content.trim() === ""
-                            ? { ...m, content: finalContent }
-                            : m
-                        )
-                      );
-                    }
-                  }
-
-                  streamDone = true;
-                }
-              } catch {
-                // Malformed JSON chunk — skip
+            try {
+              const parsed = JSON.parse(data);
+              const delta = parsed.choices?.[0]?.delta?.content;
+              if (typeof delta === "string" && delta) {
+                setMessages((prev) =>
+                  prev.map((m) => {
+                    if (m.id !== assistantId) return m;
+                    const chunk = m.content === "" ? delta.trimStart() : delta;
+                    if (!chunk) return m;
+                    return { ...m, content: m.content + chunk };
+                  })
+                );
               }
+            } catch {
+              // Malformed JSON chunk — skip
             }
           }
         }
@@ -190,7 +160,7 @@ export function useChatStream() {
           err.message.includes("fetch")
         ) {
           message =
-            "Could not connect to the AI server. Make sure LM Studio is running.";
+            "Could not connect to the AI server. Please try again later.";
         } else if (err instanceof Error) {
           message = err.message;
         } else {
@@ -225,7 +195,6 @@ export function useChatStream() {
   const clearMessages = useCallback(() => {
     manualAbortRef.current = true;
     abortRef.current?.abort();
-    previousResponseIdRef.current = null;
     setMessages([]);
     setStatus("idle");
     setThinkingStatus("idle");
