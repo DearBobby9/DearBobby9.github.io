@@ -49,6 +49,19 @@ export const projects: Project[] = [
         hasDetail: true,
     },
     {
+        slug: "oversite",
+        title: "OverSite",
+        oneLiner: "AI copilot for construction field workers — smart glasses + real-time AI vision that saves hours of documentation and inspection time",
+        year: "2026",
+        category: "Build",
+        tags: ["Smart Glasses", "AI Agent", "Gemini Live", "Construction"],
+        image: "/images/projects/oversite.webp",
+        links: {
+            demo: "https://oversite.so",
+        },
+        hasDetail: true,
+    },
+    {
         slug: "refbib",
         title: "RefBib",
         oneLiner: "Drop a PDF, get .bib — extract real BibTeX from academic references with zero AI hallucinations, verified by CrossRef, Semantic Scholar, and DBLP",

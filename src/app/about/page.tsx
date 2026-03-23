@@ -133,7 +133,7 @@ export default function AboutPage() {
                                 My research sits at the intersection of <strong className="text-foreground">Mixed Reality</strong>, <strong className="text-foreground">spatial computing</strong>, and <strong className="text-foreground">embodied interaction</strong>. I&apos;m interested in how intelligent systems can help people create, visualize, and manipulate digital content more naturally in physical space — using AR, AI agents, and novel interaction techniques.
                             </p>
                             <p className="text-base text-muted-foreground leading-relaxed">
-                                I completed my B.S. in Computer Science at the <strong className="text-foreground">University of Minnesota, Twin Cities</strong>, where I worked with Prof.{" "}
+                                I completed my B.A. in Computer Science at the <strong className="text-foreground">University of Minnesota, Twin Cities</strong>, where I worked with Prof.{" "}
                                 <Link href="https://chenzhutian.org/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground transition-colors">Zhu-Tian Chen</Link>{" "}
                                 on visualization and interactive systems. Before that, I spent three years at the University of Shanghai for Science and Technology.
                             </p>
