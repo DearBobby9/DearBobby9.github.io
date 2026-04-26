@@ -21,7 +21,6 @@ interface Particle {
 }
 
 type RectDraw = { x: number; y: number; size: number };
-type EllipseDraw = { x: number; y: number; rx: number; ry: number; rotation: number };
 
 const GOOGLE_COLORS = [
     [66, 133, 244],
@@ -80,9 +79,9 @@ export function AntigravityParticleField({
 
             const area = width * height;
             const targetCount = clamp(
-                Math.round(area / (variant === "light" ? 920 : 820)),
-                variant === "light" ? 360 : 460,
-                variant === "light" ? 1900 : 2300
+                Math.round(area / (variant === "light" ? 520 : 470)),
+                variant === "light" ? 620 : 760,
+                variant === "light" ? 3400 : 3900
             );
             const aspect = width / height;
             const cols = Math.max(12, Math.round(Math.sqrt(targetCount * aspect)));
@@ -173,7 +172,6 @@ export function AntigravityParticleField({
 
             context.clearRect(0, 0, width, height);
             const rectBatches = new Map<string, RectDraw[]>();
-            const ellipseBatches = new Map<string, EllipseDraw[]>();
 
             const idleX =
                 variant === "light"
@@ -183,11 +181,8 @@ export function AntigravityParticleField({
                 variant === "light"
                     ? height * (0.15 + scrollProgress * 0.08) + Math.cos(time * 0.21) * height * 0.035
                     : height * (0.2 + scrollProgress * 0.16) + Math.cos(time * 0.2) * height * 0.05;
-            const targetX = mouse.active ? mouse.x : idleX;
-            const targetY = mouse.active ? mouse.y : idleY;
-            const follow = mouse.active ? 0.15 : 0.035;
-            centerX += (targetX - centerX) * follow;
-            centerY += (targetY - centerY) * follow;
+            centerX += (idleX - centerX) * 0.035;
+            centerY += (idleY - centerY) * 0.035;
 
             const minDim = Math.min(width, height);
             const ringRadius =
@@ -219,64 +214,65 @@ export function AntigravityParticleField({
                 const ringEnergy =
                     Math.pow(mainBand, 2.35) * (0.25 + orbitalGate * 0.95) +
                     Math.pow(innerBand, 2.1) * (0.12 + orbitalGate * 0.38);
-                const hoverBoost = mouse.active ? 1.2 : 0.82;
-                const energy = clamp(ringEnergy * hoverBoost, 0, 1);
+
+                let mousePresence = 0;
+                let mousePushX = 0;
+                let mousePushY = 0;
+                if (mouse.active) {
+                    const mdx = particle.originX - mouse.x;
+                    const mdy = particle.originY - mouse.y;
+                    const mouseDistance = Math.sqrt(mdx * mdx + mdy * mdy) || 1;
+                    const mouseRadius = minDim * (isDark ? 0.48 : 0.42);
+                    const rawPresence = clamp(1 - mouseDistance / mouseRadius, 0, 1);
+                    mousePresence = rawPresence * rawPresence * (3 - 2 * rawPresence);
+                    const invMouseDistance = 1 / mouseDistance;
+                    mousePushX = mdx * invMouseDistance * mousePresence;
+                    mousePushY = mdy * invMouseDistance * mousePresence;
+                }
+
+                const energy = clamp(ringEnergy * 0.66 + mousePresence * 0.34, 0, 1);
 
                 const driftX = Math.sin(time * 0.32 + particle.phase) * (isDark ? 0.8 : 0.62);
                 const driftY = Math.cos(time * 0.27 + particle.phase * 1.31) * (isDark ? 0.8 : 0.62);
-                const displacement = energy * minDim * (isDark ? 0.035 : 0.042);
-                const tangentDrift = Math.sin(time * 0.74 + particle.phase) * energy * minDim * 0.009;
-                const targetParticleX = particle.originX + driftX + radialX * displacement + tangentX * tangentDrift;
-                const targetParticleY = particle.originY + driftY + radialY * displacement + tangentY * tangentDrift;
+                const ringDisplacement = ringEnergy * minDim * (isDark ? 0.011 : 0.013);
+                const mouseDisplacement = mousePresence * minDim * (isDark ? 0.014 : 0.016);
+                const tangentDrift = Math.sin(time * 0.74 + particle.phase) * ringEnergy * minDim * 0.004;
+                const targetParticleX = particle.originX + driftX + radialX * ringDisplacement + tangentX * tangentDrift + mousePushX * mouseDisplacement;
+                const targetParticleY = particle.originY + driftY + radialY * ringDisplacement + tangentY * tangentDrift + mousePushY * mouseDisplacement;
                 const ease = clamp(delta / 90, 0.08, 0.32);
                 particle.x += (targetParticleX - particle.x) * ease;
                 particle.y += (targetParticleY - particle.y) * ease;
 
                 const color = GOOGLE_COLORS[particle.colorIndex % GOOGLE_COLORS.length];
-                const baseAlpha = isDark ? 0.064 : 0.058;
+                const isNeutral = particle.colorIndex === 4;
+                const baseAlpha = isDark ? 0.052 : 0.044;
                 const flicker = (Math.sin(time * 0.95 + particle.phase) + 1) * 0.5;
                 const alpha = Math.round(
                     clamp(
-                        baseAlpha + flicker * (isDark ? 0.042 : 0.032) + energy * (isDark ? 0.4 : 0.52),
-                        0.018,
-                        isDark ? 0.72 : 0.86
-                    ) * 32
-                ) / 32;
-                const size = particle.size * (isDark ? 0.95 : 0.75) * (1 + energy * 1.9);
+                        baseAlpha + flicker * (isDark ? 0.026 : 0.02) + ringEnergy * (isDark ? 0.11 : 0.13) + mousePresence * (isDark ? 0.18 : 0.2),
+                        isDark ? 0.022 : 0.016,
+                        isDark ? 0.45 : 0.4
+                    ) * 40
+                ) / 40;
+                const dotSize = particle.size * (isDark ? 0.74 : 0.56) * (1 + energy * 0.72);
 
                 const colorStyle =
-                    energy > 0.08
-                        ? `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`
-                        : isDark
-                            ? `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * 0.72})`
-                            : `rgba(32, 34, 38, ${alpha * (particle.colorIndex === 4 ? 1.25 : 0.72)})`;
+                    isNeutral
+                        ? isDark
+                            ? `rgba(230, 234, 240, ${alpha * 0.48})`
+                            : `rgba(32, 34, 38, ${alpha * 0.82})`
+                        : `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha * (isDark ? 0.66 : 0.54)})`;
 
-                if (energy > 0.075) {
-                    let batch = ellipseBatches.get(colorStyle);
-                    if (!batch) {
-                        batch = [];
-                        ellipseBatches.set(colorStyle, batch);
-                    }
-                    batch.push({
-                        x: particle.x,
-                        y: particle.y,
-                        rx: size * (2.8 + energy * 4.8),
-                        ry: Math.max(0.42, size * 0.66),
-                        rotation: angle + Math.PI / 2,
-                    });
-                } else {
-                    const dot = size * (isDark ? 1.25 : 1);
-                    let batch = rectBatches.get(colorStyle);
-                    if (!batch) {
-                        batch = [];
-                        rectBatches.set(colorStyle, batch);
-                    }
-                    batch.push({
-                        x: particle.x - dot * 0.5,
-                        y: particle.y - dot * 0.5,
-                        size: dot,
-                    });
+                let batch = rectBatches.get(colorStyle);
+                if (!batch) {
+                    batch = [];
+                    rectBatches.set(colorStyle, batch);
                 }
+                batch.push({
+                    x: particle.x - dotSize * 0.5,
+                    y: particle.y - dotSize * 0.5,
+                    size: dotSize,
+                });
             }
 
             rectBatches.forEach((draws, colorStyle) => {
@@ -284,27 +280,6 @@ export function AntigravityParticleField({
                 for (const draw of draws) {
                     context.fillRect(draw.x, draw.y, draw.size, draw.size);
                 }
-            });
-
-            ellipseBatches.forEach((draws, colorStyle) => {
-                context.fillStyle = colorStyle;
-                context.beginPath();
-                for (const draw of draws) {
-                    context.moveTo(
-                        draw.x + draw.rx * Math.cos(draw.rotation),
-                        draw.y + draw.rx * Math.sin(draw.rotation)
-                    );
-                    context.ellipse(
-                        draw.x,
-                        draw.y,
-                        draw.rx,
-                        draw.ry,
-                        draw.rotation,
-                        0,
-                        Math.PI * 2
-                    );
-                }
-                context.fill();
             });
 
             raf = requestAnimationFrame(render);

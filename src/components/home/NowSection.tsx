@@ -42,7 +42,6 @@ export function NowSection() {
                     </div>
 
                     <div className="relative">
-                        <div className="absolute -left-10 top-10 hidden h-64 w-64 rounded-full border border-white/10 lg:block" />
                         <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#f7f8fb] p-3 text-[#111318] shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
                             <div className="mb-3 flex items-center justify-between rounded-[1.35rem] bg-white px-4 py-3 text-xs text-[#6d7280] shadow-sm">
                                 <span className="font-mono uppercase tracking-[0.16em]">Mission control</span>
