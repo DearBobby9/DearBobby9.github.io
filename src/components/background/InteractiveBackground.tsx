@@ -55,17 +55,17 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             targetY: -1000,
         };
 
-        // Sparse orbital field, tuned to sit behind text instead of becoming the UI.
-        const DOT_SPACING = 28;
-        const MOUSE_RADIUS = 310;
-        const DOT_SIZE = 0.92;
+        // Grid configuration
+        const DOT_SPACING = 30;
+        const MOUSE_RADIUS = 375;
+        const DOT_SIZE = 1.2;
 
-        // Ripple configuration: low-energy particle displacement, no visible stroke rings.
-        const RIPPLE_MAX_RADIUS = 920;
-        const RIPPLE_SPEED = 2.4;
-        const RIPPLE_BAND_WIDTH = 92;
-        const RIPPLE_DOT_FORCE = 22;
-        const RIPPLE_INITIAL_STRENGTH = 0.72;
+        // Ripple configuration — particle-driven, no stroke rings
+        const RIPPLE_MAX_RADIUS = 1400;
+        const RIPPLE_SPEED = 3.75;
+        const RIPPLE_BAND_WIDTH = 180;
+        const RIPPLE_DOT_FORCE = 52.5;
+        const RIPPLE_INITIAL_STRENGTH = 2.0;
 
         // [Enhancement 3] Dynamic dark mode detection with smooth interpolation
         let darkProgress = document.documentElement.classList.contains("dark") ? 1 : 0;
@@ -225,10 +225,6 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             const time = performance.now();
             const lightPalette = paletteRef.current.light;
             const darkPalette = paletteRef.current.dark;
-            const fieldCenterX = width * 0.52 + Math.sin(time * 0.00016) * width * 0.035;
-            const fieldCenterY = height * 0.44 + Math.cos(time * 0.00013) * height * 0.045;
-            const fieldRadius = Math.min(width, height) * 0.38;
-            const fieldBandWidth = Math.max(180, Math.min(width, height) * 0.32);
 
             // Update ripples — slower decay for longer-lasting waves
             for (let i = ripples.length - 1; i >= 0; i--) {
@@ -263,14 +259,6 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                 const dy = mouse.y - dot.originY;
                 // Use squared distance to avoid sqrt for far dots
                 const distSq = dx * dx + dy * dy;
-                const fieldDx = dot.originX - fieldCenterX;
-                const fieldDy = dot.originY - fieldCenterY;
-                const fieldDist = Math.sqrt(fieldDx * fieldDx + fieldDy * fieldDy);
-                const fieldAngle = Math.atan2(fieldDy, fieldDx);
-                const ringFalloff = Math.max(0, 1 - Math.abs(fieldDist - fieldRadius) / fieldBandWidth);
-                const orbitalWave = 0.5 + 0.5 * Math.sin(fieldDist * 0.029 - fieldAngle * 5 + time * 0.00042);
-                const counterWave = 0.5 + 0.5 * Math.sin(fieldDist * 0.017 + fieldAngle * 8 - time * 0.00028);
-                const fieldPresence = Math.min(1, ringFalloff * (0.24 + orbitalWave * 0.58 + counterWave * 0.22));
 
                 // Accumulate ripple forces — only if ripples exist
                 let rippleForceX = 0;
@@ -320,7 +308,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     const angle = Math.atan2(dy, dx);
 
                     const oscillation = Math.sin(time * 0.002 + dist * 0.05);
-                    const moveDist = force * 12 + (force * oscillation * 13);
+                    const moveDist = force * 20 + (force * oscillation * 22.5);
                     const cosA = Math.cos(angle);
                     const sinA = Math.sin(angle);
                     const tx = dot.originX - cosA * moveDist + rippleForceX;
@@ -329,14 +317,14 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                     dot.x += (tx - dot.x) * 0.25;
                     dot.y += (ty - dot.y) * 0.25;
 
-                    scale = 1 + force * 1.05 + (force * oscillation * 0.42) + rippleIntensity * 1.6 + fieldPresence * 0.65;
-                    alpha = Math.min(0.025 + fieldPresence * 0.18 + force * 0.28 + rippleIntensity * 0.32, 0.72);
+                    scale = 1 + force * 1.5 + (force * oscillation * 0.75) + rippleIntensity * 2.5;
+                    alpha = Math.min(0.08 + force * 0.45 + rippleIntensity * 0.5, 0.9);
 
                     // Quantize alpha to reduce unique fillStyle strings
                     alpha = Math.round(alpha * 50) / 50;
                     const color = `rgba(${r},${g},${b},${alpha})`;
 
-                    const stretch = 1 + force * 1.2 + fieldPresence * 1.6;
+                    const stretch = 1 + force * 1.8;
                     let batch = ellipseBatches.get(color);
                     if (!batch) { batch = []; ellipseBatches.set(color, batch); }
                     batch.push({
@@ -346,36 +334,26 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
                         rot: angle + Math.PI / 2,
                     });
                 } else {
-                    const driftX = Math.sin(time * 0.0012 + dot.phase) * 1.35;
-                    const driftY = Math.cos(time * 0.001 + dot.phase * 1.3) * 1.35;
+                    const driftX = Math.sin(time * 0.0015 + dot.phase) * 2.25;
+                    const driftY = Math.cos(time * 0.0012 + dot.phase * 1.3) * 2.25;
 
-                    const tangentPush = fieldPresence * Math.sin(time * 0.0005 + dot.phase) * 2.4;
-                    const targetX = dot.originX + driftX + Math.cos(fieldAngle + Math.PI / 2) * tangentPush + rippleForceX;
-                    const targetY = dot.originY + driftY + Math.sin(fieldAngle + Math.PI / 2) * tangentPush + rippleForceY;
+                    const targetX = dot.originX + driftX + rippleForceX;
+                    const targetY = dot.originY + driftY + rippleForceY;
 
                     dot.x += (targetX - dot.x) * 0.2;
                     dot.y += (targetY - dot.y) * 0.2;
 
-                    scale = 0.78 + fieldPresence * 1.25 + rippleIntensity * 1.8;
-                    const baseAlpha = 0.012 + Math.sin(time * 0.00085 + dot.phase) * 0.016;
-                    alpha = Math.min(Math.max(0.004, baseAlpha + fieldPresence * 0.14 + rippleIntensity * 0.34), 0.62);
+                    scale = 1 + rippleIntensity * 3;
+                    const baseAlpha = 0.04 + Math.sin(time * 0.001 + dot.phase) * 0.045;
+                    alpha = Math.min(Math.max(0.01, baseAlpha + rippleIntensity * 0.55), 0.85);
 
                     // Quantize alpha to batch more aggressively for idle dots
                     alpha = Math.round(alpha * 20) / 20;
                     const color = `rgba(${r},${g},${b},${alpha})`;
 
                     const radius = DOT_SIZE * scale;
-                    if (fieldPresence > 0.34) {
-                        let batch = ellipseBatches.get(color);
-                        if (!batch) { batch = []; ellipseBatches.set(color, batch); }
-                        batch.push({
-                            x: dot.x,
-                            y: dot.y,
-                            rx: radius * (1.9 + fieldPresence * 1.8),
-                            ry: Math.max(0.55, radius * 0.74),
-                            rot: fieldAngle + Math.PI / 2,
-                        });
-                    } else if (scale < 1.35) {
+                    // For tiny idle dots, use fillRect (no arc path needed)
+                    if (scale < 1.5) {
                         const size = radius * 2;
                         let batch = circleBatches.get(color);
                         if (!batch) { batch = []; circleBatches.set(color, batch); }

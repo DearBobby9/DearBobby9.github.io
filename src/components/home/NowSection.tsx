@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Boxes, BrainCircuit, Glasses, Route } from "lucide-react";
 import { updates } from "@/data/updates";
+import { AntigravityParticleField } from "@/components/background/AntigravityParticleField";
 
 export function NowSection() {
     const capabilities = [
@@ -12,7 +13,7 @@ export function NowSection() {
 
     return (
         <section className="relative isolate overflow-hidden bg-[#0d0f14] py-24 text-white md:py-32">
-            <div className="antigravity-dark-field" aria-hidden="true" />
+            <AntigravityParticleField variant="dark" />
             <div className="container-custom relative">
                 <div className="mb-16 flex flex-wrap justify-center gap-3 md:justify-start">
                     {capabilities.map((item) => (

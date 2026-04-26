@@ -232,88 +232,6 @@
     font-family: var(--font-body);
   }
 
-  /* Antigravity-inspired fields: sparse orbital motion, no decorative blobs. */
-  .antigravity-hero-field,
-  .antigravity-dark-field {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .antigravity-hero-field::before {
-    content: "";
-    position: absolute;
-    inset: -16%;
-    opacity: 0.42;
-    background-image:
-      radial-gradient(circle, rgba(34, 87, 214, 0.55) 0 1px, transparent 1.6px),
-      radial-gradient(circle, rgba(221, 78, 69, 0.24) 0 1px, transparent 1.5px);
-    background-position: 0 0, 13px 19px;
-    background-size: 28px 28px, 43px 43px;
-    mask-image: radial-gradient(ellipse at 52% 44%, #111318 0 22%, rgba(17, 19, 24, 0.55) 36%, transparent 72%);
-    -webkit-mask-image: radial-gradient(ellipse at 52% 44%, #111318 0 22%, rgba(17, 19, 24, 0.55) 36%, transparent 72%);
-    animation: field-drift 28s linear infinite;
-  }
-
-  .antigravity-hero-field::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 45%;
-    width: min(92vw, 1040px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.34;
-    background:
-      repeating-conic-gradient(
-        from 8deg,
-        rgba(50, 121, 249, 0.76) 0deg 0.75deg,
-        transparent 0.75deg 5.4deg
-      );
-    mask-image: radial-gradient(circle, transparent 0 28%, #111318 29% 31%, transparent 33% 47%, #111318 49% 50%, transparent 52%);
-    -webkit-mask-image: radial-gradient(circle, transparent 0 28%, #111318 29% 31%, transparent 33% 47%, #111318 49% 50%, transparent 52%);
-    animation: field-orbit 46s linear infinite;
-  }
-
-  .antigravity-dark-field::before {
-    content: "";
-    position: absolute;
-    inset: -12%;
-    opacity: 0.55;
-    background-image:
-      radial-gradient(circle, rgba(68, 132, 245, 0.68) 0 1px, transparent 1.7px),
-      radial-gradient(circle, rgba(232, 80, 74, 0.38) 0 1px, transparent 1.6px),
-      radial-gradient(circle, rgba(189, 217, 83, 0.42) 0 1px, transparent 1.6px);
-    background-position: 0 0, 18px 11px, 34px 29px;
-    background-size: 31px 31px, 47px 47px, 59px 59px;
-    mask-image: radial-gradient(ellipse at 58% 10%, #111318 0 20%, rgba(17, 19, 24, 0.7) 36%, transparent 68%);
-    -webkit-mask-image: radial-gradient(ellipse at 58% 10%, #111318 0 20%, rgba(17, 19, 24, 0.7) 36%, transparent 68%);
-    animation: field-drift 36s linear infinite reverse;
-  }
-
-  .antigravity-dark-field::after {
-    content: "";
-    position: absolute;
-    left: 72%;
-    top: 16%;
-    width: min(92vw, 940px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.32;
-    background:
-      repeating-conic-gradient(
-        from -24deg,
-        rgba(255, 255, 255, 0.48) 0deg 0.5deg,
-        transparent 0.5deg 4.8deg
-      );
-    mask-image: radial-gradient(circle, transparent 0 30%, #111318 31% 33%, transparent 35% 51%, #111318 52% 53%, transparent 55%);
-    -webkit-mask-image: radial-gradient(circle, transparent 0 30%, #111318 31% 33%, transparent 35% 51%, #111318 52% 53%, transparent 55%);
-    animation: field-orbit 58s linear infinite reverse;
-  }
-
   /* Card hover - Invert effect (premium monochrome interaction) */
   .card-hover {
     @apply transition-all duration-300;
@@ -774,27 +692,6 @@
     0% { transform: rotate(0deg) scale(1); }
     40% { transform: rotate(-15deg) scale(0.9); }
     100% { transform: rotate(0deg) scale(1); }
-  }
-
-  @keyframes field-drift {
-    0% {
-      transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate3d(1.7rem, -1.15rem, 0) rotate(0.6deg);
-    }
-    100% {
-      transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-  }
-
-  @keyframes field-orbit {
-    from {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    to {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
   }
 
   @keyframes blink {

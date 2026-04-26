@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, FileText, Github, GraduationCap, Mail } from "lucide-react";
+import { AntigravityParticleField } from "@/components/background/AntigravityParticleField";
 
 export function Hero() {
     return (
-        <section className="relative isolate min-h-[92dvh] overflow-hidden pt-24 md:pt-32">
-            <div className="antigravity-hero-field" aria-hidden="true" />
+        <section className="relative isolate min-h-[92dvh] overflow-hidden bg-background pt-24 md:pt-32">
+            <AntigravityParticleField variant="light" />
             <div className="container-custom relative flex min-h-[calc(92dvh-8rem)] flex-col items-center justify-center text-center">
                 <div className="mb-9 inline-flex items-center gap-3 rounded-full border border-foreground/[0.08] bg-background/45 px-4 py-2 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-md">
                     <span className="relative flex h-8 w-8 overflow-hidden rounded-full bg-foreground/[0.06] ring-1 ring-foreground/[0.08]">
