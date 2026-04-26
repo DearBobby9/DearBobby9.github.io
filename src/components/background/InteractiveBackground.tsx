@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { usePalette } from "@/components/PaletteProvider";
 
@@ -13,6 +14,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
     const [isSuppressedForNewHome, setIsSuppressedForNewHome] = React.useState(false);
+    const pathname = usePathname();
     const { getActivePalette, paletteId, customColors } = usePalette();
 
     // Ref so the canvas render loop can read the current palette without restarting
@@ -35,29 +37,9 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     }, []);
 
     React.useEffect(() => {
-        const updateSuppressedState = () => {
-            const version =
-                document.documentElement.dataset.homeVersion ??
-                window.localStorage.getItem("home-version") ??
-                "new";
-            setIsSuppressedForNewHome(window.location.pathname === "/" && version === "new");
-        };
-
-        updateSuppressedState();
-        const htmlObserver = new MutationObserver(updateSuppressedState);
-        htmlObserver.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ["data-home-version"],
-        });
-        window.addEventListener("popstate", updateSuppressedState);
-        window.addEventListener("storage", updateSuppressedState);
-
-        return () => {
-            htmlObserver.disconnect();
-            window.removeEventListener("popstate", updateSuppressedState);
-            window.removeEventListener("storage", updateSuppressedState);
-        };
-    }, []);
+        const normalizedPathname = pathname.replace(/\/$/, "") || "/";
+        setIsSuppressedForNewHome(normalizedPathname === "/new-home");
+    }, [pathname]);
 
     React.useEffect(() => {
         if (prefersReducedMotion || isSuppressedForNewHome) return;
