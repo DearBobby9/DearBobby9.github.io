@@ -14,12 +14,13 @@ export function SelectedPublications() {
                     <div>
                         <span className="mb-4 block font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Selected work</span>
                         <h2 className="ag-display max-w-3xl text-5xl font-medium leading-[0.95] tracking-[-0.055em] md:text-7xl">
-                            Evidence, prototypes, and studies.
+                            Papers, notes, and research threads.
                         </h2>
                     </div>
                     <div className="md:justify-self-end">
                         <p className="max-w-[42ch] text-sm leading-7 text-muted-foreground md:text-base">
-                            Peer-reviewed research in AR, spatial computing, and human-computer interaction.
+                            Peer-reviewed work and paper trails from my research in AR, spatial computing,
+                            and human-computer interaction.
                         </p>
                     </div>
                 </div>

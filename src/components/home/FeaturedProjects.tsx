@@ -12,13 +12,13 @@ export function FeaturedProjects() {
                     <div>
                         <span className="mb-4 block font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Featured work</span>
                         <h2 className="ag-display max-w-3xl text-5xl font-medium leading-[0.95] tracking-[-0.055em] md:text-7xl">
-                            Built artifacts, not just demos.
+                            Projects from the lab and field.
                         </h2>
                     </div>
                     <div className="md:justify-self-end">
                         <p className="max-w-[42ch] text-sm leading-7 text-muted-foreground md:text-base">
-                            Smart-glasses products, academic tools, and mixed reality studies built
-                            around real workflows, field constraints, and research questions.
+                            A selection of prototypes, studies, and tools that keep shaping how I think
+                            about spatial interfaces and physical work.
                         </p>
                     </div>
                 </div>
