@@ -18,7 +18,6 @@ const SUGGESTION_CHIPS = [
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const permissionDismissed = true; // Cloud proxy — no local network permission needed
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
   const {
@@ -66,13 +65,13 @@ export function ChatWidget() {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isOpen ? "Close chat" : "Open chat"}
         className={cn(
-          "fixed bottom-6 right-6 z-40",
-          "h-12 w-12 rounded-full",
-          "bg-foreground text-background",
-          "shadow-lg",
+          "fixed right-24 top-3 z-[55] md:bottom-6 md:right-6 md:top-auto md:z-40",
+          "h-10 w-10 rounded-full md:h-12 md:w-12",
+          "bg-transparent text-foreground md:bg-foreground md:text-background",
+          "shadow-none md:shadow-lg",
           "flex items-center justify-center",
           "transition-all duration-300 ease-out",
-          "hover:scale-110 hover:shadow-xl",
+          "hover:bg-muted md:hover:scale-110 md:hover:bg-foreground/85 md:hover:shadow-xl",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
           isOpen && "hidden md:flex"
         )}

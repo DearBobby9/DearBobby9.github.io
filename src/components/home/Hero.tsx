@@ -1,79 +1,75 @@
 import Image from "next/image";
 import Link from "next/link";
-// import { Button } from "@/components/ui/button"; // Removed
-// import { Badge } from "@/components/ui/badge"; // Removed
-import { FileText, Mail, GraduationCap } from "lucide-react";
-import { ChatCTA } from "@/components/home/ChatCTA";
-
-// const tags = ["XR", "HCI", "CAD", "Spatial Computing", "Fabrication"]; // Removed
+import { ArrowRight, FileText, Github, GraduationCap, Mail } from "lucide-react";
 
 export function Hero() {
     return (
-        <section className="section min-h-[90vh] flex flex-col justify-center pt-24 md:pt-32">
-            <div className="container-custom">
-                <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start lg:justify-between gap-12 lg:gap-24">
+        <section className="relative isolate min-h-[92dvh] overflow-hidden pt-24 md:pt-32">
+            <div className="antigravity-hero-field" aria-hidden="true" />
+            <div className="container-custom relative flex min-h-[calc(92dvh-8rem)] flex-col items-center justify-center text-center">
+                <div className="mb-9 inline-flex items-center gap-3 rounded-full border border-foreground/[0.08] bg-background/45 px-4 py-2 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-md">
+                    <span className="relative flex h-8 w-8 overflow-hidden rounded-full bg-foreground/[0.06] ring-1 ring-foreground/[0.08]">
+                        <Image
+                            src="/images/profile.webp"
+                            alt="Difan Jia"
+                            fill
+                            className="object-cover grayscale"
+                            priority
+                            sizes="32px"
+                        />
+                    </span>
+                    <span className="font-medium tracking-tight">Difan &quot;Bobby&quot; Jia</span>
+                    <span className="hidden h-1 w-1 rounded-full bg-muted-foreground/45 sm:block" />
+                    <span className="hidden text-muted-foreground sm:inline">XR + AI + fabrication</span>
+                </div>
 
-                    {/* Left: Narrative Content */}
-                    <div className="flex-1 text-left space-y-8 max-w-3xl glass-panel">
+                <h1 className="ag-display max-w-6xl text-balance text-[clamp(3.25rem,8.4vw,7.2rem)] font-medium leading-[0.92] tracking-[-0.055em]">
+                    Building spatial systems for intelligent interfaces.
+                </h1>
 
-                        {/* Minimal Name Tag */}
-                        <div className="font-mono text-xs md:text-sm tracking-widest uppercase text-muted-foreground mb-4">
-                            Hi, I&apos;m Difan &ldquo;Bobby&rdquo; Jia (Dee-Fae Bobby Jae)
-                        </div>
+                <p className="mt-8 max-w-2xl text-pretty text-base leading-8 text-muted-foreground md:text-xl md:leading-9">
+                    I research and build mixed reality tools that help people capture context,
+                    reason with space, and turn digital intent into physical action.
+                </p>
 
-                        {/* Huge Headline - FIXED: Removed mix-blend-difference */}
-                        <h1 className="!text-[3.5rem] md:!text-8xl lg:!text-9xl leading-[0.9] tracking-tighter" style={{ textWrap: 'balance' as const }}>
-                            Researcher <span className="font-serif italic font-light">&</span> Builder
-                        </h1>
+                <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                    <Link
+                        href="/#projects"
+                        className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-all duration-200 hover:bg-foreground/85 active:scale-[0.98]"
+                    >
+                        Explore projects
+                        <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </Link>
+                    <Link
+                        href="/#publications"
+                        className="inline-flex h-12 items-center justify-center rounded-full border border-foreground/[0.08] bg-background/45 px-6 text-sm font-medium text-foreground backdrop-blur-md transition-all duration-200 hover:bg-muted active:scale-[0.98]"
+                    >
+                        Read publications
+                    </Link>
+                </div>
 
-                        {/* Divide & Connect Line */}
-                        <hr className="w-24 border-t-2 border-foreground/30 my-8" />
-
-                        {/* Narrative Paragraph */}
-                        <p className="text-xl md:text-2xl leading-[2] font-light text-muted-foreground/90 max-w-[58ch] mt-8" style={{ textWrap: 'pretty' as const }}>
-                            I design interactive systems at the intersection of <span className="text-foreground font-medium">AR</span>, <span className="text-foreground font-medium">spatial computing</span>, and <span className="text-foreground font-medium">AI</span> — exploring how intelligent, embodied interfaces can reshape the way we create, visualize, and engage with digital content in the real world.
-                        </p>
-
-                        {/* Editorial Links (Not Buttons) */}
-                        <div className="flex flex-wrap gap-8 pt-8 font-mono text-sm">
-                            <Link href="/cv.pdf" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
-                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Download CV</span>
-                                <FileText className="h-3 w-3" />
-                            </Link>
-                            <Link href="mailto:difan.jia@utdallas.edu" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
-                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Email</span>
-                                <Mail className="h-3 w-3" />
-                            </Link>
-                            <Link href="https://x.com/KeithMaxwell99" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
-                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">X</span>
-                                {/* Custom X Logo (Twitter) */}
-                                <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3">
-                                    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-                                </svg>
-                            </Link>
-                            <Link href="https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover:text-muted-foreground transition-colors">
-                                <span className="border-b border-foreground group-hover:border-muted-foreground transition-colors">Scholar</span>
-                                <GraduationCap className="h-3 w-3" />
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Right: Minimal Avatar/Visual */}
-                    <div className="w-full max-w-[280px] lg:max-w-xs shrink-0 self-start lg:self-center lg:mt-12">
-                        <div className="aspect-[4/5] relative grayscale hover:grayscale-0 transition-all duration-700 ease-out">
-                            {/* Simple rectangular crop, no round borders */}
-                            <Image
-                                src="/images/profile.webp"
-                                alt="Difan Jia"
-                                fill
-                                className="object-cover"
-                                priority
-                            />
-                        </div>
-                        <ChatCTA />
-                    </div>
+                <div className="mt-12 hidden w-full max-w-3xl grid-cols-2 gap-2 sm:grid sm:grid-cols-4">
+                    {[
+                        { label: "About", href: "/about/", icon: FileText },
+                        { label: "Email", href: "mailto:difan.jia@utdallas.edu", icon: Mail },
+                        { label: "GitHub", href: "https://github.com/DearBobby9", icon: Github },
+                        { label: "Scholar", href: "https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en", icon: GraduationCap },
+                    ].map((item) => (
+                        <Link
+                            key={item.label}
+                            href={item.href}
+                            target={item.href.startsWith("http") ? "_blank" : undefined}
+                            rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                            className="group flex items-center justify-center gap-2 rounded-full border border-foreground/[0.06] bg-background/25 px-4 py-2.5 text-xs font-medium text-muted-foreground backdrop-blur-sm transition-colors hover:text-foreground"
+                        >
+                            <item.icon className="h-3.5 w-3.5" />
+                            {item.label}
+                        </Link>
+                    ))}
                 </div>
             </div>
+
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" />
         </section>
     );
 }

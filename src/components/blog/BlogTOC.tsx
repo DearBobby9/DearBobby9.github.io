@@ -41,7 +41,8 @@ export default function BlogTOC() {
             });
         });
 
-        setHeadings(items);
+        const frame = requestAnimationFrame(() => setHeadings(items));
+        return () => cancelAnimationFrame(frame);
     }, []);
 
     // Intersection observer for active tracking
