@@ -20,6 +20,9 @@ interface Particle {
     size: number;
 }
 
+type RectDraw = { x: number; y: number; size: number };
+type EllipseDraw = { x: number; y: number; rx: number; ry: number; rotation: number };
+
 const GOOGLE_COLORS = [
     [66, 133, 244],
     [234, 67, 53],
@@ -63,6 +66,7 @@ export function AntigravityParticleField({
         let lastTime = performance.now();
         let centerX = 0;
         let centerY = 0;
+        let bounds = root.getBoundingClientRect();
         const particles: Particle[] = [];
         const mouse = {
             x: -9999,
@@ -109,10 +113,10 @@ export function AntigravityParticleField({
         };
 
         const resize = () => {
-            const rect = root.getBoundingClientRect();
+            bounds = root.getBoundingClientRect();
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            width = Math.max(1, rect.width);
-            height = Math.max(1, rect.height);
+            width = Math.max(1, bounds.width);
+            height = Math.max(1, bounds.height);
             canvas.width = Math.round(width * dpr);
             canvas.height = Math.round(height * dpr);
             canvas.style.width = `${width}px`;
@@ -140,10 +144,10 @@ export function AntigravityParticleField({
         visibilityObserver.observe(root);
 
         const onPointerMove = (event: PointerEvent) => {
-            const rect = root.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            mouse.active = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
+            if (!isVisible) return;
+            const x = event.clientX - bounds.left;
+            const y = event.clientY - bounds.top;
+            mouse.active = x >= 0 && x <= bounds.width && y >= 0 && y <= bounds.height;
             if (mouse.active) {
                 mouse.x = x;
                 mouse.y = y;
@@ -164,10 +168,12 @@ export function AntigravityParticleField({
             const delta = Math.min(34, now - lastTime);
             lastTime = now;
             const time = now * 0.001;
-            const rect = root.getBoundingClientRect();
-            const scrollProgress = clamp(-rect.top / Math.max(1, rect.height), -0.25, 1.15);
+            bounds = root.getBoundingClientRect();
+            const scrollProgress = clamp(-bounds.top / Math.max(1, bounds.height), -0.25, 1.15);
 
             context.clearRect(0, 0, width, height);
+            const rectBatches = new Map<string, RectDraw[]>();
+            const ellipseBatches = new Map<string, EllipseDraw[]>();
 
             const idleX =
                 variant === "light"
@@ -229,10 +235,16 @@ export function AntigravityParticleField({
                 const color = GOOGLE_COLORS[particle.colorIndex % GOOGLE_COLORS.length];
                 const baseAlpha = isDark ? 0.064 : 0.058;
                 const flicker = (Math.sin(time * 0.95 + particle.phase) + 1) * 0.5;
-                const alpha = clamp(baseAlpha + flicker * (isDark ? 0.042 : 0.032) + energy * (isDark ? 0.4 : 0.52), 0.018, isDark ? 0.72 : 0.86);
+                const alpha = Math.round(
+                    clamp(
+                        baseAlpha + flicker * (isDark ? 0.042 : 0.032) + energy * (isDark ? 0.4 : 0.52),
+                        0.018,
+                        isDark ? 0.72 : 0.86
+                    ) * 32
+                ) / 32;
                 const size = particle.size * (isDark ? 0.95 : 0.75) * (1 + energy * 1.9);
 
-                context.fillStyle =
+                const colorStyle =
                     energy > 0.08
                         ? `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`
                         : isDark
@@ -240,22 +252,60 @@ export function AntigravityParticleField({
                             : `rgba(32, 34, 38, ${alpha * (particle.colorIndex === 4 ? 1.25 : 0.72)})`;
 
                 if (energy > 0.075) {
-                    context.beginPath();
+                    let batch = ellipseBatches.get(colorStyle);
+                    if (!batch) {
+                        batch = [];
+                        ellipseBatches.set(colorStyle, batch);
+                    }
+                    batch.push({
+                        x: particle.x,
+                        y: particle.y,
+                        rx: size * (2.8 + energy * 4.8),
+                        ry: Math.max(0.42, size * 0.66),
+                        rotation: angle + Math.PI / 2,
+                    });
+                } else {
+                    const dot = size * (isDark ? 1.25 : 1);
+                    let batch = rectBatches.get(colorStyle);
+                    if (!batch) {
+                        batch = [];
+                        rectBatches.set(colorStyle, batch);
+                    }
+                    batch.push({
+                        x: particle.x - dot * 0.5,
+                        y: particle.y - dot * 0.5,
+                        size: dot,
+                    });
+                }
+            }
+
+            rectBatches.forEach((draws, colorStyle) => {
+                context.fillStyle = colorStyle;
+                for (const draw of draws) {
+                    context.fillRect(draw.x, draw.y, draw.size, draw.size);
+                }
+            });
+
+            ellipseBatches.forEach((draws, colorStyle) => {
+                context.fillStyle = colorStyle;
+                context.beginPath();
+                for (const draw of draws) {
+                    context.moveTo(
+                        draw.x + draw.rx * Math.cos(draw.rotation),
+                        draw.y + draw.rx * Math.sin(draw.rotation)
+                    );
                     context.ellipse(
-                        particle.x,
-                        particle.y,
-                        size * (2.8 + energy * 4.8),
-                        Math.max(0.42, size * 0.66),
-                        angle + Math.PI / 2,
+                        draw.x,
+                        draw.y,
+                        draw.rx,
+                        draw.ry,
+                        draw.rotation,
                         0,
                         Math.PI * 2
                     );
-                    context.fill();
-                } else {
-                    const dot = size * (isDark ? 1.25 : 1);
-                    context.fillRect(particle.x - dot * 0.5, particle.y - dot * 0.5, dot, dot);
                 }
-            }
+                context.fill();
+            });
 
             raf = requestAnimationFrame(render);
         }

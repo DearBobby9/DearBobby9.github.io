@@ -12,6 +12,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+    const [isSuppressedForNewHome, setIsSuppressedForNewHome] = React.useState(false);
     const { getActivePalette, paletteId, customColors } = usePalette();
 
     // Ref so the canvas render loop can read the current palette without restarting
@@ -34,7 +35,32 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     }, []);
 
     React.useEffect(() => {
-        if (prefersReducedMotion) return;
+        const updateSuppressedState = () => {
+            const version =
+                document.documentElement.dataset.homeVersion ??
+                window.localStorage.getItem("home-version") ??
+                "new";
+            setIsSuppressedForNewHome(window.location.pathname === "/" && version === "new");
+        };
+
+        updateSuppressedState();
+        const htmlObserver = new MutationObserver(updateSuppressedState);
+        htmlObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["data-home-version"],
+        });
+        window.addEventListener("popstate", updateSuppressedState);
+        window.addEventListener("storage", updateSuppressedState);
+
+        return () => {
+            htmlObserver.disconnect();
+            window.removeEventListener("popstate", updateSuppressedState);
+            window.removeEventListener("storage", updateSuppressedState);
+        };
+    }, []);
+
+    React.useEffect(() => {
+        if (prefersReducedMotion || isSuppressedForNewHome) return;
 
         const canvas = canvasRef.current;
         const container = containerRef.current;
@@ -428,9 +454,9 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             cancelAnimationFrame(animationFrameId);
             observer.disconnect();
         };
-    }, [prefersReducedMotion]);
+    }, [prefersReducedMotion, isSuppressedForNewHome]);
 
-    if (prefersReducedMotion) return null;
+    if (prefersReducedMotion || isSuppressedForNewHome) return null;
 
     return (
         <div
