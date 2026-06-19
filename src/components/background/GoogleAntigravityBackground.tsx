@@ -514,15 +514,32 @@ class MainParticleField {
           disp.x += sin((refPos.x * 20.) + (time * 4.)) * .02 * clamp(dist, 0., 1.);
           disp.y += cos((refPos.y * 20.) + (time * 3.)) * .02 * clamp(dist, 0., 1.);
 
-          float clickFade = smoothstep(1.15, 0., uClickElapsed);
-          float clickRadius = uClickElapsed * .72;
+          float clickAge = max(uClickElapsed, 0.);
+          float clickActive = step(0., uClickElapsed) * smoothstep(.95, 0., clickAge) * uClickStrength;
           float clickDist = distance(curentPos.xy, uClickPos);
-          float clickWidth = mix(.035, .11, clamp(uClickElapsed, 0., 1.));
-          float clickBand = 1. - smoothstep(0., clickWidth, abs(clickDist - clickRadius));
-          clickBand = pow(clamp(clickBand, 0., 1.), 2.) * clickFade * uClickStrength;
           vec2 clickDirection = normalize((curentPos.xy - uClickPos) + vec2(.0001, -.0001));
-          disp += clickDirection * clickBand * .11;
-          t += clickBand * 1.15;
+          vec2 clickTangent = vec2(-clickDirection.y, clickDirection.x);
+
+          float wellField = smoothstep(.34, 0., clickDist);
+          wellField = pow(clamp(wellField, 0., 1.), 1.35) * clickActive;
+          float inhale = smoothstep(.16, 0., clickAge);
+          float rebound = smoothstep(.06, .22, clickAge) * smoothstep(.68, .28, clickAge);
+          float swirl = smoothstep(.04, .20, clickAge) * smoothstep(.78, .32, clickAge);
+          float depthPulse = smoothstep(0., .08, clickAge) * smoothstep(.62, .18, clickAge);
+
+          float waveRadius = clickAge * .42;
+          float waveWidth = mix(.042, .085, clamp(clickAge, 0., 1.));
+          float rawWave = 1. - smoothstep(0., waveWidth, abs(clickDist - waveRadius));
+          float waveNoise = snoise(vec3(curentPos.xy * 18. + vec2(7.12, 31.77), time * 1.4 + clickAge * 3.));
+          float angularNoise = snoise(vec3(clickDirection * 7. + vec2(44.4, 12.3), clickAge * 5.0));
+          float brokenMask = smoothstep(-.1, .55, waveNoise + angularNoise * .55);
+          float waveFade = smoothstep(.08, .24, clickAge) * smoothstep(.92, .36, clickAge);
+          float clickWave = pow(clamp(rawWave, 0., 1.), 2.) * brokenMask * waveFade * clickActive;
+
+          disp += clickDirection * ((wellField * rebound * .036) - (wellField * inhale * .055) + (clickWave * .018));
+          disp += clickTangent * ((wellField * swirl * .032) + (clickWave * angularNoise * .012));
+          t += (wellField * depthPulse * .30) + (clickWave * .24);
+          float clickEnergy = (wellField * depthPulse * .12) + (clickWave * .08);
 
           pos -= (uRingPos - (curentPos + disp)) * pow(t2, .75) * uRingDisplacement;
           float scaleDiff = t - scale;
@@ -531,7 +548,7 @@ class MainParticleField {
           vec2 finalPos = curentPos + disp + (pos * .25);
           velocity *= .5;
           velocity += scale * .25;
-          velocity += clickBand * .35;
+          velocity += clickEnergy;
           gl_FragColor = vec4(finalPos, scale, velocity);
         }
       `,
