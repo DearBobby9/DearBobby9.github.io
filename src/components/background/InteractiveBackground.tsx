@@ -2,8 +2,11 @@
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { usePalette } from "@/components/PaletteProvider";
+import { GoogleAntigravityBackground } from "@/components/background/GoogleAntigravityBackground";
+import { useHomepageBackground } from "@/components/background/HomepageBackgroundProvider";
 
 interface InteractiveBackgroundProps {
     className?: string;
@@ -15,7 +18,11 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
     const [isSuppressedForNewHome, setIsSuppressedForNewHome] = React.useState(false);
     const pathname = usePathname();
+    const { resolvedTheme } = useTheme();
+    const { backgroundMode } = useHomepageBackground();
     const { getActivePalette, paletteId, customColors } = usePalette();
+    const normalizedPathname = React.useMemo(() => pathname.replace(/\/$/, "") || "/", [pathname]);
+    const shouldUseAntigravity = normalizedPathname === "/" && backgroundMode === "antigravity";
 
     // Ref so the canvas render loop can read the current palette without restarting
     const paletteRef = React.useRef(getActivePalette());
@@ -37,12 +44,11 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     }, []);
 
     React.useEffect(() => {
-        const normalizedPathname = pathname.replace(/\/$/, "") || "/";
         setIsSuppressedForNewHome(normalizedPathname === "/new-home");
-    }, [pathname]);
+    }, [normalizedPathname]);
 
     React.useEffect(() => {
-        if (prefersReducedMotion || isSuppressedForNewHome) return;
+        if (prefersReducedMotion || isSuppressedForNewHome || shouldUseAntigravity) return;
 
         const canvas = canvasRef.current;
         const container = containerRef.current;
@@ -436,13 +442,26 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             cancelAnimationFrame(animationFrameId);
             observer.disconnect();
         };
-    }, [prefersReducedMotion, isSuppressedForNewHome]);
+    }, [prefersReducedMotion, isSuppressedForNewHome, shouldUseAntigravity]);
 
     if (prefersReducedMotion || isSuppressedForNewHome) return null;
+
+    if (shouldUseAntigravity) {
+        return (
+            <GoogleAntigravityBackground
+                theme={resolvedTheme === "dark" ? "dark" : "light"}
+                className={cn(
+                    "fixed inset-0 -z-10 bg-background transition-colors duration-600 ease-in-out",
+                    className
+                )}
+            />
+        );
+    }
 
     return (
         <div
             ref={containerRef}
+            data-background-kind="interactive-current"
             className={cn(
                 "fixed inset-0 -z-10 bg-background pointer-events-none transition-colors duration-600 ease-in-out",
                 className

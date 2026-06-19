@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, Sun, Moon, Palette, Plus, Minus } from "lucide-react";
+import { Menu, Sun, Moon, Palette, Plus, Minus, Sparkles } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import {
     Sheet,
     SheetContent,
+    SheetDescription,
     SheetTrigger,
     SheetTitle,
 } from "@/components/ui/sheet";
@@ -26,7 +27,16 @@ import {
 import { navigation } from "@/data/navigation";
 import { siteConfig } from "@/data/site";
 import { usePalette } from "@/components/PaletteProvider";
+import {
+    useHomepageBackground,
+    type HomepageBackgroundMode,
+} from "@/components/background/HomepageBackgroundProvider";
 import { COLOR_PALETTES, PALETTE_ORDER, DEFAULT_CUSTOM_COLORS, generateDarkVariant } from "@/data/colorPalettes";
+
+const HOME_BACKGROUND_OPTIONS: Array<{ value: HomepageBackgroundMode; label: string }> = [
+    { value: "current", label: "Current" },
+    { value: "antigravity", label: "Anti Gravity" },
+];
 
 function useScrollToHash() {
     const pathname = usePathname();
@@ -74,12 +84,15 @@ export function Header() {
     const [mounted, setMounted] = React.useState(false);
     const { resolvedTheme, setTheme } = useTheme();
     const { paletteId, setPaletteId, customColors, setCustomColors } = usePalette();
+    const { backgroundMode, setBackgroundMode } = useHomepageBackground();
     const scrollToHash = useScrollToHash();
 
     const paletteRef = React.useRef<HTMLButtonElement>(null);
     React.useEffect(() => setMounted(true), []);
 
     const navItems = navigation;
+    const normalizedPathname = pathname.replace(/\/$/, "") || "/";
+    const isHome = normalizedPathname === "/";
 
     // Determine if a nav item is active
     const isActive = (href: string) => {
@@ -287,6 +300,36 @@ export function Header() {
                         </DropdownMenu>
                     )}
 
+                    {mounted && isHome && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button
+                                    className={cn(
+                                        "hidden h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:inline-flex",
+                                        backgroundMode === "antigravity" && "bg-foreground/[0.08] text-foreground"
+                                    )}
+                                    aria-label="Change homepage background"
+                                >
+                                    <Sparkles className="h-4 w-4" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Home Background</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuRadioGroup
+                                    value={backgroundMode}
+                                    onValueChange={(value) => setBackgroundMode(value as HomepageBackgroundMode)}
+                                >
+                                    {HOME_BACKGROUND_OPTIONS.map((option) => (
+                                        <DropdownMenuRadioItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </DropdownMenuRadioItem>
+                                    ))}
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+
                     {/* Mobile Menu */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild className="md:hidden">
@@ -297,6 +340,9 @@ export function Header() {
                         </SheetTrigger>
                         <SheetContent side="right" className="w-full sm:w-[400px] bg-background/95 backdrop-blur-xl border-l border-border/40 p-0">
                             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                            <SheetDescription className="sr-only">
+                                Mobile navigation, color palette, and homepage background controls.
+                            </SheetDescription>
 
                             <div className="flex flex-col h-full justify-center px-8">
                                 <div className="font-mono text-xs text-muted-foreground mb-8 tracking-widest uppercase text-center">
@@ -421,6 +467,29 @@ export function Header() {
                                                     <Minus className="h-3 w-3" />
                                                 </button>
                                             )}
+                                        </div>
+                                    )}
+                                    {mounted && isHome && (
+                                        <div className="mt-8">
+                                            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                                                Home Background
+                                            </div>
+                                            <div className="flex justify-center gap-2">
+                                                {HOME_BACKGROUND_OPTIONS.map((option) => (
+                                                    <button
+                                                        key={option.value}
+                                                        onClick={() => setBackgroundMode(option.value)}
+                                                        className={cn(
+                                                            "rounded-full px-3 py-1.5 text-xs transition-all duration-200",
+                                                            backgroundMode === option.value
+                                                                ? "bg-foreground/10 text-foreground"
+                                                                : "text-muted-foreground hover:text-foreground"
+                                                        )}
+                                                    >
+                                                        {option.label}
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
                                     )}
                                 </div>

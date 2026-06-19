@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { Fraunces, Space_Grotesk, JetBrains_Mono } from "next/font/google"; // Plan A fonts
 import "./globals.css";
-import { InteractiveBackground } from "@/components/background/InteractiveBackground";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PaletteProvider } from "@/components/PaletteProvider";
-import { ChatWidget } from "@/components/chat/ChatWidget";
+import { HomepageBackgroundProvider } from "@/components/background/HomepageBackgroundProvider";
 import { JsonLd } from "@/components/JsonLd";
 import { Analytics } from "@/components/Analytics";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 
 const fraunces = Fraunces({
   variable: "--font-heading",
@@ -79,21 +77,9 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <PaletteProvider>
-            <a
-              href="#main"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-foreground focus:text-background focus:rounded-md focus:text-sm focus:font-medium"
-            >
-              Skip to content
-            </a>
-            <InteractiveBackground />
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main id="main" className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
-            <ChatWidget />
+            <HomepageBackgroundProvider>
+              <SiteChrome>{children}</SiteChrome>
+            </HomepageBackgroundProvider>
           </PaletteProvider>
         </ThemeProvider>
       </body>
