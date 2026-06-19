@@ -124,10 +124,13 @@ export default function AboutPage() {
                         {/* Bio */}
                         <div className="prose prose-neutral dark:prose-invert max-w-none mb-12">
                             <p className="text-lg leading-relaxed">
-                                Hi, I&apos;m <strong>Difan &quot;Bobby&quot; Jia</strong> (贾迪帆). Bobby has been my name since I was three — given by my first English teacher, and it stuck ever since. I&apos;m a CS PhD student at the <strong>University of Texas at Dallas</strong>, advised by Prof.{" "}
-                                <Link href="https://www.lianghe.me/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground transition-colors">Liang He</Link>{" "}
-                                in the{" "}
-                                <Link href="https://www.de4m.xyz/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground transition-colors">DE4M Lab</Link>.
+                                Hi, I&apos;m <strong>Difan &quot;Bobby&quot; Jia</strong> (贾迪帆). Bobby has been my name since I was three — given by my first English teacher, and it stuck ever since. I&apos;m a CS PhD student at the <strong>University of Texas at Dallas</strong>, advised by{" "}
+                                <strong className="font-semibold">
+                                    Prof.{" "}
+                                    <Link href="https://www.lianghe.me/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground transition-colors">Liang He</Link>{" "}
+                                    in the{" "}
+                                    <Link href="https://www.de4m.xyz/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground transition-colors">DE4M Lab</Link>.
+                                </strong>
                             </p>
                             <p className="text-base text-muted-foreground leading-relaxed">
                                 My research sits at the intersection of <strong className="text-foreground">Mixed Reality</strong>, <strong className="text-foreground">spatial computing</strong>, and <strong className="text-foreground">embodied interaction</strong>. I&apos;m interested in how intelligent systems can help people create, visualize, and manipulate digital content more naturally in physical space — using AR, AI agents, and novel interaction techniques.

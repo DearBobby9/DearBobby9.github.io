@@ -28,6 +28,8 @@ import { navigation } from "@/data/navigation";
 import { siteConfig } from "@/data/site";
 import { usePalette } from "@/components/PaletteProvider";
 import {
+    normalizeBackgroundPathname,
+    supportsSelectableBackground,
     useHomepageBackground,
     type HomepageBackgroundMode,
 } from "@/components/background/HomepageBackgroundProvider";
@@ -91,8 +93,8 @@ export function Header() {
     React.useEffect(() => setMounted(true), []);
 
     const navItems = navigation;
-    const normalizedPathname = pathname.replace(/\/$/, "") || "/";
-    const isHome = normalizedPathname === "/";
+    const normalizedPathname = normalizeBackgroundPathname(pathname);
+    const canSelectBackground = supportsSelectableBackground(normalizedPathname);
 
     // Determine if a nav item is active
     const isActive = (href: string) => {
@@ -300,7 +302,7 @@ export function Header() {
                         </DropdownMenu>
                     )}
 
-                    {mounted && isHome && (
+                    {mounted && canSelectBackground && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button
@@ -308,13 +310,13 @@ export function Header() {
                                         "hidden h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:inline-flex",
                                         backgroundMode === "antigravity" && "bg-foreground/[0.08] text-foreground"
                                     )}
-                                    aria-label="Change homepage background"
+                                    aria-label="Change page background"
                                 >
                                     <Sparkles className="h-4 w-4" />
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Home Background</DropdownMenuLabel>
+                                <DropdownMenuLabel>Page Background</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuRadioGroup
                                     value={backgroundMode}
@@ -341,7 +343,7 @@ export function Header() {
                         <SheetContent side="right" className="w-full sm:w-[400px] bg-background/95 backdrop-blur-xl border-l border-border/40 p-0">
                             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                             <SheetDescription className="sr-only">
-                                Mobile navigation, color palette, and homepage background controls.
+                                Mobile navigation, color palette, and page background controls.
                             </SheetDescription>
 
                             <div className="flex flex-col h-full justify-center px-8">
@@ -469,10 +471,10 @@ export function Header() {
                                             )}
                                         </div>
                                     )}
-                                    {mounted && isHome && (
+                                    {mounted && canSelectBackground && (
                                         <div className="mt-8">
                                             <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                                                Home Background
+                                                Page Background
                                             </div>
                                             <div className="flex justify-center gap-2">
                                                 {HOME_BACKGROUND_OPTIONS.map((option) => (

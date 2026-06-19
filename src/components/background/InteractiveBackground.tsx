@@ -6,7 +6,11 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { usePalette } from "@/components/PaletteProvider";
 import { GoogleAntigravityBackground } from "@/components/background/GoogleAntigravityBackground";
-import { useHomepageBackground } from "@/components/background/HomepageBackgroundProvider";
+import {
+    normalizeBackgroundPathname,
+    supportsSelectableBackground,
+    useHomepageBackground,
+} from "@/components/background/HomepageBackgroundProvider";
 
 interface InteractiveBackgroundProps {
     className?: string;
@@ -21,8 +25,8 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     const { resolvedTheme } = useTheme();
     const { backgroundMode } = useHomepageBackground();
     const { getActivePalette, paletteId, customColors } = usePalette();
-    const normalizedPathname = React.useMemo(() => pathname.replace(/\/$/, "") || "/", [pathname]);
-    const shouldUseAntigravity = normalizedPathname === "/" && backgroundMode === "antigravity";
+    const normalizedPathname = React.useMemo(() => normalizeBackgroundPathname(pathname), [pathname]);
+    const shouldUseAntigravity = supportsSelectableBackground(normalizedPathname) && backgroundMode === "antigravity";
 
     // Ref so the canvas render loop can read the current palette without restarting
     const paletteRef = React.useRef(getActivePalette());
