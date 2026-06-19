@@ -122,8 +122,8 @@ export default function AboutPage() {
                         <h1 className="mb-6">About</h1>
 
                         {/* Bio */}
-                        <div className="prose prose-neutral dark:prose-invert max-w-none mb-12">
-                            <p className="text-lg leading-relaxed">
+                        <div className="prose prose-neutral dark:prose-invert max-w-none mb-12 flex flex-col gap-5">
+                            <p className="m-0 text-lg leading-relaxed">
                                 Hi, I&apos;m <strong>Difan &quot;Bobby&quot; Jia</strong> (贾迪帆). Bobby has been my name since I was three — given by my first English teacher, and it stuck ever since. I&apos;m a CS PhD student at the <strong>University of Texas at Dallas</strong>, advised by{" "}
                                 <strong className="font-semibold">
                                     Prof.{" "}
@@ -132,15 +132,15 @@ export default function AboutPage() {
                                     <Link href="https://www.de4m.xyz/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground transition-colors">DE4M Lab</Link>.
                                 </strong>
                             </p>
-                            <p className="text-base text-muted-foreground leading-relaxed">
+                            <p className="m-0 text-base text-muted-foreground leading-relaxed">
                                 My research sits at the intersection of <strong className="text-foreground">Mixed Reality</strong>, <strong className="text-foreground">spatial computing</strong>, and <strong className="text-foreground">embodied interaction</strong>. I&apos;m interested in how intelligent systems can help people create, visualize, and manipulate digital content more naturally in physical space — using AR, AI agents, and novel interaction techniques.
                             </p>
-                            <p className="text-base text-muted-foreground leading-relaxed">
+                            <p className="m-0 text-base text-muted-foreground leading-relaxed">
                                 I completed my B.A. in Computer Science at the <strong className="text-foreground">University of Minnesota, Twin Cities</strong>, where I worked with Prof.{" "}
                                 <Link href="https://chenzhutian.org/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground transition-colors">Zhu-Tian Chen</Link>{" "}
                                 on visualization and interactive systems. Before that, I spent three years at the University of Shanghai for Science and Technology.
                             </p>
-                            <p className="text-base text-muted-foreground leading-relaxed">
+                            <p className="m-0 text-base text-muted-foreground leading-relaxed">
                                 Outside of research, I follow the Premier League, tinker with new dev tools, and occasionally overthink my investment portfolio.
                             </p>
                         </div>
