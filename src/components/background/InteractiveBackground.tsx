@@ -449,6 +449,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     if (shouldUseAntigravity) {
         return (
             <GoogleAntigravityBackground
+                enableClickImpulse
                 theme={resolvedTheme === "dark" ? "dark" : "light"}
                 className={cn(
                     "fixed inset-0 -z-10 bg-background transition-colors duration-600 ease-in-out",

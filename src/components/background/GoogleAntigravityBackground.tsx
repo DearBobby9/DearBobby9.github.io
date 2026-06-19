@@ -349,6 +349,8 @@ class MainParticleField {
   private rt2: THREE.WebGLRenderTarget;
   private readonly ringPos = new THREE.Vector2(0, 0);
   private readonly cursorPos = new THREE.Vector2(0, 0);
+  private readonly clickPos = new THREE.Vector2(0, 0);
+  private clickStartTime = -1000;
   private lastTime = 0;
   private everRendered = false;
   private particleScale: number;
@@ -454,6 +456,9 @@ class MainParticleField {
         uRingWidth: { value: 0.05 },
         uRingWidth2: { value: 0.015 },
         uRingDisplacement: { value: this.scene.ringDisplacement },
+        uClickPos: { value: new THREE.Vector2(0, 0) },
+        uClickElapsed: { value: -1000 },
+        uClickStrength: { value: 0 },
         uTime: { value: 0 },
       },
       vertexShader: `
@@ -472,6 +477,9 @@ class MainParticleField {
         uniform float uRingWidth;
         uniform float uRingWidth2;
         uniform float uRingDisplacement;
+        uniform vec2 uClickPos;
+        uniform float uClickElapsed;
+        uniform float uClickStrength;
         ${NOISE_GLSL}
 
         void main() {
@@ -505,6 +513,17 @@ class MainParticleField {
           disp += vec2(noise3, noise4) * .005;
           disp.x += sin((refPos.x * 20.) + (time * 4.)) * .02 * clamp(dist, 0., 1.);
           disp.y += cos((refPos.y * 20.) + (time * 3.)) * .02 * clamp(dist, 0., 1.);
+
+          float clickFade = smoothstep(1.15, 0., uClickElapsed);
+          float clickRadius = uClickElapsed * .72;
+          float clickDist = distance(curentPos.xy, uClickPos);
+          float clickWidth = mix(.035, .11, clamp(uClickElapsed, 0., 1.));
+          float clickBand = 1. - smoothstep(0., clickWidth, abs(clickDist - clickRadius));
+          clickBand = pow(clamp(clickBand, 0., 1.), 2.) * clickFade * uClickStrength;
+          vec2 clickDirection = normalize((curentPos.xy - uClickPos) + vec2(.0001, -.0001));
+          disp += clickDirection * clickBand * .11;
+          t += clickBand * 1.15;
+
           pos -= (uRingPos - (curentPos + disp)) * pow(t2, .75) * uRingDisplacement;
           float scaleDiff = t - scale;
           scaleDiff *= .2;
@@ -512,6 +531,7 @@ class MainParticleField {
           vec2 finalPos = curentPos + disp + (pos * .25);
           velocity *= .5;
           velocity += scale * .25;
+          velocity += clickBand * .35;
           gl_FragColor = vec4(finalPos, scale, velocity);
         }
       `,
@@ -641,6 +661,11 @@ class MainParticleField {
     this.renderMaterial.needsUpdate = true;
   }
 
+  triggerClick(point: THREE.Vector3) {
+    this.clickPos.set(point.x * 0.175, point.y * 0.175);
+    this.clickStartTime = this.scene.clock.getElapsedTime();
+  }
+
   update() {
     const elapsed = this.scene.clock.getElapsedTime();
     const deltaTime = elapsed - this.lastTime;
@@ -666,6 +691,9 @@ class MainParticleField {
     this.simMaterial.uniforms.uRingWidth.value = this.scene.ringWidth;
     this.simMaterial.uniforms.uRingWidth2.value = this.scene.ringWidth2;
     this.simMaterial.uniforms.uRingDisplacement.value = this.scene.ringDisplacement;
+    this.simMaterial.uniforms.uClickPos.value = this.clickPos;
+    this.simMaterial.uniforms.uClickElapsed.value = elapsed - this.clickStartTime;
+    this.simMaterial.uniforms.uClickStrength.value = this.scene.enableClickImpulse ? 1 : 0;
 
     this.renderer.setRenderTarget(this.rt2);
     this.renderer.render(this.simScene, this.simCamera);
@@ -701,6 +729,7 @@ class MainParticleField {
 
 class WebGLParticleScene {
   readonly theme: GoogleAntigravityTheme;
+  readonly enableClickImpulse: boolean;
   readonly scene = new THREE.Scene();
   readonly renderer: THREE.WebGLRenderer;
   readonly camera: THREE.PerspectiveCamera;
@@ -738,9 +767,10 @@ class WebGLParticleScene {
   time = 0;
   isIntersecting = false;
 
-  constructor(container: HTMLElement, theme: GoogleAntigravityTheme) {
+  constructor(container: HTMLElement, theme: GoogleAntigravityTheme, enableClickImpulse: boolean) {
     this.container = container;
     this.theme = theme;
+    this.enableClickImpulse = enableClickImpulse;
     this.scene.background = new THREE.Color(theme === "dark" ? 0x09090b : 0xffffff);
     THREE.ColorManagement.enabled = false;
     this.renderer = new THREE.WebGLRenderer({
@@ -782,23 +812,16 @@ class WebGLParticleScene {
     this.screenHeight = window.innerHeight;
   }
 
-  preRender() {
-    const elapsed = this.clock.getElapsedTime();
-    const delta = elapsed - this.lastTime;
-    this.lastTime = elapsed;
-    this.time += delta;
-    this.particles.update();
-
+  private updateMouseFromCursor() {
     const rect = this.renderer.domElement.getBoundingClientRect();
     this.mouse.x = (this.cursor.x - rect.left) * (this.screenWidth / Math.max(1, rect.width));
     this.mouse.y = (this.cursor.y - rect.top) * (this.screenHeight / Math.max(1, rect.height));
     this.mouse.x = (this.mouse.x / Math.max(1, this.screenWidth)) * 2 - 1;
     this.mouse.y = -(this.mouse.y / Math.max(1, this.screenHeight)) * 2 + 1;
     this.mouseIsOver = !(this.mouse.x < -1 || this.mouse.x > 1 || this.mouse.y < -1 || this.mouse.y > 1);
+  }
 
-    this.skipFrame = !this.skipFrame;
-    if (this.skipFrame) return;
-
+  private updateRaycastIntersection() {
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersections = this.raycaster.intersectObject(this.raycastPlane);
     if (intersections.length > 0 && this.mouseIsOver) {
@@ -807,6 +830,32 @@ class WebGLParticleScene {
     } else {
       this.isIntersecting = false;
     }
+  }
+
+  triggerClick(event: MouseEvent | PointerEvent) {
+    if (!this.enableClickImpulse) return;
+
+    this.updatePointer(event);
+    this.updateMouseFromCursor();
+    this.updateRaycastIntersection();
+
+    if (this.isIntersecting) {
+      this.particles.triggerClick(this.intersectionPoint);
+    }
+  }
+
+  preRender() {
+    const elapsed = this.clock.getElapsedTime();
+    const delta = elapsed - this.lastTime;
+    this.lastTime = elapsed;
+    this.time += delta;
+    this.particles.update();
+    this.updateMouseFromCursor();
+
+    this.skipFrame = !this.skipFrame;
+    if (this.skipFrame) return;
+
+    this.updateRaycastIntersection();
   }
 
   render() {
@@ -843,11 +892,13 @@ class WebGLParticleScene {
 
 interface GoogleAntigravityBackgroundProps {
   className?: string;
+  enableClickImpulse?: boolean;
   theme?: GoogleAntigravityTheme;
 }
 
 export function GoogleAntigravityBackground({
   className,
+  enableClickImpulse = false,
   theme = "light",
 }: GoogleAntigravityBackgroundProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -857,7 +908,7 @@ export function GoogleAntigravityBackground({
     const container = containerRef.current;
     if (!container) return;
 
-    const scene = new WebGLParticleScene(container, theme);
+    const scene = new WebGLParticleScene(container, theme, enableClickImpulse);
     let visible = true;
 
     const render = () => {
@@ -872,20 +923,25 @@ export function GoogleAntigravityBackground({
     });
 
     const onPointerMove = (event: MouseEvent | PointerEvent) => scene.updatePointer(event);
+    const onClick = (event: MouseEvent | PointerEvent) => scene.triggerClick(event);
 
     observer.observe(container);
     window.addEventListener("mousemove", onPointerMove, { passive: true });
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    if (enableClickImpulse) {
+      window.addEventListener("click", onClick, { passive: true });
+    }
     frameRef.current = requestAnimationFrame(render);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("mousemove", onPointerMove);
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("click", onClick);
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
       scene.dispose();
     };
-  }, [theme]);
+  }, [enableClickImpulse, theme]);
 
   return (
     <div
