@@ -29,8 +29,6 @@ const socialLinks = [
 ];
 
 export function Footer() {
-    const currentYear = new Date().getFullYear();
-
     return (
         <footer className="shadow-[inset_0_1px_0_0] shadow-foreground/[0.06]">
             <div className="container-custom py-12 md:py-16 glass-panel my-8">
@@ -41,7 +39,19 @@ export function Footer() {
                             {siteConfig.name.toUpperCase()}
                         </span>
                         <span className="text-xs text-muted-foreground font-mono">
-                            © {currentYear} All rights reserved
+                            © 2026 All rights reserved
+                        </span>
+                        <span className="max-w-[28ch] text-center text-xs leading-relaxed text-muted-foreground md:text-left">
+                            Background motion inspired by{" "}
+                            <Link
+                                href="https://antigravity.google"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline underline-offset-4 hover:text-foreground"
+                            >
+                                Google Antigravity
+                            </Link>
+                            .
                         </span>
                     </div>
 
