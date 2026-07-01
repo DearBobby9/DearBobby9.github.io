@@ -3,7 +3,7 @@
 
 export interface Update {
     year: string;
-    type: "Project" | "Paper" | "Blog" | "Award";
+    type: "Project" | "Paper" | "Blog" | "Award" | "Study";
     title: string;
     href: string;
 }
@@ -11,9 +11,9 @@ export interface Update {
 export const updates: Update[] = [
     {
         year: "2026",
-        type: "Project",
-        title: "OverSite — building an AI copilot for construction field workers with smart glasses + Gemini Live",
-        href: "/#projects",
+        type: "Study",
+        title: "Recruiting 18+ participants for a 3-5 minute anonymous survey on mixed-reality content creation and physical objects.",
+        href: "https://utdallas.qualtrics.com/jfe/form/SV_3qmGPGjFEVcqske",
     },
     {
         year: "2026",
