@@ -40,6 +40,8 @@ const HOME_BACKGROUND_OPTIONS: Array<{ value: HomepageBackgroundMode; label: str
     { value: "antigravity", label: "Anti Gravity" },
 ];
 
+const SHOW_DESKTOP_HEADER_CONTROLS = false;
+
 function useScrollToHash() {
     const pathname = usePathname();
     const router = useRouter();
@@ -165,7 +167,7 @@ export function Header() {
                     )}
 
                     {/* Palette selector (desktop only) */}
-                    {mounted && (
+                    {SHOW_DESKTOP_HEADER_CONTROLS && mounted && (
                         <DropdownMenu onOpenChange={(open) => {
                             if (!open) return;
                             const btn = paletteRef.current;
@@ -302,7 +304,7 @@ export function Header() {
                         </DropdownMenu>
                     )}
 
-                    {mounted && canSelectBackground && (
+                    {SHOW_DESKTOP_HEADER_CONTROLS && mounted && canSelectBackground && (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button
