@@ -1,26 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { usePathname } from "next/navigation";
 import { InteractiveBackground } from "@/components/background/InteractiveBackground";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat/ChatWidget";
 
-const CHROMELESS_PATHS = new Set(["/antigravity-clone"]);
-
-function normalizePathname(pathname: string) {
-  return pathname.replace(/\/$/, "") || "/";
-}
-
 export function SiteChrome({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isChromeless = CHROMELESS_PATHS.has(normalizePathname(pathname));
-
-  if (isChromeless) {
-    return <>{children}</>;
-  }
-
   return (
     <>
       <a

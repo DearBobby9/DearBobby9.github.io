@@ -1,16 +1,24 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { usePalette } from "@/components/PaletteProvider";
-import { GoogleAntigravityBackground } from "@/components/background/GoogleAntigravityBackground";
 import {
     normalizeBackgroundPathname,
     supportsSelectableBackground,
     useHomepageBackground,
 } from "@/components/background/HomepageBackgroundProvider";
+
+const GoogleAntigravityBackground = dynamic(
+    () =>
+        import("@/components/background/GoogleAntigravityBackground").then(
+            (mod) => mod.GoogleAntigravityBackground
+        ),
+    { ssr: false }
+);
 
 interface InteractiveBackgroundProps {
     className?: string;
@@ -20,7 +28,6 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
-    const [isSuppressedForNewHome, setIsSuppressedForNewHome] = React.useState(false);
     const pathname = usePathname();
     const { resolvedTheme } = useTheme();
     const { backgroundMode } = useHomepageBackground();
@@ -48,11 +55,7 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
     }, []);
 
     React.useEffect(() => {
-        setIsSuppressedForNewHome(normalizedPathname === "/new-home");
-    }, [normalizedPathname]);
-
-    React.useEffect(() => {
-        if (prefersReducedMotion || isSuppressedForNewHome || shouldUseAntigravity) return;
+        if (prefersReducedMotion || shouldUseAntigravity) return;
 
         const canvas = canvasRef.current;
         const container = containerRef.current;
@@ -446,9 +449,9 @@ export function InteractiveBackground({ className }: InteractiveBackgroundProps)
             cancelAnimationFrame(animationFrameId);
             observer.disconnect();
         };
-    }, [prefersReducedMotion, isSuppressedForNewHome, shouldUseAntigravity]);
+    }, [prefersReducedMotion, shouldUseAntigravity]);
 
-    if (prefersReducedMotion || isSuppressedForNewHome) return null;
+    if (prefersReducedMotion) return null;
 
     if (shouldUseAntigravity) {
         return (

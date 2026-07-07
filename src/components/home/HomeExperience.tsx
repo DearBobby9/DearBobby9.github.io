@@ -11,7 +11,7 @@ import { featuredProjects, type Project } from "@/data/projects";
 import { selectedPublications, type Publication } from "@/data/publications";
 import { BibtexCopyButton } from "@/components/publications/BibtexCopyButton";
 
-export function OldCloudHome() {
+export function HomeExperience() {
     return (
         <>
             <OldHero />

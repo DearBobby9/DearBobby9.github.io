@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toggle Fix Mockup — Before / Fix A / Fix B</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --fg: #09090b;
+    --muted: #71717a;
+    --muted-bg: #f4f4f5;
+    --border: #e4e4e7;
+    --accent: #f4f4f5;
+    --accent-fg: #18181b;
+    --header-bg: rgba(255,255,255,0.3);
+  }
+  .dark {
+    --bg: #09090b;
+    --fg: #fafafa;
+    --muted: #a1a1aa;
+    --muted-bg: #27272a;
+    --border: #27272a;
+    --accent: #27272a;
+    --accent-fg: #fafafa;
+    --header-bg: rgba(9,9,11,0.3);
+  }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    transition: background-color 0.6s ease, color 0.6s ease;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1100px; margin: 0 auto;
+    padding: 60px clamp(16px, 4vw, 48px) 120px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300; font-size: 2.5rem;
+    letter-spacing: -0.04em; margin-bottom: 8px;
+  }
+  .subtitle {
+    font-size: 16px; color: var(--muted); font-weight: 300;
+    line-height: 1.6; margin-bottom: 48px;
+  }
+
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;
+  }
+  @media (max-width: 860px) { .compare { grid-template-columns: 1fr; } }
+
+  .panel {
+    border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; transition: border-color 0.6s;
+  }
+  .panel-label {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    transition: border-color 0.6s;
+  }
+  .panel-label .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
+  }
+  .panel-label .tag.bad { background: #fecaca; color: #991b1b; }
+  .dark .panel-label .tag.bad { background: #7f1d1d; color: #fca5a5; }
+  .panel-label .tag.good { background: #bbf7d0; color: #166534; }
+  .dark .panel-label .tag.good { background: #14532d; color: #86efac; }
+  .panel-label .tag.best { background: #bfdbfe; color: #1e40af; }
+  .dark .panel-label .tag.best { background: #1e3a5f; color: #93c5fd; }
+  .panel-label h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 500;
+  }
+  .panel-body {
+    min-height: 260px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px;
+    padding: 32px 20px;
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--fg) 6%, transparent) 1px, transparent 1px);
+    background-size: 30px 30px;
+    transition: background-color 0.6s;
+  }
+
+  /* ---- Mock header bar ---- */
+  .mock-header {
+    width: 100%; max-width: 380px;
+    height: 52px; border-radius: 10px;
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+    display: flex; align-items: center;
+    padding: 0 16px;
+    transition: background 0.6s, border-color 0.6s;
+  }
+  .mock-logo {
+    font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .mock-nav {
+    margin-left: auto; display: flex; align-items: center; gap: 14px;
+  }
+  .mock-nav span {
+    font-size: 11px; color: var(--muted); cursor: default;
+    transition: color 0.6s;
+  }
+
+  /* ---- Ghost button base ---- */
+  .ghost-btn {
+    width: 36px; height: 36px; border-radius: 6px;
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent;
+    color: var(--fg);
+  }
+  .ghost-btn:hover {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+  .ghost-btn svg { width: 16px; height: 16px; }
+
+  /* ==========================
+     BEFORE — transition-all (bug)
+     ========================== */
+  .btn-before {
+    transition: all 150ms ease;
+    position: relative;
+    overflow: visible;
+  }
+  .btn-before .glow-rect {
+    position: absolute; inset: 3px; border-radius: 6px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease, box-shadow 0.35s ease;
+  }
+  .btn-before:hover .glow-rect { opacity: 1; }
+  .btn-before.is-light:hover .glow-rect {
+    box-shadow: 0 0 14px 3px rgba(255, 157, 0, 0.3), inset 0 0 10px rgba(255, 157, 0, 0.12);
+  }
+  .btn-before.is-dark:hover .glow-rect {
+    box-shadow: 0 0 14px 3px rgba(168, 85, 247, 0.35), inset 0 0 10px rgba(168, 85, 247, 0.15);
+  }
+  .btn-before .icon {
+    position: relative; z-index: 1;
+    animation: icon-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* ==========================
+     FIX A — scoped transition (no bg flash)
+     ========================== */
+  .btn-fixA {
+    transition: color 150ms ease;
+    position: relative;
+    overflow: visible;
+  }
+  .btn-fixA:hover { background: var(--accent); }
+  .btn-fixA .glow-rect {
+    position: absolute; inset: 3px; border-radius: 6px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease, box-shadow 0.35s ease;
+  }
+  .btn-fixA:hover .glow-rect { opacity: 1; }
+  .btn-fixA.is-light:hover .glow-rect {
+    box-shadow: 0 0 14px 3px rgba(255, 157, 0, 0.3), inset 0 0 10px rgba(255, 157, 0, 0.12);
+  }
+  .btn-fixA.is-dark:hover .glow-rect {
+    box-shadow: 0 0 14px 3px rgba(168, 85, 247, 0.35), inset 0 0 10px rgba(168, 85, 247, 0.15);
+  }
+  .btn-fixA .icon {
+    position: relative; z-index: 1;
+    animation: icon-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* ==========================
+     FIX B — Boundaryless diffused glow (no rectangle at all)
+     ========================== */
+  .btn-diffuse {
+    /* No background ever — completely transparent button */
+    background: transparent !important;
+    border: none;
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    position: relative;
+    overflow: visible;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--fg);
+    transition: color 0.3s ease;
+  }
+  .btn-diffuse svg { width: 16px; height: 16px; }
+  /* Kill the ghost hover bg entirely */
+  .btn-diffuse:hover {
+    background: transparent !important;
+  }
+
+  /* The diffused radial glow — lives behind the icon, no hard edges */
+  .btn-diffuse .aura {
+    position: absolute;
+    width: 48px; height: 48px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    filter: blur(8px);
+    transform-origin: center center;
+  }
+  /* Hover: aura fades in and expands slightly */
+  .btn-diffuse:hover .aura {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+  /* Light mode — warm amber aura */
+  .btn-diffuse.is-light .aura {
+    background: radial-gradient(circle, rgba(255, 170, 40, 0.45) 0%, rgba(255, 140, 0, 0.15) 50%, transparent 75%);
+  }
+  /* Dark mode — violet aura */
+  .btn-diffuse.is-dark .aura {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.5) 0%, rgba(140, 60, 230, 0.18) 50%, transparent 75%);
+  }
+
+  /* Click burst: momentary flash that expands and fades */
+  .btn-diffuse .burst {
+    position: absolute;
+    width: 64px; height: 64px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.3);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    filter: blur(12px);
+  }
+  .btn-diffuse.is-light .burst {
+    background: radial-gradient(circle, rgba(255, 180, 60, 0.6) 0%, transparent 70%);
+  }
+  .btn-diffuse.is-dark .burst {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.65) 0%, transparent 70%);
+  }
+  @keyframes burst-out {
+    0% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.4); }
+    60% { opacity: 0.5; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(2.2); }
+  }
+  .btn-diffuse .burst.active {
+    animation: burst-out 0.55s ease-out forwards;
+  }
+
+  /* Icon */
+  .btn-diffuse .icon {
+    position: relative; z-index: 1;
+    animation: icon-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    filter: drop-shadow(0 0 0px transparent);
+    transition: filter 0.35s ease;
+  }
+  /* Hover: icon gets a subtle colored drop-shadow too */
+  .btn-diffuse.is-light:hover .icon {
+    filter: drop-shadow(0 0 4px rgba(255, 160, 0, 0.5));
+  }
+  .btn-diffuse.is-dark:hover .icon {
+    filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.55));
+  }
+
+  @keyframes icon-enter {
+    from { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    to { opacity: 1; transform: rotate(0deg) scale(1); }
+  }
+
+  .hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); text-align: center;
+    transition: color 0.6s;
+    line-height: 1.5;
+  }
+
+  .note {
+    padding: 12px 16px;
+    font-size: 12px; color: var(--muted); line-height: 1.6;
+    border-top: 1px solid var(--border);
+    transition: border-color 0.6s, color 0.6s;
+  }
+  .note code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; background: var(--muted-bg);
+    padding: 1px 5px; border-radius: 3px;
+    transition: background 0.6s;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1>Toggle Fix</h1>
+  <p class="subtitle">Three approaches. All toggles sync to the same page theme. Click each to compare.</p>
+
+  <div class="compare">
+
+    <!-- BEFORE -->
+    <div class="panel">
+      <div class="panel-label">
+        <span class="tag bad">BEFORE</span>
+        <h2>transition-all (bug)</h2>
+      </div>
+      <div class="panel-body">
+        <div class="mock-header">
+          <span class="mock-logo">DIFAN JIA</span>
+          <div class="mock-nav">
+            <span>Projects</span>
+            <span>About</span>
+            <button class="ghost-btn btn-before is-light" id="btnBefore" aria-label="Toggle theme">
+              <span class="glow-rect" aria-hidden="true"></span>
+              <svg class="icon" id="iconBefore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <span class="hint">Square flash on click</span>
+      </div>
+      <div class="note">
+        <code>transition: all</code> animates <code>background-color</code> during theme swap. Hard rectangle artifact.
+      </div>
+    </div>
+
+    <!-- FIX A -->
+    <div class="panel">
+      <div class="panel-label">
+        <span class="tag good">FIX A</span>
+        <h2>Scoped transition</h2>
+      </div>
+      <div class="panel-body">
+        <div class="mock-header">
+          <span class="mock-logo">DIFAN JIA</span>
+          <div class="mock-nav">
+            <span>Projects</span>
+            <span>About</span>
+            <button class="ghost-btn btn-fixA is-light" id="btnFixA" aria-label="Toggle theme">
+              <span class="glow-rect" aria-hidden="true"></span>
+              <svg class="icon" id="iconFixA" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <span class="hint">No flash, still rectangular glow</span>
+      </div>
+      <div class="note">
+        Fixes the flash but hover still reveals a rectangular boundary via <code>box-shadow</code>.
+      </div>
+    </div>
+
+    <!-- FIX B — Diffused -->
+    <div class="panel">
+      <div class="panel-label">
+        <span class="tag best">FIX B</span>
+        <h2>Boundaryless diffused aura</h2>
+      </div>
+      <div class="panel-body">
+        <div class="mock-header">
+          <span class="mock-logo">DIFAN JIA</span>
+          <div class="mock-nav">
+            <span>Projects</span>
+            <span>About</span>
+            <button class="btn-diffuse is-light" id="btnDiffuse" aria-label="Toggle theme">
+              <span class="aura" aria-hidden="true"></span>
+              <span class="burst" aria-hidden="true" id="burstDiffuse"></span>
+              <svg class="icon" id="iconDiffuse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <span class="hint">No boundary. Glow bleeds into glass.<br>Click for burst effect.</span>
+      </div>
+      <div class="note">
+        Zero rectangular elements. Radial gradient + blur = organic aura that melts into the <code>backdrop-blur</code> header.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const sunPath = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  const moonPath = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+
+  let isDark = false;
+
+  const allBtns = [
+    { btn: 'btnBefore', icon: 'iconBefore' },
+    { btn: 'btnFixA', icon: 'iconFixA' },
+    { btn: 'btnDiffuse', icon: 'iconDiffuse' },
+  ];
+
+  function setDark(dark) {
+    isDark = dark;
+    document.body.classList.toggle('dark', dark);
+  }
+
+  function updateBtn(btnId, iconId, dark) {
+    const btn = document.getElementById(btnId);
+    const icon = document.getElementById(iconId);
+    btn.classList.toggle('is-light', !dark);
+    btn.classList.toggle('is-dark', dark);
+    icon.innerHTML = dark ? sunPath : moonPath;
+    icon.classList.remove('icon');
+    void icon.offsetWidth;
+    icon.classList.add('icon');
+  }
+
+  function toggleAll() {
+    setDark(!isDark);
+    allBtns.forEach(b => updateBtn(b.btn, b.icon, isDark));
+  }
+
+  // Wire up all buttons
+  document.getElementById('btnBefore').addEventListener('click', toggleAll);
+  document.getElementById('btnFixA').addEventListener('click', toggleAll);
+  document.getElementById('btnDiffuse').addEventListener('click', () => {
+    // Trigger burst animation
+    const burst = document.getElementById('burstDiffuse');
+    burst.classList.remove('active');
+    void burst.offsetWidth;
+    burst.classList.add('active');
+    toggleAll();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSAP Motion Mockup - Difan Jia</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+  :root {
+    --bg: #f8f8f6;
+    --fg: #0b0c0f;
+    --muted: #62646c;
+    --soft: #e9e7e1;
+    --line: rgba(11, 12, 15, 0.12);
+    --line-soft: rgba(11, 12, 15, 0.07);
+    --panel: rgba(255, 255, 252, 0.74);
+    --blue: #3b82f6;
+    --red: #e74b3f;
+    --yellow: #c89b2c;
+    --green: #2f9b62;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      linear-gradient(90deg, rgba(11, 12, 15, 0.035) 1px, transparent 1px),
+      linear-gradient(180deg, rgba(11, 12, 15, 0.028) 1px, transparent 1px),
+      var(--bg);
+    background-size: 80px 80px;
+    color: var(--fg);
+    font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: hidden;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .page-shell {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    border-bottom: 1px solid var(--line-soft);
+    background: rgba(248, 248, 246, 0.76);
+    backdrop-filter: blur(18px);
+  }
+
+  .container {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .header-inner {
+    display: flex;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .nav a {
+    position: relative;
+    display: inline-flex;
+    padding: 8px 0;
+  }
+
+  .nav a::after,
+  .link-row a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    height: 1px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    background: currentColor;
+    transition: transform 220ms ease;
+  }
+
+  .nav a:hover::after,
+  .link-row a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .hero {
+    min-height: calc(88vh - 64px);
+    padding: 86px 0 58px;
+    display: grid;
+    align-items: center;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: center;
+    gap: 72px;
+  }
+
+  .eyebrow {
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    max-width: 9ch;
+    font-size: 6.35rem;
+    font-weight: 360;
+    line-height: 0.92;
+    letter-spacing: 0;
+  }
+
+  .line-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero-line {
+    display: block;
+    will-change: transform;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .rule {
+    width: 92px;
+    height: 2px;
+    margin: 34px 0;
+    background: var(--fg);
+    opacity: 0.34;
+    transform-origin: left center;
+  }
+
+  .hero-copy {
+    max-width: 58ch;
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.22rem;
+    font-weight: 300;
+    line-height: 1.85;
+  }
+
+  .hero-copy strong {
+    color: var(--fg);
+    font-weight: 560;
+  }
+
+  .link-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 30px;
+    margin-top: 40px;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.86rem;
+  }
+
+  .link-row a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    will-change: transform;
+  }
+
+  .portrait-wrap {
+    position: relative;
+    align-self: center;
+    justify-self: end;
+    width: min(320px, 100%);
+    transform-style: preserve-3d;
+    perspective: 900px;
+  }
+
+  .portrait-frame {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--soft);
+    box-shadow: 0 34px 70px -52px rgba(11, 12, 15, 0.62);
+  }
+
+  .portrait-frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+    transform: scale(1.04);
+    transition: filter 360ms ease;
+  }
+
+  .portrait-frame:hover img {
+    filter: grayscale(0);
+  }
+
+  .portrait-index {
+    display: grid;
+    grid-template-columns: 94px 1fr;
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .portrait-index span:first-child {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+  }
+
+  .section {
+    position: relative;
+    padding: 112px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .section-header {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 56px;
+    align-items: end;
+    margin-bottom: 52px;
+  }
+
+  .section-kicker {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin: 0;
+    max-width: 10ch;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 4.5rem;
+    font-weight: 360;
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  .section-header p {
+    max-width: 44ch;
+    margin: 0;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .now-list {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .now-item {
+    display: grid;
+    grid-template-columns: 64px 86px minmax(0, 1fr) 24px;
+    align-items: baseline;
+    gap: 18px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line-soft);
+    color: var(--muted);
+  }
+
+  .now-item:first-child {
+    border-top: 0;
+  }
+
+  .now-item span:nth-child(1),
+  .now-item span:nth-child(2) {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.72rem;
+  }
+
+  .now-item strong {
+    color: var(--fg);
+    font-weight: 450;
+  }
+
+  .now-arrow {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  .notes-section {
+    padding: 104px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .notes-grid {
+    display: grid;
+    grid-template-columns: 0.74fr 1.26fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .notes-copy p {
+    max-width: 42ch;
+    margin: 28px 0 0;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .note-list {
+    position: relative;
+    display: grid;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .note-card {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    gap: 28px;
+    min-height: 118px;
+    align-items: center;
+    padding: 24px 0;
+    border-top: 1px solid var(--line-soft);
+    background: transparent;
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+
+  .note-card:first-child {
+    border-top: 0;
+  }
+
+  .note-date {
+    color: var(--muted);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.72rem;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .note-card h3,
+  .project-card h3,
+  .publication-copy h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  .note-card p,
+  .project-card p,
+  .publication-copy p {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.65;
+  }
+
+  .publication-list {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .publication-row {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 34px;
+    padding: 30px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .publication-row:first-child {
+    border-top: 0;
+  }
+
+  .media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--line-soft);
+    background: var(--soft);
+  }
+
+  .media img {
+    position: absolute;
+    inset: -6% 0;
+    width: 100%;
+    height: 112%;
+    object-fit: cover;
+    will-change: transform;
+  }
+
+  .media.media-contain img {
+    inset: 0;
+    height: 100%;
+    object-fit: contain;
+    background: rgba(11, 12, 15, 0.035);
+  }
+
+  .meta {
+    color: var(--muted);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+  }
+
+  .publication-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 12px;
+    border: 1px solid var(--line-soft);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .project-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 216px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    min-height: 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--line-soft);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    will-change: transform;
+  }
+
+  .project-card:first-child {
+    border-top: 0;
+  }
+
+  .project-card.large {
+    grid-column: auto;
+  }
+
+  .project-card.medium {
+    grid-column: auto;
+  }
+
+  .project-card.small {
+    grid-column: auto;
+  }
+
+  .project-content {
+    min-height: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .project-card h3 {
+    max-width: none;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 380;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 9px;
+    border-radius: 999px;
+    background: rgba(11, 12, 15, 0.055);
+    color: var(--muted);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+  }
+
+  .footer-band {
+    padding: 84px 0 96px;
+    border-top: 1px solid var(--line-soft);
+    color: var(--muted);
+  }
+
+  .footer-band p {
+    max-width: 64ch;
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 900px) {
+    .nav {
+      display: none;
+    }
+
+    .hero {
+      padding-top: 60px;
+    }
+
+    .hero-grid,
+    .section-header,
+    .notes-grid,
+    .publication-row {
+      grid-template-columns: 1fr;
+    }
+
+    .portrait-wrap {
+      justify-self: start;
+      width: min(280px, 78vw);
+      order: -1;
+    }
+
+    .hero-title {
+      font-size: 4.25rem;
+    }
+
+    h2 {
+      font-size: 3.25rem;
+    }
+
+    .project-card {
+      grid-template-columns: 160px minmax(0, 1fr);
+    }
+
+    .project-card.large,
+    .project-card.medium,
+    .project-card.small {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .container {
+      width: min(100% - 24px, 1120px);
+    }
+
+    .hero-title {
+      font-size: 3.4rem;
+    }
+
+    .hero-copy {
+      font-size: 1.08rem;
+      line-height: 1.75;
+    }
+
+    .section {
+      padding: 82px 0;
+    }
+
+    .now-item {
+      grid-template-columns: 54px 1fr 20px;
+      gap: 12px;
+    }
+
+    .now-item span:nth-child(2) {
+      display: none;
+    }
+
+    .note-card,
+    .project-card {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .note-date {
+      font-size: 0.68rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page-shell">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#">DIFAN JIA</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#now" data-magnetic>Now</a>
+        <a href="#notes" data-magnetic>Notes</a>
+        <a href="#research" data-magnetic>Research</a>
+        <a href="#projects" data-magnetic>Projects</a>
+        <a href="#contact" data-magnetic>Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy-wrap">
+          <p class="eyebrow hero-eyebrow">Difan "Bobby" Jia / personal index</p>
+          <h1 class="hero-title" aria-label="Hi, I am Bobby">
+            <span class="line-mask"><span class="hero-line">Hi, I'm</span></span>
+            <span class="line-mask"><span class="hero-line">Bobby.</span></span>
+          </h1>
+          <div class="rule"></div>
+          <p class="hero-copy">
+            I work on <strong>XR</strong>, <strong>smart glasses</strong>, and
+            <strong>human-computer interaction</strong>. This is a public notebook for
+            papers, prototypes, small tools, and the research threads I keep coming back to.
+          </p>
+          <div class="link-row">
+            <a href="/cv.pdf" data-magnetic>Download CV</a>
+            <a href="mailto:difan.jia@utdallas.edu" data-magnetic>Email</a>
+            <a href="https://github.com/DearBobby9" data-magnetic>GitHub</a>
+            <a href="https://scholar.google.com/citations?user=M3bt3kAAAAAJ&hl=en" data-magnetic>Scholar</a>
+          </div>
+        </div>
+
+        <aside class="portrait-wrap">
+          <div class="portrait-frame media-tilt">
+            <img src="public/images/profile.webp" alt="Difan Jia">
+          </div>
+          <div class="portrait-index">
+            <span>Based in</span>
+            <span>Dallas, Texas</span>
+            <span>Studying</span>
+            <span>Spatial computing for real work</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="now" class="section reveal-group">
+      <div class="container">
+        <div class="section-header">
+          <div class="reveal-item">
+            <p class="section-kicker">Currently</p>
+            <h2>What is open on my desk.</h2>
+          </div>
+          <p class="reveal-item">
+            A short log of the work that is still moving: research papers, prototypes,
+            website notes, and the kind of small engineering tasks that usually sit
+            between them.
+          </p>
+        </div>
+
+        <div class="now-list">
+          <a class="now-item reveal-item" href="#projects">
+            <span>2026</span>
+            <span>Project</span>
+            <strong>OverSite - building an AI copilot for construction field workers with smart glasses + Gemini Live</strong>
+            <span class="now-arrow">-></span>
+          </a>
+          <a class="now-item reveal-item" href="#projects">
+            <span>2026</span>
+            <span>Project</span>
+            <strong>NoteV advanced to the next round of UTD Big Idea Pitch</strong>
+            <span class="now-arrow">-></span>
+          </a>
+          <a class="now-item reveal-item" href="#research">
+            <span>2026</span>
+            <span>Paper</span>
+            <strong>CHI '26 - AR Embedded Visualizations &amp; AI Reliance in Spatial Decision-Making</strong>
+            <span class="now-arrow">-></span>
+          </a>
+          <a class="now-item reveal-item" href="#research">
+            <span>2025</span>
+            <span>Paper</span>
+            <strong>UIST '25 - Reality Proxy: Fluid MR Interaction via Abstract Representations</strong>
+            <span class="now-arrow">-></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="notes" class="notes-section reveal-group">
+      <div class="container notes-grid">
+          <div class="notes-copy reveal-item">
+            <p class="section-kicker">Recent Notes</p>
+            <h2>Small entries from the workbench.</h2>
+            <p>
+              A few notes from current loops: research questions, lab fragments,
+              website curation, and small tools that are not always large enough
+              to become full project pages.
+            </p>
+          </div>
+
+          <div class="note-list">
+            <article class="note-card reveal-item">
+              <span class="note-date">May 2026<br>Research</span>
+              <div>
+                <h3>AR guidance without dense overlays.</h3>
+                <p>Keeping the SkillContext thread focused on light, video-referenced coaching instead of ghost hands or full scene reconstruction.</p>
+              </div>
+            </article>
+            <article class="note-card reveal-item">
+              <span class="note-date">May 2026<br>Prototype</span>
+              <div>
+                <h3>Smart-glasses capture keeps coming back.</h3>
+                <p>NoteV and OverSite are different projects, but both ask what useful context a lightweight wearable system should remember.</p>
+              </div>
+            </article>
+            <article class="note-card reveal-item">
+              <span class="note-date">Ongoing<br>Website</span>
+              <div>
+                <h3>Website curation is part of the archive.</h3>
+                <p>Some work belongs as polished project pages; some is better left as notes, screenshots, or private experiments.</p>
+              </div>
+            </article>
+          </div>
+      </div>
+    </section>
+
+    <section id="research" class="section reveal-group">
+      <div class="container">
+        <div class="section-header">
+          <div class="reveal-item">
+            <p class="section-kicker">Research</p>
+            <h2>Papers and research threads.</h2>
+          </div>
+          <p class="reveal-item">
+            Work judged by research questions, evidence, venue, collaborators, and contribution
+            boundary. These entries stay separate from build projects so the criteria are not mixed.
+          </p>
+        </div>
+
+        <div class="publication-list">
+          <article class="publication-row reveal-item">
+            <a class="media media-contain" href="#">
+              <img src="public/images/projects/ar-embedded-vis.webp" alt="AR Embedded Visualizations">
+            </a>
+            <div class="publication-copy">
+              <p class="meta">CHI 2026 / Accepted</p>
+              <h3>Can AR Embedded Visualizations Foster Appropriate Reliance on AI in Spatial Decision-Making?</h3>
+              <p><strong>Difan Jia</strong> with Xianhao Carton Liu, Tongyu Nie, Evan Suma Rosenberg, Victoria Interrante, and Chen Zhu-Tian.</p>
+              <div class="publication-actions">
+                <a class="pill" href="#">PDF</a>
+                <a class="pill" href="#">DOI</a>
+                <a class="pill" href="#">BibTeX</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="publication-row reveal-item">
+            <a class="media media-contain" href="#">
+              <img src="public/images/projects/reality-proxy.webp" alt="Reality Proxy">
+            </a>
+            <div class="publication-copy">
+              <p class="meta">UIST 2025 / Accepted</p>
+              <h3>Reality Proxy: Fluid Interactions with Real-World Objects in MR via Abstract Representations.</h3>
+              <p><strong>Difan Jia</strong> with Xiaoan Liu, Xianhao Carton Liu, Mar Gonzalez-Franco, and Chen Zhu-Tian.</p>
+              <div class="publication-actions">
+                <a class="pill" href="#">PDF</a>
+                <a class="pill" href="#">DOI</a>
+                <a class="pill" href="#">BibTeX</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section reveal-group">
+      <div class="container">
+        <div class="section-header">
+          <div class="reveal-item">
+            <p class="section-kicker">Projects</p>
+            <h2>Builds, tools, and prototypes.</h2>
+          </div>
+          <p class="reveal-item">
+            Standalone artifacts judged by what they do, how they are built, and whether someone
+            can inspect, run, or use them. Research systems only move here when they become tools.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card large reveal-item">
+            <a class="media media-contain" href="#">
+              <img src="public/images/projects/notev.webp" alt="NoteV">
+            </a>
+            <div class="project-content">
+              <div class="project-top">
+                <p class="meta">Build / 2026</p>
+              </div>
+              <h3>NoteV</h3>
+              <p>Every AI note-taker can hear. Ours can see - a multimodal AI assistant for Meta Ray-Ban smart glasses.</p>
+              <div class="tags">
+                <span class="tag">Smart Glasses</span>
+                <span class="tag">AI</span>
+                <span class="tag">EdTech</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card medium reveal-item">
+            <a class="media parallax-media" href="#">
+              <img src="public/images/projects/oversite.webp" alt="OverSite">
+            </a>
+            <div class="project-content">
+              <div class="project-top">
+                <p class="meta">Build / 2026</p>
+              </div>
+              <h3>OverSite</h3>
+              <p>AI copilot for construction field workers - smart glasses + real-time AI vision.</p>
+              <div class="tags">
+                <span class="tag">Construction</span>
+                <span class="tag">AI Agent</span>
+                <span class="tag">Gemini Live</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card small reveal-item">
+            <a class="media media-contain" href="#">
+              <img src="public/images/projects/refbib.webp" alt="RefBib">
+            </a>
+            <div class="project-content">
+              <div class="project-top">
+                <p class="meta">Build / 2026</p>
+              </div>
+              <h3>RefBib</h3>
+              <p>Drop a PDF, get .bib - verified academic references with zero AI hallucinations.</p>
+              <div class="tags">
+                <span class="tag">Academic Tools</span>
+                <span class="tag">Python</span>
+                <span class="tag">Next.js</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="footer-band">
+    <div class="container">
+      <p>
+        For papers, prototypes, or field-work notes, reach me at difan.jia@utdallas.edu.
+        I am usually switching between XR code, research writing, and lab prototypes.
+      </p>
+    </div>
+  </footer>
+</div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (!window.gsap || !window.ScrollTrigger) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.defaults({ duration: 0.72, ease: "power3.out" });
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      gsap.set([
+        ".site-header",
+        ".hero-eyebrow",
+        ".hero-line",
+        ".rule",
+        ".hero-copy",
+        ".link-row a",
+        ".portrait-wrap",
+        ".portrait-index",
+        ".reveal-item",
+        ".note-card"
+      ], {
+        clearProps: "all",
+        opacity: 1,
+        x: 0,
+        y: 0,
+        yPercent: 0,
+        scale: 1,
+        rotation: 0
+      });
+    });
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const hero = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      hero
+        .from(".site-header", { y: -24, opacity: 0, duration: 0.58 })
+        .from(".hero-eyebrow", { y: 16, opacity: 0, duration: 0.52 }, "-=0.18")
+        .from(".hero-line", { yPercent: 108, duration: 0.92, stagger: 0.1 }, "-=0.08")
+        .from(".rule", { scaleX: 0, duration: 0.58 }, "-=0.34")
+        .from(".hero-copy", { y: 22, opacity: 0, duration: 0.68 }, "-=0.32")
+        .from(".link-row a", { y: 14, opacity: 0, stagger: 0.055, duration: 0.46 }, "-=0.28")
+        .from(".portrait-wrap", { y: 28, rotationY: -8, opacity: 0, duration: 0.82 }, "-=0.78")
+        .from(".portrait-index", { y: 12, opacity: 0, duration: 0.5 }, "-=0.34");
+
+      gsap.utils.toArray(".reveal-group").forEach((group) => {
+        const items = group.querySelectorAll(".reveal-item");
+        gsap.from(items, {
+          y: 30,
+          opacity: 0,
+          duration: 0.72,
+          stagger: 0.075,
+          scrollTrigger: {
+            trigger: group,
+            start: "top 74%",
+            once: true
+          }
+        });
+      });
+
+      gsap.utils.toArray(".now-item").forEach((item) => {
+        const arrow = item.querySelector(".now-arrow");
+        item.addEventListener("pointerenter", () => {
+          gsap.to(arrow, { x: 0, opacity: 1, duration: 0.22, overwrite: true });
+        });
+        item.addEventListener("pointerleave", () => {
+          gsap.to(arrow, { x: -8, opacity: 0, duration: 0.22, overwrite: true });
+        });
+      });
+
+      gsap.utils.toArray(".parallax-media img").forEach((image) => {
+        gsap.fromTo(image, {
+          yPercent: -4,
+          scale: 1.08
+        }, {
+          yPercent: 4,
+          scale: 1.08,
+          ease: "none",
+          scrollTrigger: {
+            trigger: image.closest(".parallax-media"),
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.6
+          }
+        });
+      });
+
+      gsap.utils.toArray("[data-magnetic]").forEach((target) => {
+        const xTo = gsap.quickTo(target, "x", { duration: 0.34, ease: "power3.out" });
+        const yTo = gsap.quickTo(target, "y", { duration: 0.34, ease: "power3.out" });
+
+        target.addEventListener("pointermove", (event) => {
+          const rect = target.getBoundingClientRect();
+          const x = event.clientX - rect.left - rect.width / 2;
+          const y = event.clientY - rect.top - rect.height / 2;
+          xTo(x * 0.18);
+          yTo(y * 0.28);
+        });
+
+        target.addEventListener("pointerleave", () => {
+          xTo(0);
+          yTo(0);
+        });
+      });
+
+      gsap.utils.toArray(".media-tilt").forEach((card) => {
+        const rotateX = gsap.quickTo(card, "rotationX", { duration: 0.46, ease: "power3.out" });
+        const rotateY = gsap.quickTo(card, "rotationY", { duration: 0.46, ease: "power3.out" });
+        const yTo = gsap.quickTo(card, "y", { duration: 0.38, ease: "power3.out" });
+
+        card.addEventListener("pointermove", (event) => {
+          const rect = card.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width - 0.5;
+          const py = (event.clientY - rect.top) / rect.height - 0.5;
+          rotateX(py * -5);
+          rotateY(px * 6);
+          yTo(-5);
+        });
+
+        card.addEventListener("pointerleave", () => {
+          rotateX(0);
+          rotateY(0);
+          yTo(0);
+        });
+      });
+
+      return () => {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      };
+    });
+  });
+</script>
+</body>
+</html>

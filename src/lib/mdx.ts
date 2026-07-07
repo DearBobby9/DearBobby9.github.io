@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { compileMDX } from "next-mdx-remote/rsc";
+import { assertContentDataInSync } from "@/lib/content-validation";
 
 const contentDir = path.join(process.cwd(), "src/content");
 
@@ -17,6 +18,8 @@ export async function getBlogContent(slug: string) {
 }
 
 async function getMDXContent(type: string, name: string) {
+    assertContentDataInSync();
+
     const filePath = path.join(contentDir, type, `${name}.mdx`);
 
     if (!fs.existsSync(filePath)) {

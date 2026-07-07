@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schoger Refinement Mockup — Difan Jia</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@300..700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        heading: ['Fraunces', 'serif'],
+        body: ['Space Grotesk', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+    },
+  },
+}
+</script>
+<style>
+  body { font-family: 'Space Grotesk', sans-serif; }
+  h1, h2, h3, h4 { font-family: 'Fraunces', serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* #16 Canvas grid — decorative lines between sections */
+  .canvas-grid {
+    position: relative;
+  }
+  .canvas-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(9, 9, 11, 0.06);
+  }
+  /* Vertical grid lines inside container */
+  .grid-lines {
+    position: relative;
+  }
+  .grid-lines::before,
+  .grid-lines::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(9, 9, 11, 0.04);
+    pointer-events: none;
+  }
+  .grid-lines::before { left: 0; }
+  .grid-lines::after { right: 0; }
+
+  /* Annotation callouts */
+  .callout {
+    position: relative;
+    --callout-color: #2563eb;
+  }
+  .callout::after {
+    content: attr(data-note);
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateX(100%) translateY(-50%);
+    background: var(--callout-color);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+  }
+  @media (max-width: 1200px) {
+    .callout::after { display: none; }
+  }
+</style>
+</head>
+
+<body class="bg-white text-zinc-950 antialiased">
+
+<!-- ============================================================
+     ANNOTATION LEGEND
+     ============================================================ -->
+<div class="fixed top-4 right-4 z-50 bg-blue-600 text-white font-mono text-[10px] px-3 py-2 rounded-lg shadow-lg max-w-[200px] leading-relaxed">
+  <strong class="text-[11px]">MOCKUP ANNOTATIONS</strong><br>
+  Blue labels = Schoger principle applied.<br>
+  Compare with your live site.
+</div>
+
+<!-- ============================================================
+     HEADER — #1 ring instead of border-b
+     ============================================================ -->
+<header class="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl shadow-[inset_0_-1px_0_0_rgba(9,9,11,0.06)]">
+  <!-- #1: shadow-[inset_0_-1px] replaces border-b. No muddy band. -->
+  <div class="mx-auto max-w-[1120px] px-4 md:px-6 lg:px-8 flex h-16 items-center justify-between">
+    <a href="#" class="text-lg font-semibold tracking-tight font-body">DIFAN JIA</a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#" class="text-sm text-zinc-950 font-semibold">Home</a>
+      <a href="#" class="text-sm text-zinc-500 hover:text-zinc-950 transition-colors">Publications</a>
+      <a href="#" class="text-sm text-zinc-500 hover:text-zinc-950 transition-colors">Projects</a>
+      <a href="#" class="text-sm text-zinc-500 hover:text-zinc-950 transition-colors">Blog</a>
+      <a href="#" class="text-sm text-zinc-500 hover:text-zinc-950 transition-colors">About</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <button class="w-9 h-9 inline-flex items-center justify-center rounded-full hover:bg-zinc-100 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO — #5 tight tracking, #7 text-balance, #8 2x line-height,
+             #9 left-aligned, #11 ch units
+     ============================================================ -->
+<section class="min-h-[90vh] flex flex-col justify-center pt-24 md:pt-32 py-16 md:py-24 lg:py-32">
+  <div class="mx-auto max-w-[1120px] px-4 md:px-6 lg:px-8">
+    <div class="flex flex-col-reverse lg:flex-row items-start lg:justify-between gap-12 lg:gap-24">
+
+      <!-- Left: Content -->
+      <div class="flex-1 text-left space-y-8 max-w-3xl">
+
+        <!-- #6 Eyebrow — monospace, uppercase, wider tracking -->
+        <div class="font-mono text-xs tracking-[0.15em] uppercase text-zinc-500">
+          Hi, I'm Difan "Bobby" Jia
+        </div>
+
+        <!-- #5 Tight tracking on large text, #7 text-balance -->
+        <h1 class="text-[3.5rem] md:text-8xl lg:text-9xl leading-[0.9] font-light" style="letter-spacing: -0.05em; text-wrap: balance;">
+          Researcher <span class="font-heading italic font-light">&</span> Builder
+        </h1>
+
+        <hr class="w-24 border-t-2 border-zinc-950/30 my-8">
+
+        <!-- #8 Small font 2x line-height, #11 ch units, #7 text-pretty -->
+        <p class="text-xl md:text-2xl font-light text-zinc-500 max-w-[58ch]" style="line-height: 2; text-wrap: pretty;">
+          I design interactive systems at the intersection of
+          <span class="text-zinc-950 font-medium">AR</span>,
+          <span class="text-zinc-950 font-medium">spatial computing</span>, and
+          <span class="text-zinc-950 font-medium">AI</span> —
+          exploring how intelligent, embodied interfaces can reshape the way we create, visualize, and engage with digital content in the real world.
+        </p>
+
+        <!-- Links — unchanged, already good -->
+        <div class="flex flex-wrap gap-8 pt-8 font-mono text-sm">
+          <a href="#" class="group flex items-center gap-2 hover:text-zinc-500 transition-colors">
+            <span class="border-b border-zinc-950 group-hover:border-zinc-500 transition-colors">Download CV</span>
+          </a>
+          <a href="#" class="group flex items-center gap-2 hover:text-zinc-500 transition-colors">
+            <span class="border-b border-zinc-950 group-hover:border-zinc-500 transition-colors">Email</span>
+          </a>
+          <a href="#" class="group flex items-center gap-2 hover:text-zinc-500 transition-colors">
+            <span class="border-b border-zinc-950 group-hover:border-zinc-500 transition-colors">Scholar</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Avatar -->
+      <div class="w-full max-w-[280px] lg:max-w-xs shrink-0 self-start lg:self-center lg:mt-12">
+        <div class="aspect-[4/5] relative bg-zinc-200 overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-zinc-300 to-zinc-100"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-zinc-400 font-mono text-xs">profile.webp</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NOW — #9 split layout, #10 inline heading, #16 canvas grid
+     ============================================================ -->
+<section class="py-16 md:py-20 canvas-grid">
+  <div class="mx-auto max-w-[1120px] px-4 md:px-6 lg:px-8 grid-lines">
+
+    <!-- #10 Inline heading: title + description on same line -->
+    <div class="mb-10 max-w-[65ch]">
+      <p class="text-xl md:text-2xl font-heading" style="text-wrap: balance;">
+        <span class="text-zinc-950 font-semibold">Now</span>
+        <span class="text-zinc-500 font-normal"> — what I'm currently working on and recent milestones.</span>
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Update items -->
+      <a href="#" class="group flex items-baseline gap-4 py-2.5 transition-colors hover:text-zinc-500">
+        <span class="font-mono text-xs text-zinc-400 w-12 shrink-0">2026</span>
+        <!-- #6 Eyebrow-style type label -->
+        <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-400 w-16 shrink-0">Project</span>
+        <span class="text-sm md:text-base" style="line-height: 1.75;">NoteV advanced to the next round of UTD Big Idea Pitch — excited to present this smart-glasses idea, stay tuned!</span>
+        <span class="ml-auto text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">&rarr;</span>
+      </a>
+      <a href="#" class="group flex items-baseline gap-4 py-2.5 transition-colors hover:text-zinc-500">
+        <span class="font-mono text-xs text-zinc-400 w-12 shrink-0">2026</span>
+        <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-400 w-16 shrink-0">Paper</span>
+        <span class="text-sm md:text-base" style="line-height: 1.75;">CHI '26 — AR Embedded Visualizations & AI Reliance in Spatial Decision-Making</span>
+        <span class="ml-auto text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">&rarr;</span>
+      </a>
+      <a href="#" class="group flex items-baseline gap-4 py-2.5 transition-colors hover:text-zinc-500">
+        <span class="font-mono text-xs text-zinc-400 w-12 shrink-0">2025</span>
+        <span class="font-mono text-[10px] uppercase tracking-wider text-zinc-400 w-16 shrink-0">Paper</span>
+        <span class="text-sm md:text-base" style="line-height: 1.75;">UIST '25 — Reality Proxy: Fluid MR Interaction via Abstract Representations</span>
+        <span class="ml-auto text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PUBLICATIONS — #1 ring, #3 inset ring, #9 split header,
+                    #10 inline heading, #16 canvas grid
+     ============================================================ -->
+<section class="py-16 md:py-24 lg:py-32 canvas-grid">
+  <div class="mx-auto max-w-[1120px] px-4 md:px-6 lg:px-8 grid-lines">
+
+    <!-- #9 Split layout header: title left 3/5, description right 2/5 -->
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-14">
+      <div class="md:w-3/5">
+        <!-- #6 Eyebrow -->
+        <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-zinc-400 block mb-3">Selected Work</span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-normal" style="letter-spacing: -0.03em; text-wrap: balance;">Publications</h2>
+      </div>
+      <div class="md:w-2/5 md:pt-10">
+        <p class="text-sm text-zinc-500 max-w-[40ch]" style="line-height: 1.85;">
+          Peer-reviewed research in AR, spatial computing, and human-computer interaction at top-tier venues.
+        </p>
+      </div>
+    </div>
+
+    <!-- Publication items -->
+    <div class="space-y-8">
+      <!-- Pub 1 -->
+      <div class="group p-4 -mx-4 rounded-sm border-l-2 border-transparent hover:border-zinc-950/30 hover:translate-x-0.5 transition-all duration-200">
+        <div class="flex flex-col md:flex-row gap-5">
+          <!-- #14 Well-styled container for teaser image -->
+          <div class="w-full md:w-[280px] shrink-0">
+            <div class="aspect-video relative overflow-hidden rounded-sm
+                        bg-zinc-950/[2.5%]
+                        ring-1 ring-inset ring-zinc-950/[0.05]">
+              <!-- #14: bg-gray-950/[2.5%] + inset ring = well effect -->
+              <div class="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-100 group-hover:scale-105 transition-transform duration-300"></div>
+              <div class="absolute inset-0 flex items-center justify-center text-zinc-400 font-mono text-[10px]">teaser.png</div>
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-2">
+              <!-- #6 Venue as eyebrow -->
+              <span class="font-mono text-xs font-medium text-zinc-500">CHI 2026</span>
+              <span class="text-xs font-mono px-2 py-0.5 bg-zinc-100 rounded text-zinc-500 ring-1 ring-inset ring-zinc-950/[0.05]">Full Paper</span>
+            </div>
+            <!-- #7 text-pretty on title -->
+            <h3 class="text-base md:text-lg font-medium mb-2 leading-snug" style="text-wrap: pretty;">
+              <a href="#" class="hover:underline underline-offset-4">AR Embedded Visualizations & AI Reliance in Spatial Decision-Making</a>
+            </h3>
+            <p class="text-sm text-zinc-500 mb-3">
+              <strong class="text-zinc-950">Difan Jia</strong>, Co-Author Name, Another Author
+            </p>
+            <!-- #12 Buttons: pill shape, padding-based height -->
+            <div class="flex gap-2">
+              <a href="#" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100 transition-colors ring-1 ring-zinc-950/[0.08]">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                PDF
+              </a>
+              <a href="#" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100 transition-colors ring-1 ring-zinc-950/[0.08]">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                DOI
+              </a>
+              <button class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100 transition-colors ring-1 ring-zinc-950/[0.08]">
+                BibTeX
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pub 2 -->
+      <div class="group p-4 -mx-4 rounded-sm border-l-2 border-transparent hover:border-zinc-950/30 hover:translate-x-0.5 transition-all duration-200">
+        <div class="flex flex-col md:flex-row gap-5">
+          <div class="w-full md:w-[280px] shrink-0">
+            <div class="aspect-video relative overflow-hidden rounded-sm bg-zinc-950/[2.5%] ring-1 ring-inset ring-zinc-950/[0.05]">
+              <div class="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-100 group-hover:scale-105 transition-transform duration-300"></div>
+              <div class="absolute inset-0 flex items-center justify-center text-zinc-400 font-mono text-[10px]">teaser.png</div>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-mono text-xs font-medium text-zinc-500">UIST 2025</span>
+            </div>
+            <h3 class="text-base md:text-lg font-medium mb-2 leading-snug" style="text-wrap: pretty;">
+              <a href="#" class="hover:underline underline-offset-4">Reality Proxy: Fluid MR Interaction via Abstract Representations</a>
+            </h3>
+            <p class="text-sm text-zinc-500 mb-3">
+              <strong class="text-zinc-950">Difan Jia</strong>, Co-Author, Another Author
+            </p>
+            <div class="flex gap-2">
+              <a href="#" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100 transition-colors ring-1 ring-zinc-950/[0.08]">PDF</a>
+              <a href="#" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100 transition-colors ring-1 ring-zinc-950/[0.08]">DOI</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROJECTS — #1 ring, #3 inset ring, #9 split header,
+                #14 well container, #16 canvas grid
+     ============================================================ -->
+<section class="py-16 md:py-24 lg:py-32 canvas-grid">
+  <div class="mx-auto max-w-[1120px] px-4 md:px-6 lg:px-8 grid-lines">
+
+    <!-- #9 Split layout header -->
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-14">
+      <div class="md:w-3/5">
+        <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-zinc-400 block mb-3">Featured Work</span>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-normal" style="letter-spacing: -0.03em; text-wrap: balance;">Projects</h2>
+      </div>
+      <div class="md:w-2/5 md:pt-10">
+        <p class="text-sm text-zinc-500 max-w-[40ch]" style="line-height: 1.85;">
+          Systems built at the intersection of AR, spatial computing, and fabrication.
+        </p>
+      </div>
+    </div>
+
+    <!-- Projects grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Project Card 1 -->
+      <div class="group h-full flex flex-col overflow-hidden rounded-xl
+                  bg-white
+                  ring-1 ring-zinc-950/[0.07]
+                  shadow-sm shadow-zinc-950/[0.04]
+                  hover:shadow-md hover:shadow-zinc-950/[0.08]
+                  hover:ring-zinc-950/[0.12]
+                  transition-all duration-300">
+        <!-- #1: ring-1 replaces border. ring + shadow = same render layer, no muddy band -->
+        <!-- #14 Well-styled image container -->
+        <div class="aspect-video relative overflow-hidden
+                    bg-zinc-950/[3%]
+                    ring-1 ring-inset ring-zinc-950/[0.04]">
+          <!-- #14: Subtle bg tint + inset ring = recessed/well effect -->
+          <div class="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-100 group-hover:scale-105 transition-transform duration-300"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-zinc-400 font-mono text-[10px]">project-screenshot.png</div>
+          <!-- #14: Hover overlay uses foreground at 0% → 3% -->
+          <div class="absolute inset-0 bg-zinc-950/0 group-hover:bg-zinc-950/[3%] transition-colors"></div>
+        </div>
+
+        <div class="p-4 flex flex-col flex-1">
+          <div class="flex-1">
+            <span class="font-mono text-xs text-zinc-400">2026</span>
+            <h3 class="text-lg font-semibold mt-1 mb-1.5 group-hover:text-zinc-700 transition-colors">
+              <a href="#" class="hover:underline underline-offset-4">NoteV</a>
+            </h3>
+            <p class="text-sm text-zinc-500 line-clamp-3" style="line-height: 1.7;">
+              AI-powered smart glasses for real-time note-taking and contextual assistance during lectures.
+            </p>
+          </div>
+
+          <!-- Bottom: Tags + Links -->
+          <!-- #3 inset ring on divider instead of border-t -->
+          <div class="mt-auto pt-3 flex items-center justify-between" style="box-shadow: inset 0 1px 0 0 rgba(9,9,11,0.06);">
+            <div class="flex flex-wrap gap-1.5">
+              <!-- #1 Tags: ring instead of border -->
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">AR</span>
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">AI</span>
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">Glasses</span>
+            </div>
+            <div class="flex gap-2.5 ml-3 shrink-0">
+              <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+              </a>
+              <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Card 2 -->
+      <div class="group h-full flex flex-col overflow-hidden rounded-xl
+                  bg-white ring-1 ring-zinc-950/[0.07] shadow-sm shadow-zinc-950/[0.04]
+                  hover:shadow-md hover:shadow-zinc-950/[0.08] hover:ring-zinc-950/[0.12]
+                  transition-all duration-300">
+        <div class="aspect-video relative overflow-hidden bg-zinc-950/[3%] ring-1 ring-inset ring-zinc-950/[0.04]">
+          <div class="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-100 group-hover:scale-105 transition-transform duration-300"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-zinc-400 font-mono text-[10px]">project-screenshot.png</div>
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="flex-1">
+            <span class="font-mono text-xs text-zinc-400">2025</span>
+            <h3 class="text-lg font-semibold mt-1 mb-1.5">
+              <a href="#" class="hover:underline underline-offset-4">Reality Proxy</a>
+            </h3>
+            <p class="text-sm text-zinc-500 line-clamp-3" style="line-height: 1.7;">
+              Abstract representations for fluid mixed-reality interaction with physical environments.
+            </p>
+          </div>
+          <div class="mt-auto pt-3 flex items-center justify-between" style="box-shadow: inset 0 1px 0 0 rgba(9,9,11,0.06);">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">MR</span>
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">HCI</span>
+            </div>
+            <div class="flex gap-2.5 ml-3 shrink-0">
+              <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Card 3 -->
+      <div class="group h-full flex flex-col overflow-hidden rounded-xl
+                  bg-white ring-1 ring-zinc-950/[0.07] shadow-sm shadow-zinc-950/[0.04]
+                  hover:shadow-md hover:shadow-zinc-950/[0.08] hover:ring-zinc-950/[0.12]
+                  transition-all duration-300">
+        <div class="aspect-video relative overflow-hidden bg-zinc-950/[3%] ring-1 ring-inset ring-zinc-950/[0.04]">
+          <div class="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-100 group-hover:scale-105 transition-transform duration-300"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-zinc-400 font-mono text-[10px]">project-screenshot.png</div>
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="flex-1">
+            <span class="font-mono text-xs text-zinc-400">2024</span>
+            <h3 class="text-lg font-semibold mt-1 mb-1.5">
+              <a href="#" class="hover:underline underline-offset-4">Spatial CAD Toolkit</a>
+            </h3>
+            <p class="text-sm text-zinc-500 line-clamp-3" style="line-height: 1.7;">
+              Gesture-driven 3D modeling in AR for rapid prototyping and collaborative design.
+            </p>
+          </div>
+          <div class="mt-auto pt-3 flex items-center justify-between" style="box-shadow: inset 0 1px 0 0 rgba(9,9,11,0.06);">
+            <div class="flex flex-wrap gap-1.5">
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">CAD</span>
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">AR</span>
+              <span class="font-mono text-[10px] px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 ring-1 ring-inset ring-zinc-950/[0.06]">Fab</span>
+            </div>
+            <div class="flex gap-2.5 ml-3 shrink-0">
+              <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+              </a>
+              <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER — #1 ring, #16 canvas grid, clean
+     ============================================================ -->
+<footer class="canvas-grid">
+  <div class="mx-auto max-w-[1120px] px-4 md:px-6 lg:px-8 py-12 md:py-16">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex flex-col items-center md:items-start gap-2">
+        <span class="text-lg font-semibold tracking-tight">DIFAN JIA</span>
+        <span class="text-xs text-zinc-400 font-mono">&copy; 2026 All rights reserved</span>
+      </div>
+      <a href="#" class="text-sm text-zinc-500 hover:text-zinc-950 transition-colors">Google Scholar &rarr;</a>
+      <div class="flex items-center gap-4">
+        <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/></svg>
+        </a>
+        <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        </a>
+        <a href="#" class="text-zinc-400 hover:text-zinc-950 transition-colors p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- #3 Inset ring divider instead of border -->
+    <div class="my-8 h-px bg-zinc-950/[0.06]"></div>
+
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-xs text-zinc-400 font-mono">
+      <a href="#" class="hover:text-zinc-950 transition-colors">Home</a>
+      <a href="#" class="hover:text-zinc-950 transition-colors">Publications</a>
+      <a href="#" class="hover:text-zinc-950 transition-colors">Projects</a>
+      <a href="#" class="hover:text-zinc-950 transition-colors">Blog</a>
+      <a href="#" class="hover:text-zinc-950 transition-colors">About</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     CHANGE LOG — What's different from current site
+     ============================================================ -->
+<div class="border-t-4 border-blue-600 bg-zinc-50 py-16">
+  <div class="mx-auto max-w-[1120px] px-4 md:px-6 lg:px-8">
+    <h2 class="text-2xl font-semibold mb-8 font-heading" style="letter-spacing:-0.02em;">Schoger Principles Applied — Change Log</h2>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Change 1 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#1 Ring &gt; Border</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">border border-border/50</code> on cards<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">ring-1 ring-zinc-950/[0.07] shadow-sm</code><br>
+          Ring and shadow share the same render layer &mdash; no muddy band between them.
+        </p>
+      </div>
+
+      <!-- Change 2 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#3 Inset Ring</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">dark:border dark:border-white/[0.18]</code><br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">ring-1 ring-inset ring-zinc-950/[0.05]</code><br>
+          5% opacity &mdash; barely visible, just enough to define container edges.
+        </p>
+      </div>
+
+      <!-- Change 3 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#6 Eyebrow Labels</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> Section headers were just <code class="text-xs bg-zinc-100 px-1 rounded">&lt;h2&gt;Projects&lt;/h2&gt;</code><br>
+          <strong>After:</strong> Added monospace eyebrow above: <code class="text-xs bg-zinc-100 px-1 rounded">font-mono text-[11px] uppercase tracking-[0.15em]</code>
+        </p>
+      </div>
+
+      <!-- Change 4 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#7 text-balance / text-pretty</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> No text-wrap control anywhere<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">text-wrap: balance</code> on headings, <code class="text-xs bg-zinc-100 px-1 rounded">text-wrap: pretty</code> on paragraphs. Eliminates orphan words.
+        </p>
+      </div>
+
+      <!-- Change 5 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#8 2x Line Height</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> Hero subtitle <code class="text-xs bg-zinc-100 px-1 rounded">leading-relaxed</code> (1.625)<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">line-height: 2</code> (200%) on subtitle. More breathing room for short descriptive paragraphs.
+        </p>
+      </div>
+
+      <!-- Change 6 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#9 Split Layout Headers</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> Section title centered or full-width alone<br>
+          <strong>After:</strong> Title 3/5 left, description 2/5 right, top-aligned. Clear visual hierarchy like Tailwind's own site.
+        </p>
+      </div>
+
+      <!-- Change 7 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#10 Inline Heading</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> "Now" title + rule line, no subtitle<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">&lt;span bold&gt;Now&lt;/span&gt; &lt;span muted&gt;— what I'm working on&lt;/span&gt;</code> in one line. Compact, editorial.
+        </p>
+      </div>
+
+      <!-- Change 8 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#11 ch Units</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">max-w-2xl</code> (42rem fixed)<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">max-w-[58ch]</code> scales with font size. Always optimal reading width.
+        </p>
+      </div>
+
+      <!-- Change 9 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#12 Pill Buttons</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">rounded-md h-8</code> ghost buttons<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">rounded-full px-3 py-1.5 ring-1</code>. Padding-based height, pill shape, subtle ring outline.
+        </p>
+      </div>
+
+      <!-- Change 10 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#14 Well Containers</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">bg-muted</code> on image containers<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">bg-zinc-950/[3%] ring-1 ring-inset ring-zinc-950/[0.04]</code>. Subtle recessed depth without competing with images.
+        </p>
+      </div>
+
+      <!-- Change 11 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">#16 Canvas Grid</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> No section dividers<br>
+          <strong>After:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">.canvas-grid::before</code> adds full-width 1px line at section tops. <code class="text-xs bg-zinc-100 px-1 rounded">.grid-lines::before/after</code> adds vertical rules at container edges.
+        </p>
+      </div>
+
+      <!-- Change 12 -->
+      <div class="p-4 rounded-lg bg-white ring-1 ring-zinc-950/[0.06]">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-blue-600 font-semibold">Removed: glass-panel</span>
+        <p class="text-sm text-zinc-600 mt-2" style="line-height:1.7;">
+          <strong>Before:</strong> <code class="text-xs bg-zinc-100 px-1 rounded">.glass-panel</code> on every section (blur, bg opacity, border)<br>
+          <strong>After:</strong> Removed from sections. Glass panel adds visual noise on a white page. Sections should breathe, not be boxed. Keep glass only if over particle background with readability issues.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

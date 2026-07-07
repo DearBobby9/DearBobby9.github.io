@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palette Toggle — Click Effect Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --fg: #09090b;
+    --muted: #71717a;
+    --border: #e4e4e7;
+    --header-bg: rgba(255,255,255,0.3);
+  }
+  .dark {
+    --bg: #09090b;
+    --fg: #fafafa;
+    --muted: #a1a1aa;
+    --border: #27272a;
+    --header-bg: rgba(9,9,11,0.3);
+  }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    transition: background-color 0.6s ease, color 0.6s ease;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 800px; margin: 0 auto;
+    padding: 60px clamp(16px, 4vw, 48px) 120px;
+  }
+
+  h1 { font-size: 2rem; font-weight: 300; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .subtitle { font-size: 15px; color: var(--muted); font-weight: 300; line-height: 1.6; margin-bottom: 48px; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+
+  .panel {
+    border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; transition: border-color 0.6s;
+  }
+  .panel-label {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    transition: border-color 0.6s;
+  }
+  .panel-label .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
+  }
+  .tag.current { background: #fecaca; color: #991b1b; }
+  .dark .tag.current { background: #7f1d1d; color: #fca5a5; }
+  .tag.new { background: #bfdbfe; color: #1e40af; }
+  .dark .tag.new { background: #1e3a5f; color: #93c5fd; }
+  .panel-label h2 { font-size: 13px; font-weight: 500; }
+
+  .panel-body {
+    min-height: 300px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 24px;
+    padding: 40px 20px;
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--fg) 6%, transparent) 1px, transparent 1px);
+    background-size: 30px 30px;
+    transition: background-color 0.6s;
+  }
+
+  .mock-header {
+    width: 100%; max-width: 360px;
+    height: 52px; border-radius: 10px;
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+    display: flex; align-items: center;
+    padding: 0 16px;
+    transition: background 0.6s, border-color 0.6s;
+  }
+  .mock-logo {
+    font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .mock-nav {
+    margin-left: auto; display: flex; align-items: center; gap: 12px;
+  }
+  .mock-nav span {
+    font-size: 11px; color: var(--muted); cursor: default;
+    transition: color 0.6s;
+  }
+
+  .hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--muted); text-align: center; line-height: 1.6;
+    transition: color 0.6s;
+  }
+
+  .note {
+    padding: 12px 16px;
+    font-size: 12px; color: var(--muted); line-height: 1.6;
+    border-top: 1px solid var(--border);
+    transition: border-color 0.6s, color 0.6s;
+  }
+
+  /* Palette icon SVG (Lucide-style) */
+  .palette-svg { width: 16px; height: 16px; }
+
+  /* Dark mode toggle in corner */
+  .dark-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 99;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; width: 32px; height: 32px;
+    cursor: pointer; color: var(--fg); display: flex;
+    align-items: center; justify-content: center;
+    transition: border-color 0.6s;
+  }
+  .dark-toggle svg { width: 14px; height: 14px; }
+
+  /* ==========================
+     CURRENT — aura disappears on click
+     ========================== */
+  .btn-current {
+    position: relative; overflow: visible;
+    background: transparent; border: none; border-radius: 50%;
+    width: 36px; height: 36px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--fg); transition: color 0.3s ease;
+  }
+  .btn-current:hover { background: transparent; }
+
+  .btn-current .aura {
+    position: absolute; width: 10px; height: 10px;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    border-radius: 50%; background: transparent;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+    box-shadow:
+      -8px -4px 14px 4px rgba(255, 80, 80, 0.35),
+       0px -8px 14px 4px rgba(255, 180, 40, 0.35),
+       8px -4px 14px 4px rgba(80, 220, 100, 0.35),
+       8px  4px 14px 4px rgba(60, 160, 255, 0.35),
+      -8px  4px 14px 4px rgba(168, 85, 247, 0.35),
+       0px  8px 14px 4px rgba(255, 100, 180, 0.35);
+  }
+  .btn-current:hover .aura { opacity: 1; }
+
+  .btn-current .icon-wrap {
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 0 0px transparent);
+    transition: filter 0.35s ease;
+  }
+  .btn-current:hover .icon-wrap {
+    filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.4))
+            drop-shadow(0 0 3px rgba(255, 160, 40, 0.3));
+  }
+
+  /* ==========================
+     NEW — aura persists on active + rainbow ripple on click
+     ========================== */
+  .btn-new {
+    position: relative; overflow: visible;
+    background: transparent; border: none; border-radius: 50%;
+    width: 36px; height: 36px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--fg); transition: color 0.3s ease;
+  }
+  .btn-new:hover { background: transparent; }
+
+  /* Persistent aura — stays visible on hover AND when dropdown is open */
+  .btn-new .aura {
+    position: absolute; width: 10px; height: 10px;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    border-radius: 50%; background: transparent;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+    box-shadow:
+      -8px -4px 14px 4px rgba(255, 80, 80, 0.35),
+       0px -8px 14px 4px rgba(255, 180, 40, 0.35),
+       8px -4px 14px 4px rgba(80, 220, 100, 0.35),
+       8px  4px 14px 4px rgba(60, 160, 255, 0.35),
+      -8px  4px 14px 4px rgba(168, 85, 247, 0.35),
+       0px  8px 14px 4px rgba(255, 100, 180, 0.35);
+  }
+  .btn-new:hover .aura,
+  .btn-new.is-open .aura { opacity: 1; }
+
+  /* Water ripple rings — multiple thin rings expanding outward like 涟漪 */
+  .btn-new .ripple-ring {
+    position: absolute;
+    width: 20px; height: 20px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.3);
+    border-radius: 50%;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Each ring gets a different rainbow color border */
+  .btn-new .ripple-ring:nth-child(2) {
+    border: 1.5px solid rgba(255, 120, 80, 0.6);
+  }
+  .btn-new .ripple-ring:nth-child(3) {
+    border: 1.5px solid rgba(255, 190, 60, 0.55);
+  }
+  .btn-new .ripple-ring:nth-child(4) {
+    border: 1.5px solid rgba(100, 200, 140, 0.5);
+  }
+  .btn-new .ripple-ring:nth-child(5) {
+    border: 1.5px solid rgba(100, 160, 255, 0.5);
+  }
+
+  .btn-new .ripple-ring.active:nth-child(2) {
+    animation: water-ripple 0.9s ease-out forwards;
+    animation-delay: 0s;
+  }
+  .btn-new .ripple-ring.active:nth-child(3) {
+    animation: water-ripple 0.9s ease-out forwards;
+    animation-delay: 0.1s;
+  }
+  .btn-new .ripple-ring.active:nth-child(4) {
+    animation: water-ripple 0.9s ease-out forwards;
+    animation-delay: 0.2s;
+  }
+  .btn-new .ripple-ring.active:nth-child(5) {
+    animation: water-ripple 0.9s ease-out forwards;
+    animation-delay: 0.3s;
+  }
+
+  @keyframes water-ripple {
+    0% {
+      opacity: 0.7;
+      transform: translate(-50%, -50%) scale(0.3);
+    }
+    40% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(3.5);
+    }
+  }
+
+  /* Icon with hover glow */
+  .btn-new .icon-wrap {
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 0 0px transparent);
+    transition: filter 0.35s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn-new:hover .icon-wrap,
+  .btn-new.is-open .icon-wrap {
+    filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.4))
+            drop-shadow(0 0 3px rgba(255, 160, 40, 0.3));
+  }
+
+  /* Subtle rotate on click */
+  .btn-new .icon-wrap.clicked {
+    animation: palette-spin 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes palette-spin {
+    0% { transform: rotate(0deg) scale(1); }
+    40% { transform: rotate(-15deg) scale(0.9); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+
+  /* Fake dropdown to simulate open state */
+  .fake-dropdown {
+    width: 140px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 0;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+    transition: opacity 0.2s, transform 0.2s, background 0.6s, border-color 0.6s, box-shadow 0.6s;
+    pointer-events: none;
+    position: absolute; top: 100%; right: 0; margin-top: 6px;
+  }
+  .dark .fake-dropdown {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  .fake-dropdown.show {
+    opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+  }
+  .fake-dropdown div {
+    padding: 5px 12px; font-size: 11px; color: var(--muted);
+    cursor: default; transition: color 0.6s;
+  }
+
+  /* Wrapper for dropdown positioning */
+  .dropdown-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
+
+<div class="page">
+  <h1>Palette Toggle</h1>
+  <p class="subtitle">Left = current (aura disappears on click). Right = rainbow ripple + persistent aura.</p>
+
+  <div class="compare">
+
+    <!-- CURRENT -->
+    <div class="panel">
+      <div class="panel-label">
+        <span class="tag current">CURRENT</span>
+        <h2>Aura vanishes on click</h2>
+      </div>
+      <div class="panel-body">
+        <div class="mock-header">
+          <span class="mock-logo">DIFAN JIA</span>
+          <div class="mock-nav">
+            <span>About</span>
+            <div class="dropdown-wrap">
+              <button class="btn-current" id="btnCurrent">
+                <span class="aura" aria-hidden="true"></span>
+                <span class="icon-wrap">
+                  <svg class="palette-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/><circle cx="6.5" cy="12" r="0.5" fill="currentColor"/>
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="fake-dropdown" id="dropCurrent">
+                <div>Jewel Tones</div>
+                <div>Indigo</div>
+                <div>Academic</div>
+                <div>Pastel</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="hint">Click to open dropdown.<br>Aura disappears immediately.</span>
+      </div>
+      <div class="note">
+        Hover-only aura. Once focus moves to dropdown, hover state is lost and the glow vanishes.
+      </div>
+    </div>
+
+    <!-- NEW -->
+    <div class="panel">
+      <div class="panel-label">
+        <span class="tag new">NEW</span>
+        <h2>Ripple + persistent aura</h2>
+      </div>
+      <div class="panel-body">
+        <div class="mock-header">
+          <span class="mock-logo">DIFAN JIA</span>
+          <div class="mock-nav">
+            <span>About</span>
+            <div class="dropdown-wrap">
+              <button class="btn-new" id="btnNew">
+                <span class="aura" aria-hidden="true"></span>
+                <span class="ripple-ring" aria-hidden="true"></span>
+                <span class="ripple-ring" aria-hidden="true"></span>
+                <span class="ripple-ring" aria-hidden="true"></span>
+                <span class="ripple-ring" aria-hidden="true"></span>
+                <span class="icon-wrap" id="iconNew">
+                  <svg class="palette-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/><circle cx="6.5" cy="12" r="0.5" fill="currentColor"/>
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="fake-dropdown" id="dropNew">
+                <div>Jewel Tones</div>
+                <div>Indigo</div>
+                <div>Academic</div>
+                <div>Pastel</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="hint">Click: rainbow ripple bursts out,<br>icon wiggles, aura stays while open.</span>
+      </div>
+      <div class="note">
+        Aura persists via <code>.is-open</code> class. Rainbow ripple on click. Icon does a playful wiggle.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Dark mode toggle
+  document.getElementById('darkToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+  });
+
+  // CURRENT — simple toggle dropdown, aura only on hover
+  let currentOpen = false;
+  document.getElementById('btnCurrent').addEventListener('click', () => {
+    currentOpen = !currentOpen;
+    document.getElementById('dropCurrent').classList.toggle('show', currentOpen);
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown-wrap') && currentOpen) {
+      currentOpen = false;
+      document.getElementById('dropCurrent').classList.remove('show');
+    }
+  });
+
+  // NEW — persistent aura + ripple + icon wiggle
+  let newOpen = false;
+  const btnNew = document.getElementById('btnNew');
+  const rippleRings = btnNew.querySelectorAll('.ripple-ring');
+  const iconNew = document.getElementById('iconNew');
+
+  btnNew.addEventListener('click', (e) => {
+    e.stopPropagation();
+    newOpen = !newOpen;
+
+    // Toggle dropdown
+    document.getElementById('dropNew').classList.toggle('show', newOpen);
+
+    // Toggle persistent aura via is-open class
+    btnNew.classList.toggle('is-open', newOpen);
+
+    // Fire water ripple rings
+    rippleRings.forEach(ring => {
+      ring.classList.remove('active');
+      void ring.offsetWidth;
+      ring.classList.add('active');
+    });
+
+    // Fire icon wiggle
+    iconNew.classList.remove('clicked');
+    void iconNew.offsetWidth;
+    iconNew.classList.add('clicked');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown-wrap') && newOpen) {
+      newOpen = false;
+      document.getElementById('dropNew').classList.remove('show');
+      btnNew.classList.remove('is-open');
+    }
+  });
+</script>
+
+</body>
+</html>
