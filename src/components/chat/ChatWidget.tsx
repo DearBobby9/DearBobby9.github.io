@@ -2,12 +2,14 @@
 
 import * as React from "react";
 import { MessageCircle, X, RotateCcw } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useChatStream } from "@/hooks/use-chat-stream";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { ThinkingIndicator } from "@/components/chat/ThinkingIndicator";
+import { BorderBeam } from "@/components/effects/border-beam";
 import { MAX_TURNS } from "@/lib/chat-config";
 
 const SUGGESTION_CHIPS = [
@@ -19,6 +21,18 @@ const SUGGESTION_CHIPS = [
 export function ChatWidget() {
   const [isOpen, setIsOpen] = React.useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const { resolvedTheme } = useTheme();
+  const beamTheme = resolvedTheme === "dark" ? "dark" : "light";
+  const beamStyle = React.useMemo(
+    () =>
+      ({
+        position: "fixed",
+        "--beam-stroke-opacity": "2.35",
+        "--beam-inner-opacity": "1.22",
+        "--beam-bloom-opacity": "1.75",
+      }) as React.CSSProperties,
+    []
+  );
 
   const {
     messages,
@@ -81,30 +95,39 @@ export function ChatWidget() {
 
       {/* Chat Panel */}
       {isOpen && (
-        <div
+        <BorderBeam
+          size="md"
+          colorVariant="colorful"
+          theme={beamTheme}
+          strength={0.98}
+          duration={2.35}
+          hueRange={34}
+          saturation={1.45}
+          brightness={2.25}
+          borderRadius={12}
+          style={beamStyle}
           className={cn(
-            // Mobile: fullscreen (z-50+ to cover site header)
+            "chat-beam-shell",
             "fixed inset-0 z-[60]",
             "md:inset-auto md:bottom-24 md:right-6 md:z-40",
-            // Desktop: floating panel
             "md:w-[400px] md:h-[500px] md:rounded-xl",
-            // Background
-            "bg-background/80 backdrop-blur-xl",
-            "md:bg-background/70 md:backdrop-blur-xl",
-            "dark:bg-background/90 md:dark:bg-background/60",
-            // Border & shadow
-            "border border-border/40 dark:border-white/[0.12]",
-            "md:shadow-2xl",
-            // Layout
-            "flex flex-col",
-            // Animation
             "animate-in fade-in-0 slide-in-from-bottom-4 duration-300"
           )}
         >
+          <div
+            className={cn(
+              "chat-panel-enhanced",
+              "h-full w-full",
+              "backdrop-blur-xl",
+              "border border-border/40 dark:border-white/[0.12]",
+              "md:rounded-xl",
+              "flex flex-col overflow-hidden"
+            )}
+          >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
+          <div className="chat-header-enhanced flex items-center justify-between px-4 py-3 border-b border-border/40 shrink-0">
             <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+              <div className="chat-status-dot h-2 w-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-sm font-medium">Chat with Bobby</span>
             </div>
             <div className="flex items-center gap-1">
@@ -131,10 +154,10 @@ export function ChatWidget() {
           </div>
 
           {/* Messages */}
-          <div role="log" aria-live="polite" aria-label="Chat messages" className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-hide">
+          <div role="log" aria-live="polite" aria-label="Chat messages" className="chat-message-log flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-hide">
             {/* Welcome state */}
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full text-center px-4">
+              <div className="chat-welcome flex flex-col items-center justify-center h-full text-center px-4">
                 <MessageCircle className="h-8 w-8 text-muted-foreground/30 mb-3" />
                 <p className="text-sm text-muted-foreground">
                   Hey! I&apos;m Bobby — ask me anything about my research, projects, or background.
@@ -224,7 +247,8 @@ export function ChatWidget() {
             isStreaming={status === "streaming"}
             isDisabled={isAtLimit}
           />
-        </div>
+          </div>
+        </BorderBeam>
       )}
     </>
   );

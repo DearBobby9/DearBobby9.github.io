@@ -47,7 +47,7 @@ export function ChatInput({ onSend, onStop, isStreaming, isDisabled }: ChatInput
   );
 
   return (
-    <div className="flex items-end gap-2 border-t border-border/40 p-3">
+    <div className="chat-input-enhanced flex items-end gap-2 border-t border-border/40 p-3">
       <textarea
         ref={textareaRef}
         value={value}
@@ -61,7 +61,7 @@ export function ChatInput({ onSend, onStop, isStreaming, isDisabled }: ChatInput
           "placeholder:text-muted-foreground/50",
           "focus:outline-none",
           "disabled:opacity-50 disabled:cursor-not-allowed",
-          "max-h-[120px] py-2"
+          "max-h-[120px] py-2 px-0.5"
         )}
       />
       {isStreaming ? (
@@ -70,7 +70,7 @@ export function ChatInput({ onSend, onStop, isStreaming, isDisabled }: ChatInput
           size="icon-sm"
           onClick={onStop}
           aria-label="Stop generating"
-          className="shrink-0"
+          className="chat-send-button shrink-0"
         >
           <Square className="h-4 w-4" />
         </Button>
@@ -81,7 +81,7 @@ export function ChatInput({ onSend, onStop, isStreaming, isDisabled }: ChatInput
           onClick={handleSubmit}
           disabled={!value.trim() || isDisabled}
           aria-label="Send message"
-          className="shrink-0"
+          className="chat-send-button shrink-0"
         >
           <Send className="h-4 w-4" />
         </Button>
