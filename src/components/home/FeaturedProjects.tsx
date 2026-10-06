@@ -39,10 +39,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     const detailHref = `/projects/${project.slug}`;
     const spanClass =
         index === 0
-            ? "md:col-span-7 md:row-span-2"
+            ? "md:col-span-7"
             : index === 1
                 ? "md:col-span-5"
-                : "md:col-span-4";
+                : "md:col-span-6";
 
     const imageBlock = (
         <div className="relative aspect-[16/10] overflow-hidden rounded-[1.4rem] bg-foreground/[0.035] ring-1 ring-inset ring-foreground/[0.05]">

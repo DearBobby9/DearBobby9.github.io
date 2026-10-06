@@ -28,6 +28,20 @@ export interface Project {
 
 export const projects: Project[] = [
     {
+        slug: "embodi",
+        title: "EmboDi",
+        oneLiner: "An open-source mixed reality directing system for staging 3D scenes, rehearsing actions, and recording stories in your physical space",
+        year: "2026",
+        category: "Build",
+        tags: ["Mixed Reality", "Embodied Authoring", "AI"],
+        image: "/images/projects/embodi-teaser-birthday.webp",
+        links: {
+            code: "https://github.com/XulongT/EmboDi",
+            video: "https://x.com/KeithMaxwell99/status/2098173020745441629",
+        },
+        hasDetail: true,
+    },
+    {
         slug: "notev",
         title: "NoteV",
         oneLiner: "Every AI note-taker can hear. Ours can see — a multimodal AI assistant for Meta Ray-Ban smart glasses that captures and structures your lectures",
